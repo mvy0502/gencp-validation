@@ -223,22 +223,22 @@ yeşil sayılar).*
 
 ## Güncel durum (25 Ağustos 2026)
 
-* ✅ Geometri bulgusu doğrulandı; düzeltme (Option A) teslimat aracına gömüldü:
+* **Tamam** — Geometri bulgusu doğrulandı; düzeltme (Option A) teslimat aracına gömüldü:
   [`tubitak/tool/gencp_ref.py`](tubitak/tool/gencp_ref.py) — deterministik referans
   üreteci (aynı girdi → bayt-özdeş çıktı), provenance bilgisi çıktıya işleniyor
-* ✅ Faz C faktöriyeli eğitildi ve skorlandı (yukarıda)
-* ✅ T1: gerçek görüntü, erişilebildiği her yerde sentetik referansı belirgin biçimde
+* **Tamam** — Faz C faktöriyeli eğitildi ve skorlandı (yukarıda)
+* **Tamam** — T1: gerçek görüntü, erişilebildiği her yerde sentetik referansı belirgin biçimde
   geçiyor; T3: chip bazlı güvenilirlik katmanı öneri olarak paketlendi
-* ✅ E1–E3 konumlandırma ölçümleri: "sentetik referans gerekli çünkü gerçek görüntüye
+* **Tamam** — E1–E3 konumlandırma ölçümleri: "sentetik referans gerekli çünkü gerçek görüntüye
   erişim yok/zor" gerekçesinin üç öncülü de yazıldığı haliyle ölçümde düşüyor
   ([positioning-results.md](tubitak/docs/positioning-results.md)). **Kapsam notu:**
   hedef ortam uyduda **offline** kullanım — gerçek referansa erişimin olmadığı bu
   senaryoda gerekçe ayakta kalır; sonuçlar bu bağlamla birlikte okunmalı
-* ✅ Türkiye rasterizer'ı CLC+ Backbone taban katmanıyla kabul kapısını geçti (yukarıda)
-* 🔄 Seed replikasyonu Modal A10G'de koşuyor (SEED-b, yukarıda)
-* 📝 Yayın: IEEE GRSL letter, kayıp fonksiyonu sonucuna odaklı
+* **Tamam** — Türkiye rasterizer'ı CLC+ Backbone taban katmanıyla kabul kapısını geçti (yukarıda)
+* **Sürüyor** — Seed replikasyonu Modal A10G'de koşuyor (SEED-b, yukarıda)
+* **Planlı** — Yayın: IEEE GRSL letter, kayıp fonksiyonu sonucuna odaklı
   ([paper-roadmap.md](tubitak/docs/paper-roadmap.md))
-* 📄 Türkçe raporlar: [`tubitak/rapor2/`](tubitak/rapor2/) (ilerleme),
+* Türkçe raporlar: [`tubitak/rapor2/`](tubitak/rapor2/) (ilerleme),
   [`tubitak/rapor3/`](tubitak/rapor3/) (sonuç; PDF'ler `rapor3/build_pdf.py` ile üretilir)
 
 ## Kullanılan veri
