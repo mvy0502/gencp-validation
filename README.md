@@ -149,8 +149,9 @@ sahadaki görünümü.*
 Kendi OSM rasterizer'ımız yayınlanan palete oturtuldu. İlk kabul denemesi (yalnız OSM)
 KARIOS kapısını geçemedi; ikinci deneme (ESA WorldCover taban katmanı) da yetmedi.
 Teşhis, referans rasterların OSM'nin altında **CLC+ Backbone** arazi örtüsü katmanı
-kullandığıydı — CLC+ ile kurulan üçüncü sürüm, ayrılmış (held-out) kabul kapısını
-**geçti** (+0.012 px, istatistiksel olarak sıfır).
+kullandığıydı — CLC+ ile kurulan üçüncü sürüm, yeniden üretilmiş girdilerle koşulan
+kabul kapısını **geçti** (+0.119 ± 0.138 px; sıfırdan istatistiksel olarak ayırt
+edilemez).
 → [renderer-tolerance.md](tubitak/docs/renderer-tolerance.md)
 
 ### Zorlu sahalar: Kapadokya ve Tuz Gölü
