@@ -81,3 +81,12 @@ it is ever run; still deferred, conclusion unaffected.
 **Standing state of the ledger:** 25 items, 8 closed, 17 open — every open item carries a
 written reason and none blocks the final report.
 
+## Repository split 2026-08-26 (standing practice 8, fifth pass)
+
+| # | Item | Source | Status |
+|---|---|---|---|
+| 26 | `tubitak/README.md` in the GenCP fork is 549 lines written when the study lived there. Its Findings summary, Verification scripts, Geometry analysis tools, KARIOS validation and Visualisation sections document material that now lives here, and their `docs/` links do not resolve in that repository | repository split, `b815b46` | **OPEN — ACCEPTED AS FLAGGED.** A banner was added at the top marking which sections still apply and which do not; the stale sections were deliberately left in place rather than deleted, because they are accurate history and rewriting them is a separate task from the split. Recorded here so the banner is not mistaken for a finished rewrite. Does not block the report or the manuscript |
+
+**Standing state of the ledger:** 26 items, 8 closed, 18 open — every open item carries a
+written reason and none blocks the final report.
+

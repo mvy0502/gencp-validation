@@ -18,6 +18,29 @@ Modelin yaptığı iş tek satırda — soldaki haritadan sağdaki görüntü ü
 |:---:|:---:|:---:|
 | ![](gencp_imgs/32UPA_1584_00_real_A.png) | ![](gencp_imgs/32UPA_1584_00_real_B.png) | ![](gencp_imgs/32UPA_1584_00_fake_B.png) |
 
+## KURAL: BU DEPO VE GenCP KALICI OLARAK AYRILDI
+
+**Hiçbir yönde merge yok, hiçbir zaman.** Bu bir uyarı değil, kuraldır.
+
+Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler,
+kanıt artefaktları ve düzeltme kaydı. Fork ve QGIS eklenti iş paketi
+[mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında
+devam eder. Makale çalışması
+[mvy0502/gencp-letter](https://github.com/mvy0502/gencp-letter) deposundadır.
+
+- **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı
+  siler; o dal buraya merge edilirse silme buraya yayılır ve **araştırma kaydını yok
+  eder**.
+- **Ters yön de kapalıdır.** Bu deponun `main` dalı GenCP'ye birleştirilmez.
+- **Bekleyen tek tamamlayıcı aktarım `cherry-pick` ile yapılır**, merge ile değil.
+  Senkron noktası `844dbec`; oraya kadar her şey burada (birleştirme `f9e0de6`,
+  ardından kanıt rasterları `284571b`).
+- **O aktarımdan sonra senkron KAPANIR.** İki depo bir daha birleşmez.
+
+Tarih yeniden yazılmadı ve yazılmayacak: iki depo `96503b7` birleşme tabanından
+itibaren aynı tarihi paylaşır, bu yüzden araştırma kaydında anılan 49 commit SHA'sının
+hepsi her iki depoda da çözülür. `filter-repo` hiç kullanılmadı ve kullanılmayacak.
+
 ## Öne çıkanlar
 
 * Yayınlanan üründe **+1/256 georeferanslama ölçek hatası** bulundu (karo köşesinde

@@ -89,6 +89,28 @@ Rules of general force, collected where future work will see them. Each carries 
     permanently unverifiable) is the earlier instance of the same class that this practice
     exists to stop recurring for a third time.
 
+    **Amended 2026-08-26, after the practice failed on its second day.** The required
+    final step: **after an evidence commit, verify from a fresh clone that the files are
+    actually there.** Not `git status`, which is silent about ignored paths, and not
+    `git log`, which reports what was committed rather than what was intended: clone the
+    pushed remote into a scratch directory and re-run the manifest check against that
+    tree. **A file is evidence when a stranger can obtain it, not when the committing
+    session believes it was added.** If that check cannot be run, the artifacts are not
+    committed yet and the manifest rows must not be written.
+
+    Why the clause was needed, stated so it is not read as carelessness: **`git add`
+    exits zero when it adds nothing.** `4e4fb05` was told to commit 260 evidence
+    rasters; `.gitignore`'s `*.tif` rule refused every one of them silently; the commit
+    then succeeded on the two files that remained, and `MANIFEST.md` went on asserting
+    the sha256 and byte size of all 260. **Every local signal reported success.** The
+    only signal that would have contradicted it was one nobody was asked to look for —
+    which is why this amendment specifies an *observation of the resulting state* rather
+    than one more action. The practice as first written said "commit the artifacts"; it
+    did not say "check that the commit succeeded", and that gap is the whole failure.
+    Type rules are fixed at the class level too: `.gitignore` now ends with
+    `!tubitak/docs/evidence/**`, so no future extension rule can swallow an evidence
+    artifact. Instance: **corrections entry 35**.
+
 11. **A registration that names a set, a threshold or a condition QUOTES the implementing
     code's expression of it** (2026-08-26). **FORWARD-ONLY.** When a registration fixes a
     reading in prose, the line of code that implements it is quoted in the registration
