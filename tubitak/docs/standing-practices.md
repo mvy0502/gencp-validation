@@ -65,3 +65,57 @@ Rules of general force, collected where future work will see them. Each carries 
    would never have caught that, because no leg was pointed at it.
    [seed-replication-registration.md](seed-replication-registration.md) is the correction; this
    practice is so the class is caught next time rather than the instance.
+
+10. **Numerical artifacts that a published number depends on live under `docs/` and are
+    tracked** (2026-08-26). `.gitignore` excludes `tubitak/data/*` and `tubitak/outputs/*`
+    wholesale, so **no per-chip CSV, summary JSON or analysis script under those paths has
+    ever been under version control**. Any such file that a published number rests on is
+    committed to `tubitak/docs/evidence/`, with its sha256 recorded in
+    [evidence/MANIFEST.md](evidence/MANIFEST.md) and verified against any value already
+    published for it. **The scripts that produce those files are committed too** — an output
+    without its producer is not reproducible, only re-implementable, and re-implementation
+    yields new numbers rather than the published ones. Origin: **Phase D**
+    ([phase-d-audit.md](phase-d-audit.md) §C). Six of its seven registered checks and its veto
+    rule have no surviving artifact of any kind; `eu_per_chip.csv`,
+    `blur_control_per_chip.csv`, `eu_decomposition_per_chip.csv`, `veto_features.csv` and
+    `veto_rule.py` do not exist anywhere in the repository; and the sentence that justified not
+    committing them — "regenerable end-to-end from committed scripts and registrations" — was
+    **false**, because none of those scripts was committed either. Two Table II rows rest on
+    numbers nothing in this repository can re-derive. **The rule is not "hash your artifacts".
+    A hash proves identity if the file survives; it does not preserve the file.** At the moment
+    the Phase D audit was written, the six-seed Modal block — 26 arm-units, one night, $23 of
+    GPU — was protected by nothing but sha256 strings in a markdown file. The corrective is
+    this practice, and entry 22 (B3's harness deleted, four registered matcher parameters
+    permanently unverifiable) is the earlier instance of the same class that this practice
+    exists to stop recurring for a third time.
+
+11. **A registration that names a set, a threshold or a condition QUOTES the implementing
+    code's expression of it** (2026-08-26). **FORWARD-ONLY.** When a registration fixes a
+    reading in prose, the line of code that implements it is quoted in the registration
+    itself, so prose and implementation sit in one place and can be checked against each
+    other by reading rather than by remembering to compare two files. Origin: **three findings
+    that looked like unrelated slips and share one cause — a registration written in prose,
+    implemented in code, and the two drifting.**
+
+    - **The warm-up de-confound's branch text** said "as C1 and C4 did", presuming both
+      adversarial arms rise at the first main-stage transition. True at seed 42, false at
+      seed 43, where C4 falls. The branch fired on its antecedent so nothing changed, but the
+      clause had no determinate referent
+      ([warmup-deconfound-results.md](warmup-deconfound-results.md) §5).
+    - **The hardware gate's acceptance rule** was written as a single global verdict while
+      scaling each quantity to its own spread, so the most reproducibly-measured quantity
+      governed the package and one quantity vetoed ten
+      ([hardware-gate-results.md](hardware-gate-results.md)).
+    - **AMENDMENT SEED-c (d)** reads "C5's edge mean the highest of **the four arms**", while
+      `seed_analysis.py:212` implements the tie rule as `("pre", "C1", "C2", "C4")` —
+      **five arms, including pretrained** ([phase-d-closeout.md](phase-d-closeout.md) §C).
+      The harness was stricter than the registration, which is the safe direction, and the
+      reading held either way.
+
+    **Not applied retroactively.** The existing registrations stand exactly as written, with
+    their mismatches disclosed where they were found and not repaired — the same disposal the
+    hardware gate's own flaw received, and for the same reason: a rule rewritten after seeing
+    which way it cuts is indistinguishable from a rule adjusted to pass. **When
+    corrections-log entries 30–34 are applied, these three are grouped under one heading in
+    the tiering**, so a reader sees one class with three instances rather than three
+    unrelated slips.

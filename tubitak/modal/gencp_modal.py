@@ -95,6 +95,24 @@ out_vol = modal.Volume.from_name("gencp-out", create_if_missing=True)
 DATA = "/data/gencp-tr"
 DATA_TAR = "/data/gencp-tr.tar"
 
+# The repository commit every container checks out. PINNED, not `-b tubitak-tr`, because a
+# bare branch clone takes whatever HEAD happens to be at container start: on 2026-08-25 three
+# commits landed at 19:16:15 WHILE the gate was running, one of which modified
+# tubitak/kaggle/train_c1_c2.py - the training script itself. C1/C2/C4/C5 had already cloned
+# the older code, so the next arm would have run a different code version inside the same
+# gate. That diff turned out to be behaviour-preserving (open() -> with open()), but the
+# hazard is structural and this closes it.
+#
+# f2dc962 carries the train_c1_c2.py that ALL FOUR completed seed-43 arms ran:
+#     sha256(train_c1_c2.py) 839e1aadd8b88a7be6b7...  at 4817b90 (C1,C2) and f2dc962 (C4,C5)
+#     sha256(train_c1_c2.py) 878fa2009683277e28f1...  at 96503b7 (the mid-run commit)
+GIT_COMMIT = "f2dc962"
+# The warm-up de-confound arms (C2_warmup, C5_warmup) exist only from a782aa5 - a
+# membership-only edit on the training script's ARM conditionals (schedule/loss code shared
+# verbatim with the existing arms). The replication arms above NEVER move off f2dc962.
+# Registration: tubitak/docs/warmup-deconfound-registration.md.
+WARMUP_COMMIT = "a782aa5"
+
 # The ordered file-list hash the SORTED code path must produce - the Modal Volume's own
 # enumeration, which the committed patch restores on local disk (AMENDMENT SEED-b). Asserting
 # this covers BOTH failure classes at once: a count change (the AppleDouble doubling) and a
@@ -106,7 +124,8 @@ OUT = "/out"
 # Expected wall time per arm on A10G, from the Kaggle T4 times divided by ~3.5, with the
 # timeout set to roughly TWICE that. A hung job left to Modal's 24-hour maximum would burn
 # most of the monthly credit for nothing.
-TIMEOUTS = {"C1": 2 * 60 * 60, "C2": 2 * 60 * 60, "C4": 4 * 60 * 60, "C5": 4 * 60 * 60}
+TIMEOUTS = {"C1": 2 * 60 * 60, "C2": 2 * 60 * 60, "C4": 4 * 60 * 60, "C5": 4 * 60 * 60,
+            "C2_warmup": 2 * 60 * 60, "C5_warmup": 4 * 60 * 60}
 
 
 LOCAL_DATA = "/scratch/gencp-tr"
@@ -235,20 +254,31 @@ def _disable_tf32():
           f"cuda.matmul.allow_tf32={torch.backends.cuda.matmul.allow_tf32}  (both must be False)")
 
 
-def _run_arm(arm: str, seed: int, sort_files: bool = True, label: str = None):
+def _run_arm(arm: str, seed: int, sort_files: bool = True, label: str = None,
+             checkout: str = None):
     """Run one arm by invoking the UNCHANGED tubitak/kaggle/train_c1_c2.py.
 
     The script is used verbatim, including its sharp-half stop rule (run_train / _spike_hits),
     which therefore behaves on Modal exactly as it does on Kaggle. Only the two environment
     variables it already reads are set here.
+
+    `checkout` defaults to GIT_COMMIT (the replication pin, f2dc962). The warm-up de-confound
+    arms pass WARMUP_COMMIT instead - their schedule exists only there. Always an explicit
+    commit, never a branch head (corrections-log entry 29, sixth instance).
     """
     t0 = time.time()
+    checkout = checkout or GIT_COMMIT
     _cuda_smoke_test()
     _disable_tf32()
 
     repo = "/work/GenCP"
-    subprocess.run(["git", "clone", "--depth", "1", "-b", "tubitak-tr",
-                    "https://github.com/mvy0502/GenCP.git", repo], check=True)
+    subprocess.run(["git", "clone", "https://github.com/mvy0502/GenCP.git", repo], check=True)
+    subprocess.run(["git", "checkout", "--detach", checkout], cwd=repo, check=True)
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo,
+                          capture_output=True, text=True, check=True).stdout.strip()
+    print(f"[repo] pinned checkout {checkout} -> HEAD {head}", flush=True)
+    tsha = _sha256_file(f"{repo}/tubitak/kaggle/train_c1_c2.py")
+    print(f"[repo] train_c1_c2.py sha256: {tsha}", flush=True)
 
     # Enumeration-order patch: COMMITTED as a file, applied with `git apply`, never sed'd in.
     # `git apply` verifies the pre-state and fails loudly if upstream ever differs, so this is
@@ -365,6 +395,25 @@ def train_c2_unsorted(seed: int):
 
 
 @app.function(image=image, gpu="A10G", volumes={"/data": vol, OUT: out_vol},
+              timeout=TIMEOUTS["C2_warmup"])
+def train_c2_warmup(seed: int):
+    """C2's L1-only loss under C1's exact two-stage warm-up schedule, at WARMUP_COMMIT.
+
+    The warm-up de-confound probe (warmup-deconfound-registration.md): entry 26's window is
+    perfectly collinear with discriminator presence; this arm supplies the LR jump without
+    the adversarial gradient. Sorted enumeration, same data, same seed handling as C2.
+    """
+    return _run_arm("C2_warmup", seed, checkout=WARMUP_COMMIT)
+
+
+@app.function(image=image, gpu="A10G", volumes={"/data": vol, OUT: out_vol},
+              timeout=TIMEOUTS["C5_warmup"])
+def train_c5_warmup(seed: int):
+    """C5's LPIPS-only loss under C1's exact two-stage warm-up schedule, at WARMUP_COMMIT."""
+    return _run_arm("C5_warmup", seed, checkout=WARMUP_COMMIT)
+
+
+@app.function(image=image, gpu="A10G", volumes={"/data": vol, OUT: out_vol},
               timeout=TIMEOUTS["C4"])
 def train_c4(seed: int):
     return _run_arm("C4", seed)
@@ -406,6 +455,27 @@ def smoke():
             "torch": str(torch.__version__), "cuda": str(torch.version.cuda)}
 
 
+def _arm_complete(seed: int, tag: str) -> bool:
+    """Complete = BOTH latest_net_G.pth AND 20_net_G.pth present in the arm's directory.
+
+    The previous predicate was a bare isdir(). _run_arm creates the directory and copies
+    whatever checkpoints exist BEFORE the returncode check, so an arm that died mid-training
+    left a directory and was skipped as complete on resume - its latest_net_G.pth a mid-run
+    epoch that would have flowed into evaluation as a finished run. A ceiling stop produces
+    exactly that shape. Requiring the epoch-20 checkpoint alongside latest closes it.
+    Bookkeeping only: no number, threshold, gate or numerical path is touched.
+    """
+    base = f"{OUT}/seed{seed}/{tag}"
+    if not os.path.isdir(base):
+        return False
+    for inner in (tag, tag.split("_")[0]):        # C2_unsorted stores under .../C2
+        d = f"{base}/{inner}"
+        if os.path.isdir(d):
+            return (os.path.exists(f"{d}/latest_net_G.pth")
+                    and os.path.exists(f"{d}/20_net_G.pth"))
+    return False
+
+
 @app.function(image=image, timeout=24 * 60 * 60, retries=0,
               volumes={OUT: out_vol})
 def gate_driver(seed: int, arms=None):
@@ -422,13 +492,27 @@ def gate_driver(seed: int, arms=None):
     """
     t0 = time.time()
     fns = {"C1": train_c1, "C2": train_c2, "C4": train_c4, "C5": train_c5,
-           "C2_unsorted": train_c2_unsorted}
+           "C2_unsorted": train_c2_unsorted,
+           "C2_warmup": train_c2_warmup, "C5_warmup": train_c5_warmup}
     order = arms or ["C1", "C2", "C4", "C5", "C2_unsorted"]
     results, failures = [], []
     for name in order:
         out_vol.reload()
+        if _arm_complete(seed, name):
+            print(f"[driver] SKIP {name} - complete on the output Volume "
+                  f"(latest_net_G.pth AND 20_net_G.pth both present)", flush=True)
+            continue
         if os.path.isdir(f"{OUT}/seed{seed}/{name}"):
-            print(f"[driver] SKIP {name} - already present in the output Volume", flush=True)
+            # A directory without both checkpoints is a PARTIAL from a dead arm - _run_arm
+            # copies before the returncode check. Refuse to treat it as complete AND refuse
+            # to run into it: a re-run would mix two attempts' checkpoints in one directory.
+            # The operator moves it to {OUT}/_partial/ (never deletes) and re-runs.
+            failures.append({"arm": name,
+                             "error": "PARTIAL directory present (missing latest and/or "
+                                      "20_net_G.pth) - move it aside before re-running"})
+            print(f"[driver] PARTIAL {name} - directory exists without both checkpoints; "
+                  f"refusing to skip and refusing to overwrite. Move it to "
+                  f"{OUT}/_partial/seed{seed}/ and re-run.", flush=True)
             continue
         try:
             r = fns[name].remote(seed)
@@ -462,6 +546,59 @@ def gate_seed43():
     print(f"[launch] gate driver spawned on Modal, call id {call.object_id}")
     print("[launch] the laptop can be closed - sequencing runs inside Modal, not here.")
     print("[launch] progress: modal app logs, or check the gencp-out Volume.")
+
+
+@app.local_entrypoint()
+def seed_block_wave():
+    """AMENDMENT SEED-c wave: six confirmatory seed drivers plus the warm-up de-confound.
+
+    Arm order ["C5", "C4", "C2", "C1"] - longest and most load-bearing first, C2 before C1
+    because C2 is a leg of C5-C2, the contrast that carries the paper's title claim; a
+    ceiling stop costs C1 (which feeds only C1-C2) before it costs anything else. The
+    warm-up driver runs C5_warmup then C2_warmup at seed 43, checkout WARMUP_COMMIT, and
+    touches no replication directory (tags C2_warmup/C5_warmup cannot collide with
+    seed43/C2 or seed43/C5). Seven GPU containers peak, within the workspace's limit of 10.
+    """
+    calls = []
+    for seed in (45, 46, 47, 48, 49, 50):
+        c = gate_driver.spawn(seed, ["C5", "C4", "C2", "C1"])
+        calls.append((f"seed{seed}", c.object_id))
+    c = gate_driver.spawn(43, ["C5_warmup", "C2_warmup"])
+    calls.append(("warmup_s43", c.object_id))
+    for name, cid in calls:
+        print(f"[launch] {name}: {cid}", flush=True)
+    print("[launch] the laptop can be closed - sequencing runs inside Modal, not here.")
+
+
+@app.function(image=image, volumes={OUT: out_vol}, timeout=30 * 60)
+def verify_latest(seed: int):
+    """Per arm on the output Volume: latest_net_G.pth tensor-equal to 20_net_G.pth, plus the
+    sha256 of latest.
+
+    The local evaluation downloads latest_net_G.pth ONLY, so the equality check that
+    seed_eval_run.py::step_infer performs when both files are present is performed HERE,
+    where both files live. The printed sha256 is what the local run asserts its downloaded
+    file against - transfer integrity and identity in one line.
+    """
+    import hashlib
+    import torch
+    res = {}
+    base = f"{OUT}/seed{seed}"
+    for tag in sorted(os.listdir(base)):
+        # Inner directory = the ARM env value the training script ran under: the tag itself
+        # for warm-up arms (ARM=C2_warmup), the base arm for C2_unsorted (ARM=C2).
+        cands = [c for c in (tag, tag.split("_")[0]) if os.path.isdir(f"{base}/{tag}/{c}")]
+        assert cands, f"no checkpoint directory under {base}/{tag}"
+        d = f"{base}/{tag}/{cands[0]}"
+        a = torch.load(f"{d}/latest_net_G.pth", map_location="cpu")
+        b = torch.load(f"{d}/20_net_G.pth", map_location="cpu")
+        eq = set(a) == set(b) and all(torch.equal(a[k], b[k]) for k in a)
+        h = hashlib.sha256(open(f"{d}/latest_net_G.pth", "rb").read()).hexdigest()
+        res[tag] = {"tensor_equal_latest_20": bool(eq), "latest_sha256": h}
+        print(f"[verify] {tag}: latest==20 tensor-equal {eq}   latest sha256 {h}", flush=True)
+    assert all(r["tensor_equal_latest_20"] for r in res.values()), \
+        f"latest_net_G.pth is not epoch 20 for some arm: {res}"
+    return res
 
 
 @app.function(image=image, volumes={"/data": vol}, timeout=60 * 60)

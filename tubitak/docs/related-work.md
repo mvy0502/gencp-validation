@@ -86,12 +86,45 @@ matcher lives on the distortion axis, so for a matcher the perceptual end of the
 the wrong end. That reading is fully consistent with the theorem and is the safest place to
 stand. Claiming to contradict Blau and Michaeli would be both wrong and easy to attack.
 
-What the factorial adds that the theory does not have: PD treats plausibility as one axis
+~~What the factorial adds that the theory does not have: PD treats plausibility as one axis
 and says nothing about *substitutability between sources of plausibility pressure*. The
 interaction term (I = -0.212 +/- 0.069) is a measurement of exactly that, and it has no
 counterpart in the theory. Freirich, Michaeli, Meir (NeurIPS 2021, arXiv:2107.02555) is the
 closest formal statement that the axis is a single traversable lever, and is the right
-supporting citation for the "same lever" half of the claim.
+supporting citation for the "same lever" half of the claim.~~
+
+**SUPERSEDED 2026-08-26.** Struck, preserved verbatim above. The interaction reading failed
+at 5/6 across six confirmatory seeds and the pre-committed consequence withdrew the "same
+lever" half of the claim ([seed-block-results.md](seed-block-results.md) §4), so the
+factorial can no longer be positioned as supplying a measurement of substitutability.
+
+**DECISION on Freirich, Michaeli, Meir (NeurIPS 2021, arXiv:2107.02555): it comes OUT of the
+letter's citation strategy.** Not weakened — removed. The reason, stated so the decision can
+be checked rather than taken on trust:
+
+- **It was recruited for one purpose only.** The struck text names that purpose exactly: it
+  is "the closest formal statement that the axis is a single traversable lever, and is the
+  right supporting citation for the **'same lever' half** of the claim". That half is the
+  half that was withdrawn.
+- **It does not support the main claim in its place.** The perception-distortion tradeoff
+  itself is established by Blau and Michaeli, which is the cited authority for it in both
+  this document and the letter. What Freirich et al. add on top is the *traversability* of
+  the axis — the single-lever property — and that is precisely the withdrawn claim, not a
+  separate contribution we can fall back on.
+- **Removing it costs the letter nothing**, which is worth checking rather than assuming: it
+  never appeared in the letter's own related-work list
+  ([letter-skeleton.md](letter-skeleton.md) §3, I.5), so no drafted sentence depends on it.
+
+A citation with no claim left to support is not a weakened citation, it is a decoration, and
+this letter has a hard reference budget. **Do not cite it.**
+
+**What the factorial adds, restated on what six seeds establish:** PD theory treats
+plausibility as one axis and does not identify which downstream consumers sit on the wrong
+end of it. The factorial identifies one — a geometric matcher — and establishes each
+plausibility pressure separately, at n = 6 with the sign fixed in advance. That is a
+contribution about *who pays* for movement along the axis, not about how sources of pressure
+substitute for one another. It is the weaker of the two framings and it is the one the
+evidence carries.
 
 Adjacent, worth one clause each: Blau & Michaeli ICML 2019 (rate-distortion-perception,
 arXiv:1901.07821); Ohayon, Michaeli, Elad, "The Perception-Robustness Tradeoff in

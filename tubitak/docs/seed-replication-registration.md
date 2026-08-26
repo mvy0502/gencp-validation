@@ -629,6 +629,72 @@ the adversarial arms. That is the manipulated factor.
 >
 > Both branches are written here so neither is chosen after seeing the number.
 >
+> **Runner routing for the Modal evaluation, 2026-08-25, before any Modal arm is scored.**
+> The Modal checkpoints must not collide with the Kaggle `*_s43` directories or the
+> `C45_s43` outputs, and only `latest_net_G.pth` is downloaded per arm. `seed_eval_run.py`
+> therefore gains two ROUTING-ONLY parameters — `--variant` (suffixes the checkpoint and
+> output directories: `*_checkpoints_s43_modal`, `C45_s43_modal`) and `--arms` (subset, for
+> the C2_unsorted control which is a single arm) — and the latest==20 tensor-equality check
+> runs Modal-side (`gencp_modal.py::verify_latest`, where both files live) when
+> `20_net_G.pth` is absent locally, with the downloaded file's sha256 asserted against the
+> Modal-reported value. Per-step numeric logic is untouched, and the seed-42 reproduction
+> gate was wiped and re-run AFTER this change to verify that
+> ([gates/](gates/)`seed-eval-runner-gate42-at-*`; the gate path takes the defaults, so it
+> exercises the modified code).
+>
+> **EVALUATION CODE FREEZE, 2026-08-25, while the four-arm Modal evaluation runs and before
+> C2_unsorted is scored.** The five Modal arms must be scored by ONE version of the
+> evaluation code — the same requirement the f2dc962 training pin enforces on the training
+> side, imposed here before it can be violated rather than after. The code is frozen as it
+> stands at commit `48ced64`, sha256 pinned per file:
+>
+> | file | sha256 |
+> |---|---|
+> | `seed_eval/seed_eval_run.py` | `3df87c807cefce860b4c870a36ba5e7e9c3d09051a63395ffed945b8ad46f977` |
+> | `seed_eval/seed_analysis.py` | `d22053e1c3640f548c726cd4e871a3fc949f98a19d6a2c8fbd072c9bcee6e1f8` |
+> | `c45_eval/c45_b2_score.py` | `ec35efc7f095b397422ce23cd2bed04ebef145be7e3cbee9f532aa48cf599f6c` |
+> | `c45_eval/c45_e1.py` | `be6ecc8979c6d78df30358fb4d84d440fd47ebb424b94654c773bd89ff715174` |
+> | `c45_eval/c45_edge_ratio.py` | `93819668ed7c60c0d46f41547e3f097af9007e15aa59b0b8eee755a057f5f269` |
+> | `c45_eval/c45_infer.py` | `3b220f4e217a2df489125a536b75a8c271fb931d089a3e2c68a377f3c1516a86` |
+> | `c45_eval/c45_karios.py` | `d4826fa07188d6227eb38a9fa8130e6701fddb52d814bab2751e5159fa92f231` |
+> | `c45_eval/c45_score.py` | `02d3063d455334de3eb1c4dae65ed8b8b3bdfd8e911396be697ee5a5eab566ce` |
+> | `c45_eval/c45_sweep.py` | `38bc9d58da2edd189170a62a8e36853b98d53a446f09d0f153a80676e82279e2` |
+> | `c45_eval/c45_warp.py` | `3d965bcd610f060beb3b817ca2871f647cbc884b43d155ea73426946c4d37541` |
+>
+> No file above is edited until all five Modal arms are scored. **If a change becomes
+> necessary before then, it INVALIDATES the four-arm evaluation already produced: both
+> evaluations must be re-run from scratch on the changed code, after a fresh seed-42 gate.**
+> That is the price of breaking the freeze, stated here so it is paid knowingly, not
+> discovered afterwards.
+>
+> **POST-VERDICT NOTES, 2026-08-25, written after the gate returned NOT POOLED
+> ([hardware-gate-results.md](hardware-gate-results.md)). Nothing here alters the verdict.**
+>
+> **1. Specification flaw in the acceptance rule, noticed post-hoc, not repaired.** The rule
+> above issues one global verdict while scaling each quantity to its own spread, so the most
+> reproducibly-measured quantity governs the package: edge_C1's spread (0.0042) set a bar an
+> order of magnitude lower than the positional quantities', and one quantity vetoed ten. A
+> per-quantity verdict would have been the better specification. The flaw was noticed only
+> after seeing which quantity failed — when refining it would be indistinguishable from
+> adjusting a gate to pass — so the verdict stands under the rule as written, and the fix is
+> registered forward only: **future gates of this shape return a verdict per quantity, not
+> one for the package.**
+>
+> **2. Platform allocation under the no-pooling verdict, decided before either package is
+> designed.** The extra {C2, C5} seeds for the secondary reading (which needs n = 6; two
+> Kaggle seeds are held) **move back to Kaggle T4**: under NOT POOLED, Modal seeds cannot
+> contribute to that count, and Kaggle's quota is free — four seeds of the two short arms is
+> roughly 19 hours, inside one week. Slower, but **poolable, which is the property that
+> matters for that count**. The **warm-up de-confound stays on Modal**: that package is
+> self-contained — warm-up on versus off, all arms on Modal, compared only to each other —
+> so no pooling with Kaggle is required and the faster platform is free to be used there.
+> **Neither package runs until its own registration is written.**
+>
+> **3. A Modal seed-44 replication was considered and DECLINED.** It would exist only to
+> give the Modal block a seed spread of its own. Under the allocation above, the Modal
+> block never has to carry a spread — the only package that lives there is internally
+> self-contained. Recorded so it does not resurface as an open item.
+>
 > ### Data staging, enumeration order, and the throughput inversion
 >
 > **The measured problem.** Training directly off the Modal Volume stalled the dataloader at
@@ -689,6 +755,17 @@ the adversarial arms. That is the manipulated factor.
 > **Enumeration order is a THIRD unrecorded axis**, beside the image version and the seed-42
 > code path. From now on the ordered file-list hash is captured at preflight, per the
 > generalised prevention on corrections-log entry 29.
+>
+> **Code version for the unsorted arm, decided 2026-08-25 before its launch.** C2_unsorted
+> checks out the pinned `f2dc962` — the commit whose `train_c1_c2.py` (sha256 `839e1aad…`)
+> every completed seed-43 Modal arm ran — not the branch head, which by launch time carried a
+> later code-review pass (96503b7). One commit for every arm of the replication is simpler
+> and stricter than proving equivalence for each change; 96503b7 touches nothing in the
+> training path, and if a training-path fix ever becomes necessary it gets its own
+> equivalence run against a completed arm before adoption. corrections-log entry 29 (sixth
+> instance) records the near-miss that forced the pin: 96503b7 landed at 19:16 while C5 was
+> still training, and the pin (80206b4) was committed at 19:51 — after the exposure, not
+> before.
 >
 > ### The LPIPS backbone weights — a fifth unrecorded axis
 >
@@ -822,6 +899,74 @@ the adversarial arms. That is the manipulated factor.
 comparison being replicated, identical in kind and size to seed 42's): the adversarial arms
 carry the warm-up and a 14.7% summed-LR disadvantage; each stage's final epoch runs at lr 0
 (upstream off-by-one, symmetric); the cold D exists only where a D exists.
+
+> **AMENDMENT SEED-c, 2026-08-25 — Kaggle stage 2 is CANCELLED; the confirmatory
+> replication becomes a six-seed Modal block. Dated; every earlier stage-2 paragraph above
+> is preserved verbatim, as with SEED-a and SEED-b. Written and committed BEFORE any
+> seed-45–50 run is launched.**
+>
+> **Why now, and in what order the decision happened.** First the hardware gate returned
+> NOT POOLED ([hardware-gate-results.md](hardware-gate-results.md)): Modal and Kaggle runs
+> can never be combined into one count. Then the cost constraint that made Kaggle
+> attractive was lifted — this project now pays for Modal. In that order. With pooling
+> impossible and cost no longer the binding constraint, a confirmatory count assembled
+> across two platforms is strictly worse than one homogeneous block on the faster platform.
+> This supersedes POST-VERDICT NOTES 2 and 3 above, which were written earlier the same
+> evening while the cost constraint still held: the {C2, C5} extra seeds do NOT return to
+> Kaggle, and the "Modal block never has to carry a spread" reasoning that declined a Modal
+> replication no longer applies — the Modal block below carries its own spread at n = 6.
+> Those notes are preserved above, as the rule requires.
+>
+> **(a) The Kaggle confirmatory block closes at n = 2** (seeds 43, 44), df = 1,
+> t* = 12.71. Every Kaggle-block interval is reported with that df stated in the same
+> sentence as the interval, wherever it appears.
+>
+> **(b) The Modal confirmatory block is seeds 45, 46, 47, 48, 49, 50**, all four cells
+> (C1, C2, C4, C5): n = 6, df = 5, t*(0.975, 5) = 2.571. Training at the pinned commit
+> `f2dc962` per the entry-29 prevention (the branch does not move while this package
+> executes; every container checks out the explicit pin). Evaluation per seed through the
+> frozen local pipeline (`seed_eval_run.py`, freeze table above) on the registered
+> evaluation machine, latest-only downloads verified by `verify_latest` as for the gate.
+>
+> **(c) Modal seed 43 is EXCLUDED from the Modal confirmatory n**, in plain terms: its
+> C5−C4, C1−C2, C4−C5, C5−C2, I_raw and per-arm edge means are already published in
+> [hardware-gate-results.md](hardware-gate-results.md), so it is a SEEN observation for
+> exactly the contrasts this block tests. It is the gate seed. It is reported beside the
+> block, and its position within the range spanned by the six confirmatory seeds is checked
+> and reported for every primary quantity — the same comparability rule seed 42 already
+> carries.
+>
+> **(d) Registered readings for the Modal block** — the stage-2 readings carried over and
+> restated at n = 6. All are sign-replication readings, distribution-free:
+>
+> - **PRIMARY: C5 − C4 negative in all six seeds.** Under the null, with the sign fixed in
+>   advance by seed 42, P = 1/64.
+> - **SECONDARY: C5 − C2 positive in all six seeds.** Same P = 1/64.
+> - C1 − C2 positive in all six; C4 − C5 positive in all six; I_raw negative in all six;
+>   C2's edge mean below 0.5 and C5's edge mean the highest of the four arms in all six.
+> - **Intervals are REPORTED, NOT REQUIRED.** The seed-level t-intervals (df = 5,
+>   t* = 2.571) are computed and printed for every contrast because the correction this
+>   package exists to make demands seed-level uncertainty on the record — but no interval
+>   is a gate. An interval that includes zero is not a failed reading; the registered
+>   readings are the sign replications above and only those.
+>
+> **(e) The pre-committed consequence, reproduced verbatim from "Registered consequences"
+> above:** *"If C5 − C2 is not positive in every seed: the LPIPS-alone penalty moves from a
+> result to a discussion-section hypothesis and the claim narrows from 'plausibility
+> pressure' to 'the adversarial term'."* Restated at this block's n: if C5 − C2 is not
+> positive in all six Modal seeds, that consequence executes — the paper's claim narrows
+> from "plausibility pressure" to "the adversarial term", **and the title changes with
+> it.**
+>
+> **(f) The Kaggle block's role is now CONSISTENCY, not inference.** Both blocks are
+> reported, each with its own n, df and multiplier. **No pooled statistic appears anywhere
+> in the manuscript.**
+>
+> **(g) Seed-number provenance.** Seed numbers 45 and 46 were registered above for Kaggle
+> stage 2 and are now used on Modal. No Kaggle seed-45 or seed-46 run ever existed — a
+> reader finding 45/46 in the Modal block should not infer a Kaggle counterpart. The
+> platform move was decided after the gate verdict and after the cost constraint was
+> lifted, in that order, as recorded at the head of this amendment.
 
 ## Runs and artifacts
 
