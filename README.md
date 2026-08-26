@@ -202,9 +202,10 @@ kolu (C2) "ortalamaya kaçıp" yumuşuyor:
 yayınlanan model, C1, C2. Sol kenardaki yeşil sayılar her kolun konum hatası (px) ve
 eşleşen nokta sayısı.*
 
-Şu anda bu sonuçların **tohum (seed) düzeyinde replikasyonu** Modal bulut GPU'sunda
-(A10G) koşuyor — tek eğitimden çıkan farkın şansa değil kayıp fonksiyonuna ait
-olduğunu göstermek için. → [seed-replication-registration.md](tubitak/docs/seed-replication-registration.md)
+Bu sonuçların **tohum (seed) düzeyinde replikasyonu** Modal bulut GPU'sunda (A10G)
+yürütülüyor — tek eğitimden çıkan farkın şansa değil kayıp fonksiyonuna ait olduğunu
+göstermek için. İlk replikasyon seed'inin (43) dört kolu tamamlandı; değerlendirme
+sırada. → [seed-replication-registration.md](tubitak/docs/seed-replication-registration.md)
 
 ## Somut çıktı: ODTÜ referans paketi
 
@@ -223,23 +224,33 @@ yeşil sayılar).*
 
 ## Güncel durum (25 Ağustos 2026)
 
-* **Tamam** — Geometri bulgusu doğrulandı; düzeltme (Option A) teslimat aracına gömüldü:
+**Tamamlanan**
+
+* Geometri bulgusu doğrulandı; düzeltme (Option A) teslimat aracına gömüldü:
   [`tubitak/tool/gencp_ref.py`](tubitak/tool/gencp_ref.py) — deterministik referans
   üreteci (aynı girdi → bayt-özdeş çıktı), provenance bilgisi çıktıya işleniyor
-* **Tamam** — Faz C faktöriyeli eğitildi ve skorlandı (yukarıda)
-* **Tamam** — T1: gerçek görüntü, erişilebildiği her yerde sentetik referansı belirgin biçimde
+* Faz C faktöriyeli eğitildi ve skorlandı (yukarıda)
+* T1: gerçek görüntü, erişilebildiği her yerde sentetik referansı belirgin biçimde
   geçiyor; T3: chip bazlı güvenilirlik katmanı öneri olarak paketlendi
-* **Tamam** — E1–E3 konumlandırma ölçümleri: "sentetik referans gerekli çünkü gerçek görüntüye
+* E1–E3 konumlandırma ölçümleri: "sentetik referans gerekli çünkü gerçek görüntüye
   erişim yok/zor" gerekçesinin üç öncülü de yazıldığı haliyle ölçümde düşüyor
   ([positioning-results.md](tubitak/docs/positioning-results.md)). **Kapsam notu:**
   hedef ortam uyduda **offline** kullanım — gerçek referansa erişimin olmadığı bu
   senaryoda gerekçe ayakta kalır; sonuçlar bu bağlamla birlikte okunmalı
-* **Tamam** — Türkiye rasterizer'ı CLC+ Backbone taban katmanıyla kabul kapısını geçti (yukarıda)
-* **Sürüyor** — Seed replikasyonu Modal A10G'de koşuyor (SEED-b, yukarıda)
-* **Planlı** — Yayın: IEEE GRSL letter, kayıp fonksiyonu sonucuna odaklı
+* Türkiye rasterizer'ı CLC+ Backbone taban katmanıyla kabul kapısını geçti (yukarıda)
+
+**Sürüyor**
+
+* Seed replikasyonu (SEED-b, Modal A10G): seed-43'ün dört kolu tamamlandı; sıra
+  kontrolü ve değerlendirme onay bekliyor
+
+**Planlı**
+
+* Yayın: IEEE GRSL letter, kayıp fonksiyonu sonucuna odaklı
   ([paper-roadmap.md](tubitak/docs/paper-roadmap.md))
-* Türkçe raporlar: [`tubitak/rapor2/`](tubitak/rapor2/) (ilerleme),
-  [`tubitak/rapor3/`](tubitak/rapor3/) (sonuç; PDF'ler `rapor3/build_pdf.py` ile üretilir)
+
+Türkçe raporlar: [`tubitak/rapor2/`](tubitak/rapor2/) (ilerleme),
+[`tubitak/rapor3/`](tubitak/rapor3/) (sonuç; PDF'ler `rapor3/build_pdf.py` ile üretilir).
 
 ## Kullanılan veri
 
