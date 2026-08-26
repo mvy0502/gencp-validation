@@ -78,3 +78,10 @@ tubitak/data/paper/
 tubitak/docs/*.pdf
 tubitak/docs/teke-proposal.md
 RESUME.md
+
+# ---- Evidence is the study record, and type rules must not swallow it ----
+# The *.tif rule above silently refused 260 committed evidence rasters while
+# MANIFEST.md went on asserting their sha256 and byte size (corrections entry 35).
+# This negation fixes the class, not the incident: anything under the evidence
+# directory is tracked regardless of its extension. Placed last so it wins.
+!tubitak/docs/evidence/**
