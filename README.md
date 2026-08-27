@@ -56,7 +56,7 @@ hatırlar, her açılışta yeniden seçmeniz gerekmez.
 ayar girdileri ODbL lisanslı OpenStreetMap verisinden üretildi. ODbL'nin share-alike
 yükümlülüğünün bu tür ağırlıklara uzanıp uzanmadığı hukuken belirsizdir. Bu soruyu
 yayımlayarak yanıtlamak yerine dosya kurum içi doğrudan aktarımla veriliyor. Ayrıntı:
-[`tubitak/docs/evidence/BACKUP.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/evidence/BACKUP.md).
+[`tubitak/docs/evidence/BACKUP.md`](tubitak/docs/evidence/BACKUP.md).
 
 Ayrıca **CLC+ Backbone 2021 rasterı** (Copernicus'tan indirilir) ve çalışacağınız alanı
 kapsayan bir **`.osm.pbf`** dosyası gerekir; alternatif olarak eklenti Overpass'tan
@@ -74,7 +74,7 @@ her piksel için "burası girdi bilgisine mi dayanıyor, yoksa uydurma mı" soru
 
 Kırmızı = kullanmayın, turuncu = dikkatli kullanın, yeşil = kullanılabilir. Bantlar 150
 ayrık Avrupa ve 130 Ankara karosunda ölçüldü; ölçümün gücü ve sınırları
-[`confidence-results.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-results.md) dosyasında, olumsuz bulgular
+[`confidence-results.md`](tubitak/docs/confidence-results.md) dosyasında, olumsuz bulgular
 dahil, açıkça yazılıdır.
 
 ### Devamı
@@ -82,9 +82,9 @@ dahil, açıkça yazılıdır.
 | | |
 |---|---|
 | **Adım adım kullanım** (Türkçe, yalnızca tıklamalar) | [`docs/plugin/QUICKSTART.md`](docs/plugin/QUICKSTART.md) |
-| Eklentinin mimarisi, kapılar, bilinen sınırlar | [`tubitak/qgis_plugin/README.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/qgis_plugin/README.md) |
-| Güven katmanının ölçümü ve ön kayıtları | [`confidence-registration.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-registration.md) · [`confidence-results.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-results.md) |
-| Eklentiyi gerçek QGIS'te kurup çalıştırınca ne bulundu | [`plugin-field-test.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/plugin-field-test.md) |
+| Eklentinin mimarisi, kapılar, bilinen sınırlar | [`tubitak/qgis_plugin/README.md`](tubitak/qgis_plugin/README.md) |
+| Güven katmanının ölçümü ve ön kayıtları | [`confidence-registration.md`](tubitak/docs/confidence-registration.md) · [`confidence-results.md`](tubitak/docs/confidence-results.md) |
+| Eklentiyi gerçek QGIS'te kurup çalıştırınca ne bulundu | [`plugin-field-test.md`](tubitak/docs/plugin-field-test.md) |
 
 Doğrulandığı sürüm: **QGIS 4.2.1 (Qt 6), macOS**. QGIS 3.28 için kod uyumlu yazıldı ama
 denenmedi; Windows denenmedi.
@@ -117,8 +117,8 @@ Modelin yaptığı iş tek satırda — soldaki haritadan sağdaki görüntü ü
 Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler,
 kanıt artefaktları ve düzeltme kaydı. Fork ve QGIS eklenti iş paketi
 [mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında
-devam eder. Makale çalışması
-[mvy0502/gencp-letter](https://github.com/mvy0502/gencp-letter) deposundadır.
+devam eder. Makale çalışması `mvy0502/gencp-letter` deposundadır — **bu depo özeldir**, bağlantı
+verilmemiştir çünkü herkese açık bir ziyaretçi için 404 döner.
 
 - **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı
   siler; o dal buraya merge edilirse silme buraya yayılır ve **araştırma kaydını yok

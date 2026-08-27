@@ -2,26 +2,6 @@
 
 Rules of general force, collected where future work will see them. Each carries its origin.
 
-## Registrations are frozen. Standing practices are living.
-
-*Written 2026-08-26, because it was unwritten and a session hesitated in exactly this
-place.*
-
-A **registration** binds a specific analysis and **must not move once numbers exist**. A
-**standing practice** is a working rule and **improves as the project learns**.
-
-A practice's **FORWARD-ONLY** marker governs whether past *registrations* get repaired
-under it. It **never** governs whether the practice's own text may be improved.
-
-Improving a practice is recorded as a **dated broadening with the original preserved
-verbatim**. It is never a silent edit, and it never reopens a disposal already made.
-
-The test that keeps the two apart: **a rule can only have been adjusted to pass if it
-changes a verdict.** A broadening that changes no verdict is a broadening. One that
-changes a verdict is a re-registration, and re-registration after seeing which way a
-rule cuts is exactly what practice 4 forbids.
-
-
 1. **Invariance section in every gate registration** (2026-08-21). Three ill-posed gate
    elements failed the same way — an unstated invariance assumption (same OSM source: false;
    same render path: false; deterministic inference: false). Every gate registration now
@@ -109,129 +89,33 @@ rule cuts is exactly what practice 4 forbids.
     permanently unverifiable) is the earlier instance of the same class that this practice
     exists to stop recurring for a third time.
 
-    **Amended 2026-08-26, after the practice failed on its second day.** The required
-    final step: **after an evidence commit, verify from a fresh clone that the files are
-    actually there.** Not `git status`, which is silent about ignored paths, and not
-    `git log`, which reports what was committed rather than what was intended: clone the
-    pushed remote into a scratch directory and re-run the manifest check against that
-    tree. **A file is evidence when a stranger can obtain it, not when the committing
-    session believes it was added.** If that check cannot be run, the artifacts are not
-    committed yet and the manifest rows must not be written.
+11. **A registration that names a set, a threshold or a condition QUOTES the implementing
+    code's expression of it** (2026-08-26). **FORWARD-ONLY.** When a registration fixes a
+    reading in prose, the line of code that implements it is quoted in the registration
+    itself, so prose and implementation sit in one place and can be checked against each
+    other by reading rather than by remembering to compare two files. Origin: **three findings
+    that looked like unrelated slips and share one cause — a registration written in prose,
+    implemented in code, and the two drifting.**
 
-    Why the clause was needed, stated so it is not read as carelessness: **`git add`
-    exits zero when it adds nothing.** `4e4fb05` was told to commit 260 evidence
-    rasters; `.gitignore`'s `*.tif` rule refused every one of them silently; the commit
-    then succeeded on the two files that remained, and `MANIFEST.md` went on asserting
-    the sha256 and byte size of all 260. **Every local signal reported success.** The
-    only signal that would have contradicted it was one nobody was asked to look for —
-    which is why this amendment specifies an *observation of the resulting state* rather
-    than one more action. The practice as first written said "commit the artifacts"; it
-    did not say "check that the commit succeeded", and that gap is the whole failure.
-    Type rules are fixed at the class level too: `.gitignore` now ends with
-    `!tubitak/docs/evidence/**`, so no future extension rule can swallow an evidence
-    artifact. Instance: **corrections entry 35**.
+    - **The warm-up de-confound's branch text** said "as C1 and C4 did", presuming both
+      adversarial arms rise at the first main-stage transition. True at seed 42, false at
+      seed 43, where C4 falls. The branch fired on its antecedent so nothing changed, but the
+      clause had no determinate referent
+      ([warmup-deconfound-results.md](warmup-deconfound-results.md) §5).
+    - **The hardware gate's acceptance rule** was written as a single global verdict while
+      scaling each quantity to its own spread, so the most reproducibly-measured quantity
+      governed the package and one quantity vetoed ten
+      ([hardware-gate-results.md](hardware-gate-results.md)).
+    - **AMENDMENT SEED-c (d)** reads "C5's edge mean the highest of **the four arms**", while
+      `seed_analysis.py:212` implements the tie rule as `("pre", "C1", "C2", "C4")` —
+      **five arms, including pretrained** ([phase-d-closeout.md](phase-d-closeout.md) §C).
+      The harness was stricter than the registration, which is the safe direction, and the
+      reading held either way.
 
-11. **A rule states the class it governs, not the instance that prompted it**
-    (2026-08-26; **BROADENED 2026-08-26** — original text preserved verbatim below).
-    **FORWARD-ONLY.**
-
-    A rule states the class it governs, not the instance that prompted it. When an
-    exception, a budget or a threshold is written against the case in hand, write the
-    membership test instead, and write it down — **an intended class that is not stated
-    is not checkable**. Where the class lives in code, quoting the implementing code
-    inside the registration is how this is done.
-
-    ### Original text, preserved verbatim (2026-08-26, before the broadening)
-
-    > 11. **A registration that names a set, a threshold or a condition QUOTES the implementing
-    > code's expression of it** (2026-08-26). **FORWARD-ONLY.** When a registration fixes a
-    > reading in prose, the line of code that implements it is quoted in the registration
-    > itself, so prose and implementation sit in one place and can be checked against each
-    > other by reading rather than by remembering to compare two files. Origin: **three findings
-    > that looked like unrelated slips and share one cause — a registration written in prose,
-    > implemented in code, and the two drifting.**
-    >
-    > - **The warm-up de-confound's branch text** said "as C1 and C4 did", presuming both
-    >   adversarial arms rise at the first main-stage transition. True at seed 42, false at
-    >   seed 43, where C4 falls. The branch fired on its antecedent so nothing changed, but the
-    >   clause had no determinate referent
-    >   ([warmup-deconfound-results.md](warmup-deconfound-results.md) §5).
-    > - **The hardware gate's acceptance rule** was written as a single global verdict while
-    >   scaling each quantity to its own spread, so the most reproducibly-measured quantity
-    >   governed the package and one quantity vetoed ten
-    >   ([hardware-gate-results.md](hardware-gate-results.md)).
-    > - **AMENDMENT SEED-c (d)** reads "C5's edge mean the highest of **the four arms**", while
-    >   `seed_analysis.py:212` implements the tie rule as `("pre", "C1", "C2", "C4")` —
-    >   **five arms, including pretrained** ([phase-d-closeout.md](phase-d-closeout.md) §C).
-    >   The harness was stricter than the registration, which is the safe direction, and the
-    >   reading held either way.
-    >
-    > **Not applied retroactively.** The existing registrations stand exactly as written, with
-    > their mismatches disclosed where they were found and not repaired — the same disposal the
-    > hardware gate's own flaw received, and for the same reason: a rule rewritten after seeing
-    > which way it cuts is indistinguishable from a rule adjusted to pass. **When
-    > corrections-log entries 30–34 are applied, these three are grouped under one heading in
-    > the tiering**, so a reader sees one class with three instances rather than three
-    > unrelated slips.
-
-    ### Why it was broadened
-
-    The original's mechanism — quote the implementing code — requires a registration,
-    implementing code, and two artifacts that can drift. Two further instances arrived
-    the same day with none of those three: a boundary exception written in a README and
-    a word budget written in a drafting skeleton. Each is a single artifact with no code
-    to quote, so the practice as first written had no purchase on either, **while both
-    failed in precisely the way its three founding cases had failed**. Quoting the code
-    is not the principle; it is how the principle is applied in the one setting where
-    the class happens to be written in code.
-
-    ### The broadening changes no past disposal
-
-    Stated explicitly, because it is what removes any suspicion that the rule was
-    adjusted to pass. **All five instances below stay disclosed and not repaired**, and
-    every one would have been disposed of identically had this practice been written
-    broadly from the start. The broadening changes **no verdict**: not a gate, not a
-    reading, not a number, not a retraction condition. A rule can only have been
-    adjusted to pass if it changes a verdict; this changes none. The non-retroactivity
-    of the original stands unaltered — a rule rewritten after seeing which way it cuts
-    is indistinguishable from a rule adjusted to pass, which is why the five are
-    disclosed where they were found rather than repaired.
-
-    ### Instances — one class, five cases
-
-    1. **"as C1 and C4 did"** — the warm-up de-confound's branch text presumed both
-       adversarial arms rise at the first main-stage transition. True at seed 42, false
-       at seed 43, where C4 falls. The branch fired on its antecedent so nothing
-       changed, but the clause had no determinate referent
-       ([warmup-deconfound-results.md](warmup-deconfound-results.md) §5).
-    2. **"the four arms"** — AMENDMENT SEED-c (d) reads "C5's edge mean the highest of
-       the four arms", while `seed_analysis.py:212` implements the tie rule as
-       `("pre", "C1", "C2", "C4")` — five arms, including pretrained
-       ([phase-d-closeout.md](phase-d-closeout.md) §C). The harness was stricter than
-       the registration, the safe direction, and the reading held either way.
-    3. **The hardware gate's acceptance rule** — written as a single global verdict
-       while scaling each quantity to its own spread, so the most
-       reproducibly-measured quantity governed the package and one quantity vetoed ten
-       ([hardware-gate-results.md](hardware-gate-results.md)).
-    4. **The interaction disclosure's 120-word budget** — set by what the deleted
-       paragraph happened to vacate rather than by what the disclosure requires. The
-       budget described the hole left behind, not the class of text that had to fill it.
-    5. **The split boundary's exception** — written as one file,
-       `plugin-gate-registrations.md`, rather than as the class it meant: the plugin
-       work package's registrations **and results**. The deletion commit `b815b46`
-       consequently removed `plugin-results.md` while a parallel session was writing
-       it; in-flight work was destroyed and recovered by rewriting (`21054d7`). Nothing
-       published was affected and no registered claim moved, so it is recorded as
-       repository hygiene in the handover guides rather than in the corrections log.
-
-    **Cases 4 and 5 were both specified by the supervising session, within one day of
-    each other.** That is recorded because it locates the class correctly: this is not
-    a failure of care by whoever drafted a given line, and it is not confined to
-    registrations or to any one author. It is a failure mode of rule-writing itself —
-    the instance in front of you is the cheapest thing to describe, and it is almost
-    never what you mean.
-
-    **When corrections-log entries 30–34 are applied, the first three are grouped under
-    one heading in the tiering**, so a reader sees one class with instances rather than
-    unrelated slips. Cases 4 and 5 are not corrections-log material: neither moved a
-    published number.
+    **Not applied retroactively.** The existing registrations stand exactly as written, with
+    their mismatches disclosed where they were found and not repaired — the same disposal the
+    hardware gate's own flaw received, and for the same reason: a rule rewritten after seeing
+    which way it cuts is indistinguishable from a rule adjusted to pass. **When
+    corrections-log entries 30–34 are applied, these three are grouped under one heading in
+    the tiering**, so a reader sees one class with three instances rather than three
+    unrelated slips.

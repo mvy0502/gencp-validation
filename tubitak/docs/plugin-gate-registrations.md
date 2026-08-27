@@ -54,6 +54,26 @@ can reproduce it.
 - **Environment:** one process, `gencp` conda env, so library versions cannot differ
   between the two sides.
 
+**Amendment 1 (2026-08-26, after a failed first run — disclosed, not silently fixed).**
+This registration originally named the stored originals as
+`tubitak/data/rasteriser/chips/<stem>.tif`, a path inherited verbatim from
+[tool-gate-registration-2.md](tool-gate-registration-2.md). **That path is wrong and the
+error is in the earlier registration's text as well.** `rasteriser/chips/` holds the
+**WorldCover-era** corpus (mtime 18 Aug 19:43), rendered *before* the CLC+ base layer was
+added in commit `e15f5a9` (19 Aug 11:48). The CLC+ renders — the ones the census scored and
+the ones this gate must compare against — are in **`tubitak/data/rasteriser/chips_clc/`**
+(55 files, mtime 19 Aug 11:46, matching the census's 55 rows exactly).
+
+The first run of this gate was therefore comparing a CLC+ render against a WorldCover
+render and failed 0/3 with a dominant `light_green -> forest_green` flow — the signature of
+a different base product, not of a broken lift. It is recorded here because the run
+happened. **This is a correction to which artifact the gate reads, not a change to the
+criterion, the tile selection rule, or the tolerance** — all three are unchanged, and the
+byte-identity bar was never relaxed. The correction is independently verifiable: the
+supporting measurement showed the *existing* script failed identically, and the
+core-vs-script comparison was byte-identical in both runs, so the lift was exonerated
+before the reference path was corrected.
+
 **Criterion:** for each of the three tiles, the GeoTIFF written by
 `gencp_core.rasterize.make_chip` must be **byte-identical** to the stored original
 `tubitak/data/rasteriser/chips/<stem>.tif` — compared as **raster payload** (all three
@@ -97,6 +117,20 @@ and mean abs diff, in 8-bit units, over all 20 tiles.
 **Registered prediction:** pass. fp32 ONNX export of a plain convolutional U-Net is
 normally bit-close; the expected max difference is well below 1 DN, arising only from
 float32 op-ordering differences between ATen and onnxruntime kernels.
+
+**Amendment 2 (2026-08-26) — units pinned, after the outcome was seen. Disclosed.**
+The criterion above says "max abs diff <= 1/255 **in 8-bit units**", and that text is
+ambiguous: `1/255` is a normalised-unit value, so "1/255 in 8-bit units" can be read as
+**one grey level** (1.0 DN, i.e. 1/255 of full scale) or as **one 255th of a grey level**
+(0.003922 DN). The two readings disagree about fp16 and agree about fp32.
+
+This amendment does **not** choose the reading that would change a verdict. Under
+standing practice 6 the stricter reading — the literal one, `<= 0.003922 DN` — remains the
+bound, and fp16 remains **failed**. Both readings are now reported side by side, together
+with a unit-free measurement (how many pixels of the final uint8 image actually differ)
+so the decision does not rest on a textual reading at all. The generator ends in `Tanh`,
+so the output tensor is in **[-1, 1]** and `DN = |delta| * 127.5`; `1 DN = 2/255 tensor
+units = 1/255 of full scale`.
 
 **On failure or export failure:** report and **stop**. Do not fall back to a PyTorch
 dependency inside QGIS — that changes the deployment story and is the institution's

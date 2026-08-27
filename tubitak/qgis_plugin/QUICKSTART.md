@@ -1,10 +1,8 @@
 # GenCP Sentetik Referans eklentisi - hızlı başlangıç
 
 QGIS kullanmış, ancak bu eklentiyi hiç görmemiş biri için. Yalnızca tıklamalar.
-Mimari ve gerekçe için [eklenti README'si](../../tubitak/qgis_plugin/README.md);
-ölçüm kayıtları için [confidence-results.md](../../tubitak/docs/confidence-results.md),
-[confidence-transfer-results.md](../../tubitak/docs/confidence-transfer-results.md) ve
-[plugin-field-test.md](../../tubitak/docs/plugin-field-test.md).
+Mimari ve gerekçe için `README.md`, ölçüm kayıtları için
+`tubitak/docs/confidence-results.md` ve `tubitak/docs/plugin-field-test.md`.
 
 Doğrulandığı sürüm: **QGIS 4.2.1 (macOS)**. QGIS 3.28 için kod uyumlu yazıldı ama
 denenmedi. Arayüz Türkçedir.
@@ -25,7 +23,7 @@ Model dosyası neden bağlantıyla verilmiyor: ağırlıklar GenCP'nin CC-BY 4.0
 ağırlıklarından türedi, ancak ince ayar girdileri ODbL lisanslı OpenStreetMap verisinden
 üretildi. ODbL'nin share-alike yükümlülüğünün bu ağırlıklara uzanıp uzanmadığı belirsiz
 olduğu için dosyalar kurum içi doğrudan aktarımla veriliyor.
-Ayrıntı: [BACKUP.md](../../tubitak/docs/evidence/BACKUP.md).
+Ayrıntı: `tubitak/docs/evidence/BACKUP.md`.
 
 Ayrıca elinizde bulunması gerekenler:
 
