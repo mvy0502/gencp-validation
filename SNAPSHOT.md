@@ -5,7 +5,7 @@ This repository is a **handover copy**, not a workspace. See `CLAUDE.md`.
 | | |
 |---|---|
 | **Source repository** | `mvy0502/GenCP`, branch `tubitak-tr` |
-| **Reflects commit** | `937f0c7196ac17b348391f0b6a50245c18a101d1` — *measure: the European bands transfer to Ankara ordinally, not absolutely* |
+| **Reflects commit** | `84ee2294bea2617456ab317adfe0afc91106fbec` — *feat: demo project that runs without a keyboard, plus a harness lifetime fix* |
 | **Snapshot taken** | 2026-08-27 |
 | **Last verified** | 2026-08-27 |
 
