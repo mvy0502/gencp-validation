@@ -5,7 +5,7 @@ This repository is a **handover copy**, not a workspace. See `CLAUDE.md`.
 | | |
 |---|---|
 | **Source repository** | `mvy0502/GenCP`, branch `tubitak-tr` |
-| **Reflects commit** | `1f28d5d` — *feat: tile overlap becomes a free numeric input, with both limits enforced* |
+| **Reflects commit** | `a9ec10a` — *.qml sidecar, verifier argument guard, Gate G overlap sweep* |
 | **Snapshot taken** | 2026-08-27 |
 | **Last verified** | 2026-08-27 |
 

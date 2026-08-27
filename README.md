@@ -55,7 +55,8 @@ düğmesine basarsınız.
 Çıktının yanında modelin gördüğü rasterleştirilmiş girdi de katman olarak eklenir.
 
 Her pikselin ne ölçüde girdiye dayandığı, çıktının **alfa kanalına** ölçülmüş bir değer
-olarak yazılır. Göz için üç renkli ayrı bir katman da üretilebilir:
+olarak yazılır. 4. bant güvendir; onu saydamlık sayan yazılım görüntüyü altındaki katmanla
+harmanlar. Göz için üç renkli ayrı bir katman da üretilebilir:
 
 <img src="docs/plugin/confidence_layer.png" width="300" alt="Güven katmanı">
 
