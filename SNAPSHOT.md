@@ -5,7 +5,7 @@ This repository is a **handover copy**, not a workspace. See `CLAUDE.md`.
 | | |
 |---|---|
 | **Source repository** | `mvy0502/GenCP`, branch `tubitak-tr` |
-| **Reflects commit** | `0701e39d08971ec020d2d11a1e7e414a5bdf04f5` — *feat: simplify the dialog, confidence into alpha, publish the weights, Turkish rewrite* |
+| **Reflects commit** | `4c1b666` — *fix: the link check passed on files no visitor can see* |
 | **Snapshot taken** | 2026-08-27 |
 | **Last verified** | 2026-08-27 |
 
@@ -21,6 +21,12 @@ results, the field-test record, and the evidence transcripts. Before this refres
 handover repository's README linked to documents that did not exist here, and every one of
 them bounced a visitor to `mvy0502/GenCP` — which defeats the point of a handover copy.
 Those links now point at the local copies.
+
+**Re-synced 2026-08-27, after the alpha-rendering fix.** The confidence alpha band was
+making QGIS draw the plugin's output semi-transparently over whatever layer sat beneath it,
+so a visual comparison of generated against real was silently comparing a blend of the two.
+The file bytes were always correct and Gate ALPHA was unaffected; the fix is display-only.
+This snapshot carries it, along with the regression check that would catch it returning.
 
 **A snapshot still lags by construction.** Anything committed to `GenCP` `tubitak-tr` after
 the commit named above is not here, and `mvy0502/GenCP`, branch `tubitak-tr`, remains the
