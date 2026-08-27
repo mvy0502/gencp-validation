@@ -1,16 +1,108 @@
 # GenCP Doğrulama Çalışması
 
-Bu repo, harita verisinden **sahte ama gerçekçi uydu görüntüsü** üreten bir yapay zekâ
-sistemini ölçen, doğrulayan ve iyileştiren bir çalışmanın kaydıdır.
+Bu depo iki şey içerir. Birincisi, harita verisinden **sahte ama gerçekçi uydu görüntüsü**
+üreten ESA/Telespazio **GenCP** sisteminin ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP))
+bağımsız bir ölçüm ve doğrulama çalışmasıdır — TÜBİTAK UZAY stajı kapsamında, Ağustos
+2026. İkincisi, o çalışmadan çıkan **QGIS eklentisidir**: seçtiğiniz bir alan için
+OpenStreetMap ve arazi örtüsü verisinden georeferanslı sentetik referans görüntü üretir,
+terminale hiç dokunmadan.
 
-Kısaca hikâye: ESA'nın **GenCP** projesi ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP)),
-OpenStreetMap (OSM) haritalarını **pix2pix** adlı bir üretici ağa (koşullu GAN) verip
-sentetik Sentinel-2 (S2) görüntüsü üretiyor. Amaç, bu sentetik görüntüleri **GCP** (yer
-kontrol noktası — uydu görüntülerinin geometrik doğruluğunu ölçmekte kullanılan,
-koordinatı hassas bilinen referans noktalar) için telifsiz referans chip'leri olarak
-kullanmak. Biz de TÜBİTAK UZAY stajı kapsamında (Ağustos 2026) bu yayınlanmış sistemi
-teslim aldık, "gerçekten işe yarıyor mu, nerede aksıyor?" sorusunu ölçerek yanıtladık
-ve Türkiye'ye genelleme hattını kurduk.
+---
+
+## Kurulum — QGIS eklentisi
+
+**1. Eklentiyi indirin**
+
+> ### [gencp_plugin.zip indir](https://github.com/mvy0502/gencp-validation/releases/latest/download/gencp_plugin.zip)
+>
+> (~73 KB · [sürüm sayfası ve notlar](https://github.com/mvy0502/gencp-validation/releases/latest))
+
+**2. QGIS'e kurun — üç tık**
+
+QGIS → **Eklentiler** → *Eklentileri Yönet ve Kur…* → **ZIP'ten Kur** → indirdiğiniz
+dosyayı seçin → **Eklentiyi Kur**.
+
+> **Önce şunu yapın:** aynı pencerede **Ayarlar** sekmesine geçip **Deneysel eklentileri de
+> göster** kutusunu işaretleyin. Eklenti deneysel olarak işaretli olduğu için bu kutu
+> işaretli değilse kurulur ama listede görünmez.
+
+Kurulduktan sonra **Raster ▸ GenCP ▸ GenCP Synthetic Reference…** menüsünde ve araç
+çubuğunda çıkar.
+
+**3. `onnxruntime` eksikse**
+
+Eklenti modeli çalıştıramazsa `No module named 'onnxruntime'` hatası verir. Kütüphaneyi
+**QGIS'in kendi Python'una** kurmanız gerekir:
+
+```bash
+# QGIS ▸ Eklentiler ▸ Python Konsolu içinde yolu öğrenin:
+#   import sys; print(sys.executable)
+# sonra terminalde, çıkan yolu kullanarak:
+/Applications/QGIS.app/Contents/MacOS/bin/python3 -m pip install onnxruntime
+```
+
+Yerel `.osm.pbf` dosyası kullanacaksanız `osmium` da aynı şekilde gerekir. Kurduktan sonra
+**QGIS'i tamamen kapatıp yeniden açın.**
+
+**4. Model dosyası (`.onnx`)**
+
+Model ağırlıkları bu sürümün içinde **değildir** ve indirme bağlantısıyla verilmez.
+Doğrudan proje sahibinden isteyin: Mustafa Vedat Yıldırım
+([@mvy0502](https://github.com/mvy0502)). Dosyayı aldıktan sonra eklentinin
+**4 · Model** bölümündeki **Gözat…** düğmesiyle yolunu gösterirsiniz; eklenti bu yolu
+hatırlar, her açılışta yeniden seçmeniz gerekmez.
+
+*Neden pakette değil:* ağırlıklar GenCP'nin CC-BY 4.0 ağırlıklarından türedi, ancak ince
+ayar girdileri ODbL lisanslı OpenStreetMap verisinden üretildi. ODbL'nin share-alike
+yükümlülüğünün bu tür ağırlıklara uzanıp uzanmadığı hukuken belirsizdir. Bu soruyu
+yayımlayarak yanıtlamak yerine dosya kurum içi doğrudan aktarımla veriliyor. Ayrıntı:
+[`tubitak/docs/evidence/BACKUP.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/evidence/BACKUP.md).
+
+Ayrıca **CLC+ Backbone 2021 rasterı** (Copernicus'tan indirilir) ve çalışacağınız alanı
+kapsayan bir **`.osm.pbf`** dosyası gerekir; alternatif olarak eklenti Overpass'tan
+çevrimiçi de okuyabilir.
+
+### Eklenti neye benziyor?
+
+<img src="docs/plugin/dialog.png" width="620" alt="GenCP eklenti penceresi">
+
+Altı bölüm: referans katmanı seçersiniz, modele gidecek rasterleştirilmiş girdiyi
+**önizlersiniz**, ve **Üret** dersiniz. Çıktının yanında bir de **güven katmanı** üretilir —
+her piksel için "burası girdi bilgisine mi dayanıyor, yoksa uydurma mı" sorusunu yanıtlar:
+
+<img src="docs/plugin/confidence_layer.png" width="320" alt="Güven katmanı: kırmızı, turuncu, yeşil bantlar">
+
+Kırmızı = kullanmayın, turuncu = dikkatli kullanın, yeşil = kullanılabilir. Bantlar 150
+ayrık Avrupa ve 130 Ankara karosunda ölçüldü; ölçümün gücü ve sınırları
+[`confidence-results.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-results.md) dosyasında, olumsuz bulgular
+dahil, açıkça yazılıdır.
+
+### Devamı
+
+| | |
+|---|---|
+| **Adım adım kullanım** (Türkçe, yalnızca tıklamalar) | [`docs/plugin/QUICKSTART.md`](docs/plugin/QUICKSTART.md) |
+| Eklentinin mimarisi, kapılar, bilinen sınırlar | [`tubitak/qgis_plugin/README.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/qgis_plugin/README.md) |
+| Güven katmanının ölçümü ve ön kayıtları | [`confidence-registration.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-registration.md) · [`confidence-results.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/confidence-results.md) |
+| Eklentiyi gerçek QGIS'te kurup çalıştırınca ne bulundu | [`plugin-field-test.md`](https://github.com/mvy0502/GenCP/blob/tubitak-tr/tubitak/docs/plugin-field-test.md) |
+
+Doğrulandığı sürüm: **QGIS 4.2.1 (Qt 6), macOS**. QGIS 3.28 için kod uyumlu yazıldı ama
+denenmedi; Windows denenmedi.
+
+---
+
+## Araştırma kaydı
+
+Buradan aşağısı ölçüm çalışmasının kendisidir: ön kayıtlar, sonuçlar, denetimler, kanıt
+artefaktları ve düzeltme kaydı.
+
+Kısaca hikâye: GenCP, OpenStreetMap (OSM) haritalarını **pix2pix** adlı bir üretici ağa
+(koşullu GAN) verip sentetik Sentinel-2 (S2) görüntüsü üretiyor. Amaç, bu sentetik
+görüntüleri **GCP** (yer kontrol noktası — uydu görüntülerinin geometrik doğruluğunu
+ölçmekte kullanılan, koordinatı hassas bilinen referans noktalar) için telifsiz referans
+chip'leri olarak kullanmak. Biz bu yayınlanmış sistemi teslim aldık, "gerçekten işe
+yarıyor mu, nerede aksıyor?" sorusunu ölçerek yanıtladık ve Türkiye'ye genelleme hattını
+kurduk.
 
 Modelin yaptığı iş tek satırda — soldaki haritadan sağdaki görüntü üretiliyor:
 

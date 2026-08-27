@@ -57,6 +57,11 @@ tubitak/outputs/*
 !tubitak/outputs/.gitkeep
 # report figures are deliverables: keep them despite the *.png rule above
 !tubitak/docs/figures/*.png
+
+# Plugin screenshots are what a visitor sees before deciding to install. Cleared against
+# the imagery rules: the base raster is Sentinel-2 (Copernicus, open), the rasterised input
+# is our own OSM/CLC+ render, and no institutional or Google Earth imagery appears.
+!docs/plugin/*.png
 *.pth
 *.zip
 .venv/
