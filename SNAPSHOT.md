@@ -5,7 +5,7 @@ This repository is a **handover copy**, not a workspace. See `CLAUDE.md`.
 | | |
 |---|---|
 | **Source repository** | `mvy0502/GenCP`, branch `tubitak-tr` |
-| **Reflects commit** | `4c1b666` — *fix: the link check passed on files no visitor can see* |
+| **Reflects commit** | `1f28d5d` — *feat: tile overlap becomes a free numeric input, with both limits enforced* |
 | **Snapshot taken** | 2026-08-27 |
 | **Last verified** | 2026-08-27 |
 
