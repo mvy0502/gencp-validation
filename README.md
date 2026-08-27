@@ -1,112 +1,106 @@
 # GenCP Doğrulama Çalışması
 
-Bu depo iki şey içerir. Birincisi, harita verisinden **sahte ama gerçekçi uydu görüntüsü**
-üreten ESA/Telespazio **GenCP** sisteminin ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP))
-bağımsız bir ölçüm ve doğrulama çalışmasıdır — TÜBİTAK UZAY stajı kapsamında, Ağustos
-2026. İkincisi, o çalışmadan çıkan **QGIS eklentisidir**: seçtiğiniz bir alan için
-OpenStreetMap ve arazi örtüsü verisinden georeferanslı sentetik referans görüntü üretir,
-terminale hiç dokunmadan.
+Bu depoda iki iş bir arada duruyor. Biri, harita verisinden sentetik uydu görüntüsü üreten
+ESA/Telespazio **GenCP** sisteminin ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP))
+bağımsız ölçüm ve doğrulama çalışması — TÜBİTAK UZAY stajı, Ağustos 2026. Öteki, o
+çalışmadan çıkan **QGIS eklentisi**: seçilen bir alan için OpenStreetMap ve arazi örtüsü
+verisinden georeferanslı sentetik referans görüntü üretir, terminal gerektirmez.
 
 ---
 
-## Kurulum — QGIS eklentisi
+## Kurulum
 
-**1. Eklentiyi indirin**
+**İndirin**
 
-> ### [gencp_plugin.zip indir](https://github.com/mvy0502/gencp-validation/releases/latest/download/gencp_plugin.zip)
->
-> (~73 KB · [sürüm sayfası ve notlar](https://github.com/mvy0502/gencp-validation/releases/latest))
+| Dosya | Boyut | |
+|---|---|---|
+| **gencp_plugin.zip** | 73 KB | [indir](https://github.com/mvy0502/gencp-validation/releases/latest/download/gencp_plugin.zip) |
+| **gencp_C2_fp32.onnx** | 208 MB | [indir](https://github.com/mvy0502/gencp-validation/releases/latest/download/gencp_C2_fp32.onnx) |
 
-**2. QGIS'e kurun — üç tık**
+[Sürüm sayfası ve notlar](https://github.com/mvy0502/gencp-validation/releases/latest)
 
-QGIS → **Eklentiler** → *Eklentileri Yönet ve Kur…* → **ZIP'ten Kur** → indirdiğiniz
-dosyayı seçin → **Eklentiyi Kur**.
+**QGIS'e kurun**
 
-> **Önce şunu yapın:** aynı pencerede **Ayarlar** sekmesine geçip **Deneysel eklentileri de
-> göster** kutusunu işaretleyin. Eklenti deneysel olarak işaretli olduğu için bu kutu
-> işaretli değilse kurulur ama listede görünmez.
+**Eklentiler > Eklentileri Yönet ve Kur** penceresini açın. **Ayarlar** sekmesinde
+**Deneysel eklentileri de göster** kutusunu işaretleyin — eklenti deneysel işaretli, bu
+kutu boşken kurulur ama listede görünmez. **ZIP'ten Kur** sekmesinden indirdiğiniz dosyayı
+seçip kurun.
 
-Kurulduktan sonra **Raster ▸ GenCP ▸ GenCP Synthetic Reference…** menüsünde ve araç
-çubuğunda çıkar.
+Eklenti **Raster > GenCP > GenCP Synthetic Reference** altında ve araç çubuğunda çıkar.
+Model dosyasının yolunu Model bölümünde bir kez gösterirsiniz, sonra hatırlanır.
 
-**3. `onnxruntime` eksikse**
+**`onnxruntime`**
 
-Eklenti modeli çalıştıramazsa `No module named 'onnxruntime'` hatası verir. Kütüphaneyi
-**QGIS'in kendi Python'una** kurmanız gerekir:
+Üretim sırasında `No module named 'onnxruntime'` hatası alırsanız kütüphane QGIS'in kendi
+Python'unda yok demektir. Başka bir Python'a kurmak işe yaramaz:
 
 ```bash
-# QGIS ▸ Eklentiler ▸ Python Konsolu içinde yolu öğrenin:
-#   import sys; print(sys.executable)
-# sonra terminalde, çıkan yolu kullanarak:
+# QGIS > Eklentiler > Python Konsolu:  import sys; print(sys.executable)
+# terminalde, çıkan yolu kullanarak:
 /Applications/QGIS.app/Contents/MacOS/bin/python3 -m pip install onnxruntime
 ```
 
-Yerel `.osm.pbf` dosyası kullanacaksanız `osmium` da aynı şekilde gerekir. Kurduktan sonra
-**QGIS'i tamamen kapatıp yeniden açın.**
+Yerel `.osm.pbf` kullanacaksanız `osmium` da gerekir. Kurulumdan sonra QGIS'i kapatıp açın.
 
-**4. Model dosyası (`.onnx`)**
+**Ayrıca gerekenler:** CLC+ Backbone 2021 rasterı (Copernicus Land Monitoring Service) ve
+çalışılacak alanı kapsayan bir `.osm.pbf`. İsterseniz eklenti OSM verisini Overpass'tan
+çevrimiçi okur, o zaman bu dosya gerekmez.
 
-Model ağırlıkları bu sürümün içinde **değildir** ve indirme bağlantısıyla verilmez.
-Doğrudan proje sahibinden isteyin: Mustafa Vedat Yıldırım
-([@mvy0502](https://github.com/mvy0502)). Dosyayı aldıktan sonra eklentinin
-**4 · Model** bölümündeki **Gözat…** düğmesiyle yolunu gösterirsiniz; eklenti bu yolu
-hatırlar, her açılışta yeniden seçmeniz gerekmez.
+### Eklenti
 
-*Neden pakette değil:* ağırlıklar GenCP'nin CC-BY 4.0 ağırlıklarından türedi, ancak ince
-ayar girdileri ODbL lisanslı OpenStreetMap verisinden üretildi. ODbL'nin share-alike
-yükümlülüğünün bu tür ağırlıklara uzanıp uzanmadığı hukuken belirsizdir. Bu soruyu
-yayımlayarak yanıtlamak yerine dosya kurum içi doğrudan aktarımla veriliyor. Ayrıntı:
-[`tubitak/docs/evidence/BACKUP.md`](tubitak/docs/evidence/BACKUP.md).
+<img src="docs/plugin/dialog.png" width="600" alt="GenCP eklenti penceresi">
 
-Ayrıca **CLC+ Backbone 2021 rasterı** (Copernicus'tan indirilir) ve çalışacağınız alanı
-kapsayan bir **`.osm.pbf`** dosyası gerekir; alternatif olarak eklenti Overpass'tan
-çevrimiçi de okuyabilir.
+Referans katmanı seçersiniz; kapsam ve koordinat sistemi ondan okunur. Sonra **Üret**
+düğmesine basarsınız.
+Çıktının yanında modelin gördüğü rasterleştirilmiş girdi de katman olarak eklenir.
 
-### Eklenti neye benziyor?
+Her pikselin ne ölçüde girdiye dayandığı, çıktının **alfa kanalına** ölçülmüş bir değer
+olarak yazılır. Göz için üç renkli ayrı bir katman da üretilebilir:
 
-<img src="docs/plugin/dialog.png" width="620" alt="GenCP eklenti penceresi">
+<img src="docs/plugin/confidence_layer.png" width="300" alt="Güven katmanı">
 
-Altı bölüm: referans katmanı seçersiniz, modele gidecek rasterleştirilmiş girdiyi
-**önizlersiniz**, ve **Üret** dersiniz. Çıktının yanında bir de **güven katmanı** üretilir —
-her piksel için "burası girdi bilgisine mi dayanıyor, yoksa uydurma mı" sorusunu yanıtlar:
+Kırmızı bölgeler kullanılmamalı, turuncu bölgeler dikkatle kullanılmalı, yeşil bölgeler
+kullanılabilir. Bant sınırları 150 karoluk ayrık Avrupa kümesinde ölçüldü, 130 karoluk
+Ankara kümesinde sınandı. Sayılar ve ölçümün sınırları, olumsuz bulgular dâhil, şu iki
+dosyada: [confidence-results.md](tubitak/docs/confidence-results.md) ve
+[confidence-transfer-results.md](tubitak/docs/confidence-transfer-results.md).
 
-<img src="docs/plugin/confidence_layer.png" width="320" alt="Güven katmanı: kırmızı, turuncu, yeşil bantlar">
-
-Kırmızı = kullanmayın, turuncu = dikkatli kullanın, yeşil = kullanılabilir. Bantlar 150
-ayrık Avrupa ve 130 Ankara karosunda ölçüldü; ölçümün gücü ve sınırları
-[`confidence-results.md`](tubitak/docs/confidence-results.md) dosyasında, olumsuz bulgular
-dahil, açıkça yazılıdır.
-
-### Devamı
+### Ayrıntı
 
 | | |
 |---|---|
-| **Adım adım kullanım** (Türkçe, yalnızca tıklamalar) | [`docs/plugin/QUICKSTART.md`](docs/plugin/QUICKSTART.md) |
-| Eklentinin mimarisi, kapılar, bilinen sınırlar | [`tubitak/qgis_plugin/README.md`](tubitak/qgis_plugin/README.md) |
-| Güven katmanının ölçümü ve ön kayıtları | [`confidence-registration.md`](tubitak/docs/confidence-registration.md) · [`confidence-results.md`](tubitak/docs/confidence-results.md) |
-| Eklentiyi gerçek QGIS'te kurup çalıştırınca ne bulundu | [`plugin-field-test.md`](tubitak/docs/plugin-field-test.md) |
+| Adım adım kullanım | [`docs/plugin/QUICKSTART.md`](docs/plugin/QUICKSTART.md) |
+| Eklentinin mimarisi ve bilinen sınırları | [`tubitak/qgis_plugin/README.md`](tubitak/qgis_plugin/README.md) |
+| Güven skorunun ön kaydı ve sonucu | [ön kayıt](tubitak/docs/confidence-registration.md) · [sonuç](tubitak/docs/confidence-results.md) |
+| Gerçek QGIS kurulumunda çıkan bulgular | [`plugin-field-test.md`](tubitak/docs/plugin-field-test.md) |
+| Terim karşılıkları | [`tubitak/docs/terimler.md`](tubitak/docs/terimler.md) |
 
-Doğrulandığı sürüm: **QGIS 4.2.1 (Qt 6), macOS**. QGIS 3.28 için kod uyumlu yazıldı ama
-denenmedi; Windows denenmedi.
+Doğrulandığı ortam: QGIS 4.2.1 (Qt 6), macOS. QGIS 3.28 için kod uyumlu yazıldı, denenmedi;
+Windows denenmedi.
+
+### Lisans ve atıf
+
+Model ağırlıkları GenCP'nin CC-BY 4.0 lisanslı ağırlıklarından türetilmiştir; atıf
+[telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP) projesinedir. Eklenti
+çalışma anında OpenStreetMap verisi okur; OSM verisi ODbL lisanslıdır ve
+[OpenStreetMap katkıcılarına](https://www.openstreetmap.org/copyright) atıf gerektirir.
+CLC+ Backbone, Copernicus Land Monitoring Service ürünüdür.
 
 ---
 
 ## Araştırma kaydı
 
 Buradan aşağısı ölçüm çalışmasının kendisidir: ön kayıtlar, sonuçlar, denetimler, kanıt
-artefaktları ve düzeltme kaydı.
+dosyaları ve düzeltme kaydı.
 
-Kısaca hikâye: GenCP, OpenStreetMap (OSM) haritalarını **pix2pix** adlı bir üretici ağa
-(koşullu GAN) verip sentetik Sentinel-2 (S2) görüntüsü üretiyor. Amaç, bu sentetik
-görüntüleri **GCP** (yer kontrol noktası — uydu görüntülerinin geometrik doğruluğunu
-ölçmekte kullanılan, koordinatı hassas bilinen referans noktalar) için telifsiz referans
-chip'leri olarak kullanmak. Biz bu yayınlanmış sistemi teslim aldık, "gerçekten işe
-yarıyor mu, nerede aksıyor?" sorusunu ölçerek yanıtladık ve Türkiye'ye genelleme hattını
-kurduk.
+GenCP, OpenStreetMap haritalarını **pix2pix** adlı üretici ağa (koşullu GAN) verip sentetik
+Sentinel-2 görüntüsü üretir. Amaç, bu görüntüleri yer kontrol noktası (GCP) çıkarımı için
+telifsiz referans karoları olarak kullanmaktır. Bu çalışma yayımlanmış sistemi devraldı,
+nerede işe yarayıp nerede yaramadığını ölçtü ve Türkiye'ye genelleme hattını kurdu.
 
-Modelin yaptığı iş tek satırda — soldaki haritadan sağdaki görüntü üretiliyor:
+Modelin yaptığı iş: soldaki haritadan sağdaki görüntü üretiliyor.
 
-| OSM rasteri (girdi) | Gerçek S2 görüntüsü | Üretilen görüntü |
+| OSM rasteri (girdi) | Gerçek Sentinel-2 | Üretilen görüntü |
 |:---:|:---:|:---:|
 | ![](gencp_imgs/32UPA_1584_00_real_A.png) | ![](gencp_imgs/32UPA_1584_00_real_B.png) | ![](gencp_imgs/32UPA_1584_00_fake_B.png) |
 
