@@ -5,9 +5,9 @@ This repository is a **handover copy**, not a workspace. See `CLAUDE.md`.
 | | |
 |---|---|
 | **Source repository** | `mvy0502/GenCP`, branch `tubitak-tr` |
-| **Reflects commit** | `a9ec10a` — *.qml sidecar, verifier argument guard, Gate G overlap sweep* |
-| **Snapshot taken** | 2026-08-27 |
-| **Last verified** | 2026-08-27 |
+| **Reflects commit** | `6c0eb65c5294204aed9ad4ce7ecb4383ae2175af` — *docs: publish Turkey CLC+, document the zero-account route, write the handover* |
+| **Snapshot taken** | 2026-08-30 |
+| **Last verified** | 2026-08-30 |
 
 ## What this means
 
@@ -27,6 +27,10 @@ making QGIS draw the plugin's output semi-transparently over whatever layer sat 
 so a visual comparison of generated against real was silently comparing a blend of the two.
 The file bytes were always correct and Gate ALPHA was unaffected; the fix is display-only.
 This snapshot carries it, along with the regression check that would catch it returning.
+
+**Refreshed 2026-08-30, at the end of the internship.** This snapshot carries the
+handover guide (`tubitak/DEVIR.md`), the download button and the Turkey data path, the OSM
+index cache, and the unit-mismatch enforcement. It is the state the work was left in.
 
 **A snapshot still lags by construction.** Anything committed to `GenCP` `tubitak-tr` after
 the commit named above is not here, and `mvy0502/GenCP`, branch `tubitak-tr`, remains the

@@ -42,10 +42,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from qgis.PyQt.QtCore import Qt, QSize
+from qgis.PyQt.QtCore import Qt, QSize, QTimer
 from qgis.PyQt.QtGui import QImage, QPixmap, QFont
 from qgis.PyQt.QtWidgets import (
-    QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout, QGroupBox,
+    QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout,
+    QGroupBox,
     QHBoxLayout, QLabel, QMessageBox, QProgressBar, QPushButton, QRadioButton,
     QScrollArea, QSpinBox, QVBoxLayout, QWidget,
 )
@@ -357,7 +358,15 @@ class GenCPDialog(QDialog):
         self._row(fa, "source", sw, "source")
         self.pbf_w = self._file_widget("GetFile", "OSM PBF (*.pbf *.osm.pbf)", "pbf_file",
                                        self._on_pbf_changed)
-        self._row(fa, "pbf_file", self.pbf_w, "pbf_file")
+        self.btn_pbf_dl = QPushButton(t("pbf_download"))
+        self.btn_pbf_dl.setToolTip(tip("pbf_download"))
+        self.btn_pbf_dl.clicked.connect(self._start_pbf_download)
+        pbf_row = QWidget()
+        pl = QHBoxLayout(pbf_row)
+        pl.setContentsMargins(0, 0, 0, 0)
+        pl.addWidget(self.pbf_w, 1)
+        pl.addWidget(self.btn_pbf_dl)
+        self._row(fa, "pbf_file", pbf_row, "pbf_file")
         self.clc_w = self._file_widget("GetFile", "GeoTIFF (*.tif *.tiff)", "clc_file",
                                        self._on_clc_changed)
         self._row(fa, "clc_file", self.clc_w, "clc_file")
@@ -477,13 +486,132 @@ class GenCPDialog(QDialog):
                 pass
 
     # ------------------------------------------------------------- handlers ---
+    def _pbf_download_dir(self):
+        """Where the country file goes. Inside the QGIS profile, so it survives and is
+        found again without the user recording a path anywhere."""
+        from qgis.core import QgsApplication
+        d = Path(QgsApplication.qgisSettingsDirPath()) / "gencp"
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def _start_pbf_download(self):
+        """Offer the country extract, with its size, and fetch it on a task."""
+        ensure_core_importable()
+        from gencp_core import geofabrik as gf
+        dest = self._pbf_download_dir() / "turkey-latest.osm.pbf"
+
+        # Already here and current? Say so rather than spending 640 MB of someone's
+        # bandwidth to arrive at the same file.
+        if dest.exists():
+            self.lbl_status.setText(t("pbf_dl_checking"))
+            QApplication.processEvents()
+            st = gf.local_status(dest, "turkey")
+            if st["state"] == "current":
+                # Set the path and say so on the status line, not in a banner. Nothing
+                # happened that the user needs told about in a box they must dismiss.
+                self.pbf_w.setFilePath(str(dest))
+                self.lbl_status.setText(t("pbf_dl_already", mb=st["size"] / 1e6,
+                                          src=st.get("source") or "?"))
+                return
+            if st["state"] == "unverifiable":
+                self._msg(t("pbf_dl_unverifiable"), member(Qgis, 'Warning'))
+
+        size = gf.remote_size("turkey")
+        approx = size is None
+        mb = (gf.APPROX_SIZE_BYTES.get("turkey", 0) if approx else size) / 1e6
+        if QMessageBox.question(
+                self, t("pbf_download"),
+                t("pbf_dl_confirm_approx" if approx else "pbf_dl_confirm",
+                  mb=mb, dest=str(dest))) != QMessageBox.StandardButton.Yes:
+            return
+
+        from .download_task import DownloadTask
+        self._dl = DownloadTask("GenCP: OSM", dest, "turkey")
+        self._dl.taskCompleted.connect(self._pbf_download_done)
+        self._dl.taskTerminated.connect(self._pbf_download_failed)
+        self.btn_pbf_dl.setEnabled(False)
+        self.btn_cancel.setEnabled(True)
+        self.btn_cancel.clicked.connect(self._dl.cancel)
+        self.progress.setValue(0)
+        self._dl_timer = QTimer(self)
+        self._dl_timer.timeout.connect(self._pbf_download_tick)
+        self._dl_timer.start(400)
+        QgsApplication.taskManager().addTask(self._dl)
+
+    def _pbf_download_tick(self):
+        d = getattr(self, "_dl", None)
+        if d is None:
+            return
+        self.progress.setValue(int(d.progress()))
+        if d.total:
+            self.lbl_status.setText(t("pbf_dl_progress", done=d.done / 1e6,
+                                      total=d.total / 1e6))
+        else:
+            self.lbl_status.setText(t("pbf_dl_progress_unknown", done=d.done / 1e6))
+
+    def _pbf_download_end(self, task):
+        """Tear down the download UI. Takes the task explicitly.
+
+        It used to read `self._dl`, which the callers had already set to None - so the
+        disconnect raised AttributeError inside a Qt slot, and the path was never set even
+        though 642 MB had arrived intact. Passing the object removes the ordering trap
+        rather than documenting it.
+        """
+        if getattr(self, "_dl_timer", None) is not None:
+            self._dl_timer.stop()
+            self._dl_timer = None
+        self.btn_pbf_dl.setEnabled(True)
+        self.btn_cancel.setEnabled(False)
+        if task is not None:
+            try:
+                self.btn_cancel.clicked.disconnect(task.cancel)
+            except (TypeError, RuntimeError):
+                pass
+
+    def _pbf_download_done(self):
+        d, self._dl = getattr(self, "_dl", None), None
+        try:
+            self._pbf_download_end(d)
+            if d is None or d.result is None:
+                return
+            r = d.result
+            self.pbf_w.setFilePath(r["path"])
+            self.progress.setValue(100)
+            self.lbl_status.setText(t("idle"))
+            key = "pbf_dl_ok_mirror" if r.get("mirror") else "pbf_dl_ok"
+            self._msg(t(key, mb=r["size"] / 1e6, md5=r["md5"][:12]),
+                      member(Qgis, 'Success'))
+        except Exception as e:                       # noqa: BLE001
+            # A slip in the completion slot must not cost the user the file they just
+            # waited five minutes for.
+            _log(f"download completion handler failed: {e}", member(Qgis, 'Warning'))
+            if d is not None and getattr(d, "result", None):
+                self.pbf_w.setFilePath(d.result["path"])
+
+    def _pbf_download_failed(self):
+        d, self._dl = getattr(self, "_dl", None), None
+        self._pbf_download_end(d)
+        self.progress.setValue(0)
+        if d is not None and d.exception is not None:
+            self.lbl_status.setText(t("pbf_dl_failed_short"))
+            QMessageBox.critical(self, t("pbf_download"), str(d.exception))
+        else:
+            self.lbl_status.setText(t("cancelled"))
+
     def _on_pbf_changed(self, p):
+        self._cover_key = None
         # 2.3: set once, then remembered. It lives in the collapsed Advanced group so it
         # is never on the path of a routine run.
         self._remember("pbf_path", p)
         if p:
             self.rb_local.setChecked(True)
         self._validate()
+        # The estimate's one-time term depends on WHICH extract is selected - a country
+        # file, a small region, or a warm cache differ by two orders of magnitude - so the
+        # line has to be recomputed when the path changes. It showed "0 sn hazırlık" for a
+        # run that then spent two minutes reading the country file.
+        self._refresh_extent()
+        self._check_pbf_covers_layer()
 
     def _on_clc_changed(self, p):
         self._remember("clc_path", p)
@@ -539,6 +667,90 @@ class GenCPDialog(QDialog):
                                     duration=0)
 
     # --------------------------------------------------------------- extent ---
+    def _index_is_cached(self, pbf, resolved_extent, work_crs):
+        """Is a built index already on disk for this file and area? Cheap: a stat, no read.
+
+        Only the fingerprint costs anything, and that is a hash of the extract - 1 s for
+        640 MB - so it is memoised per path+mtime.
+        """
+        if not pbf:
+            return False
+        try:
+            from gencp_core import vectors as _v, index_cache as _ic, extent as _ex
+            import os as _os
+            st = _os.stat(pbf)
+            memo = getattr(self, "_fp_memo", None)
+            if memo is None or memo[0] != (pbf, st.st_mtime):
+                self._fp_memo = ((pbf, st.st_mtime), _ic.file_fingerprint(pbf))
+            tiles, _s = _ex.tile_grid(resolved_extent, self.overlap_box.value())
+            xs = [t[2] for t in tiles]
+            ys = [t[3] for t in tiles]
+            rb = (min(xs), min(ys) - _ex.TILE_M, max(xs) + _ex.TILE_M, max(ys))
+            key = _ic.cache_key(pbf, _v._margin_bbox(rb, work_crs),
+                                fingerprint=self._fp_memo[1])
+            return _ic.cache_path(key).exists()
+        except Exception:                            # noqa: BLE001
+            return False
+
+    def _check_pbf_covers_layer(self):
+        """Say the extract does not cover this layer NOW, not after Generate.
+
+        The block raised by generate() is the right last line of defence and the wrong
+        first one: by then the user has chosen a layer, set an output path and pressed a
+        button.
+
+        Cost discipline, because the first version of this froze the dialog for two minutes:
+        a file that declares a header bounding box is judged from that, in 23 ms - which
+        covers every Geofabrik country file. Files without one are osmium-cut extracts,
+        the class that caused the Istanbul run, so they are parsed rather than skipped -
+        but only when small enough for that to be quick.
+        """
+        if not getattr(self, "_ui_ready", False):
+            return
+        pbf = self._pbf_or_none()
+        if not pbf or self._extent is None or self._crs is None:
+            return
+        try:
+            key = (pbf, os.path.getmtime(pbf), tuple(round(v, 1) for v in self._extent),
+                   str(self._crs))
+        except OSError:
+            return
+        if getattr(self, "_cover_key", None) == key:
+            return
+        self._cover_key = key
+
+        ensure_core_importable()
+        from gencp_core import vectors as _v
+        from gencp_core import extent as _ex
+        try:
+            # Resolve to the METRIC working CRS first, exactly as generate() does.
+            # _margin_bbox adds a 300 METRE margin; handed a geographic extent it adds 300
+            # DEGREES, and the resulting box covers the planet - so every extract looked
+            # like it covered every layer and this check silently never fired. The
+            # reference image that started all of this is EPSG:4326.
+            e, work_crs, _src = _ex.resolve(self._extent, self._crs)
+            want = _v._margin_bbox(e, work_crs)
+            have = _v.pbf_header_bounds(pbf)
+            if have is not None:
+                covered = (have[0] < want[2] and have[2] > want[0]
+                           and have[1] < want[3] and have[3] > want[1])
+            elif os.path.getsize(pbf) > 150 * 1024 * 1024:
+                return                               # too big to parse on the GUI thread
+            else:
+                n_in, _n, have = _v.pbf_coverage(pbf, want)
+                covered = n_in > 0
+        except Exception:                            # noqa: BLE001 - never block the UI
+            return
+
+        if covered:
+            return
+
+        def f(b):
+            return ("%.3f, %.3f -> %.3f, %.3f" % tuple(b)) if b else "?"
+
+        self._msg(t("pbf_no_cover_layer", have=f(have), want=f(want)),
+                  member(Qgis, 'Critical'))
+
     def _refresh_extent(self):
         layer = self.layer_box.currentLayer()
         if layer is None:
@@ -555,16 +767,35 @@ class GenCPDialog(QDialog):
         authid = crs.authid() or ""
         # pyproj/rasterio cannot resolve a QGIS-local "USER:100001" authid; the WKT works.
         self._crs = crs.toWkt() if (not authid or authid.startswith("USER:")) else authid
-        self.lbl_extent.setText(t("extent_value", xmin=r.xMinimum(), ymin=r.yMinimum(),
-                                  xmax=r.xMaximum(), ymax=r.yMaximum(),
-                                  w=r.width(), h=r.height()))
+        # A geographic layer's extent is in DEGREES. The metre formatter rounded a 0.46
+        # degree span to "0 m" and showed "29, 41 -> 29, 41", which reads as a broken tool
+        # next to a correct tile count.
+        if crs.isGeographic():
+            import math
+            mid = math.radians((r.yMinimum() + r.yMaximum()) / 2.0)
+            km_w = r.width() * 111.320 * math.cos(mid)
+            km_h = r.height() * 110.574
+            self.lbl_extent.setText(t("extent_value_deg",
+                                      xmin=r.xMinimum(), ymin=r.yMinimum(),
+                                      xmax=r.xMaximum(), ymax=r.yMaximum(),
+                                      w=km_w, h=km_h))
+        else:
+            self.lbl_extent.setText(t("extent_value_m",
+                                      xmin=r.xMinimum(), ymin=r.yMinimum(),
+                                      xmax=r.xMaximum(), ymax=r.yMaximum(),
+                                      w=r.width(), h=r.height()))
         self.lbl_crs.setText(crs.authid() or crs.description())
         try:
             from gencp_core import extent as ext
             e, work, _ = ext.resolve(self._extent, self._crs)
-            est = ext.estimate(e, self.overlap_box.value())
-            self.lbl_tiles.setText(t("tiles_value", n=est["n_tiles"], w=est["width"],
-                                     h=est["height"], mins=est["seconds"] / 60.0))
+            pbf = self._pbf_or_none()
+            est = ext.estimate(e, self.overlap_box.value(), pbf_path=pbf,
+                               index_cached=self._index_is_cached(pbf, e, work))
+            self.lbl_tiles.setText(t(
+                "tiles_value", n=est["n_tiles"], w=est["width"], h=est["height"],
+                idx_s=est["index_seconds"], idx_what=t("idx_" + est["index_kind"]),
+                tile_min=est["tile_seconds"] / 60.0,
+                total_min=est["seconds"] / 60.0))
             self._extent_ok = True
             self._msg("")
         except Exception as e:                       # noqa: BLE001 - shown to the user
@@ -573,6 +804,7 @@ class GenCPDialog(QDialog):
             self._msg(str(e), member(Qgis, 'Critical'))
         self._invalidate_preview()
         self._validate()
+        self._check_pbf_covers_layer()
 
     def _invalidate_preview(self):
         """Close the preview. It is off by default and returns to off when inputs change."""
@@ -630,7 +862,7 @@ class GenCPDialog(QDialog):
 
             rgb = np.asarray(img.convert("RGB"))
             idx, names = conf.class_map(rgb)
-            b = conf.osm_class_breakdown(idx, names)
+            b = conf.osm_class_breakdown(idx, names, rgb)
             self.lbl_osm.setText(t("osm_counts", roads=b["roads"],
                                    buildings=b["buildings"], water=b["water"],
                                    landuse=b["landuse"]))
@@ -738,6 +970,9 @@ class GenCPDialog(QDialog):
 
     # -------------------------------------------------------------------- run -
     def _start(self):
+        # The download leaves the bar at 100%. Without this, a generation started straight
+        # afterwards opens showing "100%" before it has rendered a tile.
+        self.progress.setValue(0)
         from gencp_core import confidence as conf
         model = self.model_w.filePath().strip()
         conf_on, _ = self._confidence_on()
@@ -781,9 +1016,20 @@ class GenCPDialog(QDialog):
         self.progress.setValue(int(self._task.progress()))
         stage, _, counts = (self._task.message or "").partition(":")
         done, _, total = counts.strip().partition("/")
+        stage = stage.strip()
+        # The index stages carry no counts - they are a name, not a fraction. Formatting
+        # them through the counted template would print "Çalışıyor (?/?)", which is the
+        # uninformative text this exists to replace.
+        if stage.startswith("index"):
+            self.lbl_status.setText(t({
+                "index_country": "stage_index_country",
+                "index_region": "stage_index_region",
+                "index_write": "stage_index_write",
+            }.get(stage, "stage_index_region")))
+            return
         key = {"render": "stage_render", "infer": "stage_infer",
                "confidence": "stage_confidence", "mosaic": "stage_mosaic"}.get(
-                   stage.strip(), "stage_unknown")
+                   stage, "stage_unknown")
         self.lbl_status.setText(t(key, done=done or "?", total=total or "?"))
 
     def _cancel(self):
@@ -889,8 +1135,24 @@ class GenCPDialog(QDialog):
         task, self._task = self._task, None
         self.btn_cancel.setEnabled(False)
         if task is not None and task.exception is not None:
-            self.lbl_status.setText(t("failed", err=task.exception))
-            QMessageBox.critical(self, t("failed_title"), str(task.exception))
+            exc = task.exception
+            # The wrong-extract case gets its own title and its own text. It is not a
+            # crash: nothing went wrong mechanically, the inputs simply do not describe
+            # the same place, and the message shows both boxes so the user can see that
+            # rather than be told it.
+            ensure_core_importable()
+            from gencp_core.pipeline import ExtentNotCovered
+            if isinstance(exc, ExtentNotCovered):
+                self.lbl_status.setText(t("err_pbf_no_cover_short"))
+                QMessageBox.critical(
+                    self, t("err_pbf_no_cover_title"),
+                    t("err_pbf_no_cover_body",
+                      name=Path(exc.pbf_path).name,
+                      have=exc._fmt(exc.pbf_bounds),
+                      want=exc._fmt(exc.want_bounds)))
+            else:
+                self.lbl_status.setText(t("failed", err=exc))
+                QMessageBox.critical(self, t("failed_title"), str(exc))
         else:
             self.lbl_status.setText(t("cancelled"))
         self._validate()

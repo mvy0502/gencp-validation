@@ -32,8 +32,20 @@ S = {
     "tiles_estimate": "Karo / süre",
     "unset": "—",
     "waiting": "<span style='color:gray'>katman seçilmedi</span>",
-    "extent_value": "{xmin:.0f}, {ymin:.0f} → {xmax:.0f}, {ymax:.0f}  ({w:.0f} × {h:.0f} m)",
-    "tiles_value": "<b>{n} karo</b> · {w} × {h} piksel · yaklaşık {mins:.1f} dk",
+    # Projected layer: coordinates are metres, so metres are what is shown.
+    "extent_value_m": "{xmin:.0f}, {ymin:.0f} → {xmax:.0f}, {ymax:.0f}  ({w:.0f} × {h:.0f} m)",
+    # Geographic layer: degrees, at a precision that distinguishes places, and the ground
+    # size converted rather than pretended. Printing a 0,46° span as "0 m" is what the
+    # metre formatter did here.
+    "extent_value_deg": ("{xmin:.4f}, {ymin:.4f} → {xmax:.4f}, {ymax:.4f}  "
+                         "({w:.1f} × {h:.1f} km)"),
+    "tiles_value": ("<b>{n} karo</b> · {w} × {h} piksel · "
+                    "yaklaşık {idx_s:.0f} sn {idx_what} + {tile_min:.1f} dk üretim "
+                    "= <b>{total_min:.1f} dk</b>"),
+    "idx_country": "ülke dosyasını okuma",
+    "idx_region": "OSM çıkarımını okuma",
+    "idx_cache": "önbellekten okuma",
+    "idx_none": "hazırlık",
 
     # ------------------------------------------------------------------- model ----
     "sec_model": "Model",
@@ -76,6 +88,28 @@ S = {
     "source_local": "Yerel .osm.pbf",
     "source": "Veri kaynağı",
     "pbf_file": "OSM çıkarımı",
+    "pbf_download": "Türkiye verisini indir",
+    "pbf_dl_checking": "Var olan dosya denetleniyor…",
+    "pbf_dl_confirm": ("Türkiye'nin tamamını kapsayan OSM dosyası indirilecek.\n\n"
+                       "Boyut: {mb:.0f} MB\nHedef: {dest}\n\nİndirilsin mi?"),
+    "pbf_dl_confirm_approx": ("Türkiye'nin tamamını kapsayan OSM dosyası indirilecek.\n\n"
+                              "Boyut: yaklaşık {mb:.0f} MB (sunucu kesin boyutu vermedi)\n"
+                              "Hedef: {dest}\n\nİndirilsin mi?"),
+    "pbf_dl_progress": "İndiriliyor… {done:.0f} / {total:.0f} MB",
+    "pbf_dl_progress_unknown": "İndiriliyor… {done:.0f} MB",
+    "pbf_dl_ok": ("Türkiye OSM dosyası indirildi ve doğrulandı: {mb:.0f} MB, "
+                  "MD5 {md5}… Kaynak: Geofabrik."),
+    "pbf_dl_ok_mirror": ("Türkiye OSM dosyası indirildi: {mb:.0f} MB, MD5 {md5}… "
+                         "Geofabrik yanıt vermediği için sabitlenmiş kopya kullanıldı; "
+                         "bu belirli bir tarihin dosyasıdır."),
+    "pbf_dl_already": ("Türkiye OSM dosyası zaten var ve doğrulandı ({mb:.0f} MB, kaynak: "
+                       "{src}). Yeniden indirilmedi."),
+    "pbf_dl_unverifiable": ("Yayımlanmış MD5 okunamadı, var olan dosya doğrulanamıyor. "
+                           "İndirmeye devam edilebilir."),
+    "pbf_dl_failed_short": "OSM dosyası indirilemedi.",
+    "pbf_no_cover_layer": ("Seçili OSM çıkarımı bu katmanı kapsamıyor — çıkarım {have}, "
+                           "katman {want}. Gelişmiş bölümündeki \"Türkiye verisini indir\" "
+                           "düğmesi bunu çözer."),
     "clc_file": "CLC+ rasterı",
     "tile_overlap": "Karo bindirmesi",
     "overlap_suffix": " m",
@@ -99,7 +133,22 @@ S = {
     "stage_infer": "Üretiliyor ({done}/{total})",
     "stage_confidence": "Güven hesaplanıyor ({done}/{total})",
     "stage_mosaic": "Birleştiriliyor",
+    "stage_index_country": "OSM ülke dosyası okunuyor — yaklaşık 2 dk, yalnızca ilk çalıştırmada",
+    "stage_index_region": "OSM çıkarımı okunuyor…",
+    "stage_index_write": "OSM verisi önbelleğe yazılıyor…",
     "stage_unknown": "Çalışıyor ({done}/{total})",
+    "err_pbf_no_cover_title": "Seçilen OSM çıkarımı bu alanı kapsamıyor",
+    "err_pbf_no_cover_body": (
+        "Seçili .osm.pbf bu alanı kapsamıyor, bu yüzden üretim başlatılmadı.\n\n"
+        "  Dosya    : {name}\n"
+        "  Kapsadığı: {have}\n"
+        "  İstenen  : {want}\n\n"
+        "Kapsamasaydı her karo yalnızca arazi örtüsünden çizilirdi: yol, bina ve su "
+        "olmadan. Görüntü gerçekçi görünür ama içinde OSM'den gelen hiçbir şey olmaz.\n\n"
+        "Çözüm: Gelişmiş bölümündeki \"Türkiye verisini indir\" düğmesine basın. "
+        "Türkiye'nin tamamını kapsayan tek dosya kullanılır; dosya zaten indirilmişse "
+        "yeniden indirilmez, yalnızca doğrulanıp yolu ayarlanır."),
+    "err_pbf_no_cover_short": ("Seçilen .osm.pbf bu alanı kapsamıyor. Üretim başlatılmadı."),
     "failed_title": "Üretim tamamlanamadı",
     "failed": "Üretim tamamlanamadı: {err}",
     "done_wrote": "{name} yazıldı",
@@ -153,6 +202,10 @@ TIP = {
     "add_layers": "Üretilen dosyaları iş bitince haritaya ekler.",
     "source": ("OSM verisinin okunacağı yer. Yerel .osm.pbf çevrimdışı çalışır ve "
                "hızlıdır. Overpass çevrimiçidir, dosya gerektirmez."),
+    "pbf_download": ("Türkiye'nin tamamını kapsayan tek dosyayı indirir ve yolunu ayarlar. "
+                     "Bir kez indirilir; ülke içinde başka bir çıkarım aramanız gerekmez. "
+                     "İndirme arka planda çalışır, durdurulabilir, ve dosya yayımlanmış "
+                     "MD5 özetiyle doğrulanmadan kullanılmaz."),
     "pbf_file": ("Geofabrik'ten indirilen .osm.pbf. Bir kez seçilir, sonraki açılışlarda "
                  "hatırlanır. Çalışılan alanı kapsamalıdır: kapsamazsa çıktı boş kırsal "
                  "alan gibi görünür, hata gibi görünmez."),
