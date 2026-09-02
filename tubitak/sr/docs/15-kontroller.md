@@ -3,7 +3,7 @@
 **Repository** `mvy0502/GenCP`, branch `tubitak-tr`. **Date** 1 September 2026.
 **Code** `tubitak/sr/sr_data/checks/corpus_checks.py`,
 `tubitak/sr/sr_data/checks/mutation_test.py`.
-**Evidence** `tubitak/docs/evidence/wp15/corpus_checks.json`.
+**Evidence** `tubitak/sr/docs/evidence/wp15/corpus_checks.json`.
 **Registration amended** `03a-corpus-registration.md` §12.1.
 
 An independent audit found that three of the four corpus checks had known-false arms that

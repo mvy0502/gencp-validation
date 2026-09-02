@@ -26,7 +26,7 @@ işletim sistemi için bu kit **kullanılamaz**.
 
 ## 2. Önce: hangi paketlerin eksik olduğu ölçülmelidir
 
-Kurulumdan önce `tubitak/tool/qgis_ortam_raporu.py` dosyasının tamamı QGIS'in Python
+Kurulumdan önce `tubitak/sr/tools/qgis_ortam_raporu.py` dosyasının tamamı QGIS'in Python
 konsoluna yapıştırılıp çalıştırılmalıdır (**Eklentiler > Python Konsolu**). Çıktı iki şeyi
 verir:
 

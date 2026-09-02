@@ -689,3 +689,159 @@ dışında belge karar için yeterlidir.
    izlenmez. `19` §3'te kayıtlıdır.
 4. Kurumun kurduğu zip'in kaynağının B olduğu (§12.2) bu brifingin sorduğu bir şey değildi;
    karar için en belirleyici olgu olduğu için ölçülmüştür.
+
+---
+
+## 13. WP21 — Proje 2'nin kurumun okuduğu depoda kendine yeterli olması
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `41dd36af3a5d21953c502e4707fc4b5e38cc16a1`; iki ağaç da temizdi; her izlenen dosya manifeste
+alınmıştır (A **1272**, B **1539**, `/tmp/wp21/`). §1–12 değiştirilmemiştir. **A'da hiçbir
+şey değişmemiş, hazırlanmamış, commit'lenmemiştir.** Hiçbir Proje 1 dosyasına, hiçbir sürüme
+dokunulmamıştır.
+
+### 13.1 Adım 1 — iki dosya, dosya başına karar
+
+**`qgis_ortam_raporu.py`.** B'de anıldığı tek yer, okuyucuyu yönlendiren bir cümledir
+(`13-cevrimdisi-kurulum.md:29`):
+
+> Kurulumdan önce `tubitak/tool/qgis_ortam_raporu.py` dosyasının tamamı QGIS'in Python
+> Konsolu'na yapıştırılıp çalıştırılır…
+
+Dosyanın kendisi (A `tubitak/tool/`, 85 satır) kurum makinesinde QGIS'in Python ortamını
+raporlayan, hiçbir şey kurmayan, internet gerektirmeyen tek dosyalık bir betiktir; başlığı
+"bu dosyanın TAMAMINI kopyalayıp konsola yapıştırın" der. **Kurumdaki okuyucu bu dosyayı
+bizzat kullanır ve belge onu burada bekletir.** Karar: **(a)**, kopyalanmıştır —
+`tubitak/sr/tools/qgis_ortam_raporu.py` (`tools/` zaten `make_slides_v2.py`'yi barındırır).
+Kopyalama yapılmadan önce hedef yol `git check-ignore` ile sınanmış, yoksayılmadığı
+görülmüştür. Blob A'dakiyle aynıdır (`ebcbba28820f`). Atıf düzeltilmiştir:
+
+> önce `Kurulumdan önce `tubitak/tool/qgis_ortam_raporu.py` dosyasının tamamı QGIS'in Python`
+> sonra `Kurulumdan önce `tubitak/sr/tools/qgis_ortam_raporu.py` dosyasının tamamı QGIS'in Python`
+
+**`corpus_checks.json`.** B'de iki ayrı dosya adı bu adı taşır. (1) `15-kontroller.md:6`:
+"**Evidence** `tubitak/docs/evidence/wp15/corpus_checks.json`" — WP15'in 11/11 sonucunun
+kanıt kaydı, 2,7 KB, bir koşunun dondurulmuş çıktısı. (2) `03a-wald-corpus.md:568`:
+"`tubitak/data/sr_wald_corpus/evidence/corpus_checks.json`. Exit 0, 9 of 9 cases…" — WP3A'nın
+**başka** bir koşusunun, `tubitak/data/` altındaki, politika gereği hiçbir depoya girmemiş
+çıktı yolu. Kurumdaki okuyucu (1)'i kullanmaz ama raporun dayandığı kanıt olarak orada
+bekler; kaydın kendisi değişmeyeceğinden ikinci kopyanın kayma riski yoktur ve kendine
+yeterlilik taşınmanın amacıdır. Karar: **(a)** —
+`tubitak/sr/docs/evidence/wp15/corpus_checks.json` (yoksayılmıyor; blob `8209aaa79abb`).
+(2) dosya yolu olarak doğru bir tarihsel ifadedir, düzeltilmemiştir. Atıf:
+
+> önce `**Evidence** `tubitak/docs/evidence/wp15/corpus_checks.json`.`
+> sonra `**Evidence** `tubitak/sr/docs/evidence/wp15/corpus_checks.json`.`
+
+Kaynak kaydı `tubitak/sr/SOURCE.md`'ye ek olarak yazılmıştır: depo, A'daki yol, A'daki son
+commit, blob. §12.6/2 ve `19` §3'teki "dosya B'de yoktur" cümleleri WP20 anındaki ölçümün
+kaydıdır ve değiştirilmemiştir; bu bölüm onları geçersiz kılar. **A'daki `tubitak/sr/`
+aynası dondurulmuştur ve bu iki dosyayı taşımaz; A–B farkı kopya hatası değil, bu ekin
+sonucudur.**
+
+### 13.2 Adım 2 — kök neden: düz metindeki dosya adları
+
+`tubitak/sr/tools/check_named_files.py` yazılmıştır: `tubitak/sr/**/*.md` içinde bilinen
+bir uzantıyla biten her belirteci toplar, `tubitak/sr/` altında o adı taşıyan dosya var mı
+bakar, olmayanları **ayıklama listesi** olarak basar (karar değil), her birinin depoda başka
+yerde bulunup bulunmadığını da yazar. Bilinen-yanlış önce: var olamayacak bir ad ekilir, o
+bildirilmeden gerçek tarama basılmaz. Anlamadığı argümanı reddeder (`--overlap=2560`,
+fazladan konumsal, olmayan `--root` → çıkış 2). Çıktısı
+`tubitak/sr/docs/evidence/wp21/named_files.json`'dadır.
+
+**Sayımlar:** 31 markdown dosyası; **193** ayrı ad; **103** `tubitak/sr/` altında çözülüyor;
+**90** çözülmüyor. Doksanın ayıklaması, her ad için cümlesi okunarak:
+
+| sınıf | adet | örnekler | neden meşru |
+|---|---|---|---|
+| Sürüm varlığı (ağaçta değil, sürümde) | 10 | `SAMPLE_*.tif`, `SHA256SUMS.txt`, `gencp_sr_x4_b4.onnx`, `gencp_sr_tci_x4_b3_v2.onnx`, `gencp_C2_fp32.onnx`, `gencp_plugin.zip`, `clcplus_2021_turkey_10m.tif`, `turkey-2026-08-19.osm.pbf` | B'nin üç sürümünden indirilir |
+| `tubitak/data/` altı koşu çıktısı ya da girdi (politika gereği depoda değil; belgeler yolu `tubitak/data/…` diye yazar) | 44 | `best.pt`, `last.pt`, `train_record.json`, `chips_*.npy`, `manifest.csv`, `corpus.json`, `leakage.json`, `eval_x4.FIRSTRUN.json`, `SCL.tif`, `TCI_36TVK_20260430.tif`, `eox_*.tif/.png`, `three_panel_36SXJ.png`, `fixture_1024.tif`, `gencp_sr_tci_x4_b3.onnx` (aşılmış v1) … | Ölçümün kaydı raporlardadır; ham çıktı depoya girmez (CLAUDE.md 4) |
+| Depoda `tubitak/sr/` dışında mevcut (Proje 1 kodu, demo, kaggle) | 14 | `infer.py`, `rasterize.py`, `vectors.py`, `download_task.py`, `coverage_block.py`, `plugin-field-test.md`, `dialog.png`, `confidence_layer.png`, `gencp_demo.qgz`, `phase-c-config.md`, `train_c1_c2.py`, `prepare_dataset.sh`, `setup_kaggle_cli.sh`, `dataset-metadata.json` | Denetim "başka yerde" sütununda gösterir; B'de vardır |
+| Üçüncü taraf / araç ortamı | 8 | `sentinel2.py`, `setup.cfg` (sensorsio/aracın), `serialization.py`, `storage.py`, `torch.onnx` (torch), `get-pip.py`, `WMTSCapabilities.xml` (EOX sunucusu), `sentinel.py` | Bizim dosyamız değildir |
+| Ad kalıbı / örnek / uzantı anması | 11 | `_sr_x2.tif`, `_sr_x4.tif`, `_2m5_sisr.tif`, `..._2m5_sisr.tif`, `_2m5_bicubic.tif`, `some.tif`, `.osm.pbf`, `B02.tif`, `.cancel_target.tif`, `cancel_target.tif`, `36SVJ_TCI_bicubic_x2.tif` | Dosya adı değil, biçim |
+| Yazarın makinesindeki yapılandırma, keşifte envanter olarak anılmış | 2 | `kaggle.json`, `.modal.toml` | Kimlik dosyaları; depoya girmez |
+| Yalnızca A'da, Proje 1 / derleme (bilerek dokunulmadı) | 2 | `icon.png`, `build_plugin_zip_windows.py` | `19` §3'te kayıtlı; Proje 1 sürüm işine ait |
+| **Yazarın makinesindeki betik / kayıt, rapor tarafından anılmış** | 4 | `norm_probe.py` ("scratchpad/" diye açıkça), `wp16_repro.py` (yığın izinde), `host_wsx4.py` ("depo ağacının dışında" diye açıkça), `predictions.txt` | Kurum okuyucusuna verilmiş söz değil; **ama araştırmacı için yeniden üretilebilirlik açığı** — `make_slides_v2.py` ile kapatılan arıza şeklinin aynısı. Düzeltilmemiştir: A'da yoktur, kopyalanacak bir kaynak yoktur; izinli liste dışıdır. Karar bekler |
+| **Okuyucuya verilmiş ve B'den tutulamayan söz** | 3 | `MANIFEST.json` (tekerlek kiti), `gencp_plugin_win_amd64.zip`, `gencp_plugin.zip` (98.410 baytlık WP13 yapısı) | **Aşağıda, V5** |
+
+Toplam 90 = 10 + 44 + 14 + 8 + 11 + 2 + 2 + 4 + 3 — biri geçmiş iki üst satırla çakışan
+`gencp_plugin.zip`, sürüm varlığı olarak da (73 KB, `plugin-v0.2.0`) sayılmıştır; sözü
+tutulmayan olan 98.410 baytlık **yeni** yapıdır. **Bu iş paketinde düzeltilebilen gerçek
+kusur: 2** (Adım 1'in iki dosyası; ikisi de düzeltilmiştir). **Düzeltilemeyen gerçek kusur: 3**
+(V5).
+
+### 13.3 G1
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| depo | karşılaştırılan | yol kümesi | değişen / eklenen | sınıf |
+|---|---|---|---|---|
+| A | **1272** | aynı; izlenmeyen 0 | **hiçbiri** (V4) | — |
+| B | **1539** | aynı; beliren/kaybolan/taşınan yok | `tubitak/sr/docs/13-cevrimdisi-kurulum.md`, `tubitak/sr/docs/15-kontroller.md`, `tubitak/sr/SOURCE.md` (değişen) | 2 / 1 |
+| | | | `tubitak/sr/tools/qgis_ortam_raporu.py`, `tubitak/sr/docs/evidence/wp15/corpus_checks.json` (eklenen) | 1 |
+| | | | `tubitak/sr/tools/check_named_files.py`, `tubitak/sr/docs/evidence/wp21/named_files.json` (eklenen) | 3 |
+| | | | `tubitak/sr/docs/18-depo-tasima.md` (bu bölüm) | 4 |
+
+Sekiz yolun sekizi de `tubitak/sr/` altındadır ve dört sınıftan birine girer. Kapı
+geçilmiştir.
+
+### 13.4 V1–V4
+
+**V1.** İki atıf yeni biçimleriyle §13.1'de aynen verilmiştir; ikisi de B'deki bir yola
+çözülür (`ls` ile doğrulanmıştır). `18` §12.6 ve `19` §3'teki anmalar WP20 kaydıdır, A yolunu
+adlandırır ve o yol A'da hâlâ vardır.
+
+**V2.** Denetim temiz çıkmaz — tasarımı gereği: 90 ad çözülmez ve çıkış kodu 1'dir. Doksanın
+her biri §13.2'de sınıflandırılmıştır; meşru olmayan 3'ü V5'tedir.
+
+**V3.** Bağlantı denetimi (çitler ve kod aralıkları hariç, WP20'de GitHub işleyicisiyle
+doğrulanan model): B `tubitak/sr/**/*.md` — **25 göreli bağlantı, 0 kırık.**
+
+**V4.** A'nın manifesti taban çizgisiyle aynıdır: **0 değişen dosya**; A'da hiçbir şey
+hazırlanmamıştır.
+
+### 13.5 V5 — kurumdaki bir okuyucu gibi belgeleri izlemek
+
+`10-kurulum.md` baştan sona, ve adı geçen dosyaları anan belgeler (`13-cevrimdisi-kurulum.md`,
+`15-kontroller.md`), yalnızca B ve B'nin sürümleri elde varken izlenmiştir.
+
+**Çevrimiçi ya da `onnxruntime`'ı hazır makine — EVET.** Süper çözünürlük eklentisi
+(`gencp_super_resolution.zip`), üç model, iki örnek raster, `SHA256SUMS.txt`: hepsi
+`sr-plugin-v0.1.0`'da. Proje 1 eklentisi (`gencp_plugin.zip`, `gencp_C2_fp32.onnx`):
+`plugin-v0.2.0`'da. Veri: `veri-turkiye-2026-08-31`'de. Ortam raporu betiği: artık
+`tubitak/sr/tools/`'da. Kurulum kılavuzu: bu depoda. Okuyucu A'ya hiç gitmez.
+
+**İnternetsiz makine, `onnxruntime` yok — HAYIR.** `10-kurulum.md` §7.5 adım 2 okuyucuyu
+"§3'teki çevrimdışı tekerlek kiti"ne gönderir; §3 ve `13-cevrimdisi-kurulum.md` §1 kiti
+"`kit/` klasörü, 16 `.whl` + `MANIFEST.json`, 57,6 MB" diye anlatır. **Kit hiçbir sürümde
+yoktur;** yalnızca A'nın yoksayılan `tubitak/data/kit/`'inde durmaktadır. Aynı belge iki
+Proje 1 yapısını "iki ayrı sürüm dosyası" diye sunar: `gencp_plugin.zip` **98.410 bayt** ve
+`gencp_plugin_win_amd64.zip` **15.935.709 bayt** (`_vendor/` gömülü). **İkisi de
+yayımlanmamıştır;** `plugin-v0.2.0`'daki `gencp_plugin.zip` 26 Ağustos'un 73 KB'lık,
+WP12/WP13 öncesi yapısıdır; Windows yapısı yalnızca A'nın `tubitak/data/dist/`'indedir.
+Dolayısıyla internetsiz bir Windows makinesinde, `onnxruntime` yoksa, belgelerin anlattığı
+yolun **hiçbiri** B'den yürütülemez.
+
+Eksik olan, tam olarak: (1) tekerlek kiti (`kit/`, 57,6 MB) bir sürüm varlığı olarak;
+(2) `gencp_plugin_win_amd64.zip` bir sürüm varlığı olarak; (3) 98.410 baytlık `gencp_plugin.zip`
+ya bir sürüm olarak ya da belgede "yayımlanmadı" notuyla. Üçü de Proje 1 eklentisinin sürüm
+işidir (`19` §5, S3) ve bu iş paketinin kapsamı dışında bırakılmıştır; burada hiçbiri
+yapılmamıştır. **İş bitmiş ilan edilmemektedir.**
+
+### 13.6 Brifingin öngörmediği bulgular
+
+1. **Çevrimdışı kurulum yolu B'den yürütülemez** (V5). Bu, iki dosyanın eksikliğinden daha
+   büyük bir açıktır ve ancak adları tek tek okuyunca görülmüştür; bağlantı denetimi de,
+   Adım 2'nin denetimi de tek başına bunu "kusur" diye işaretleyemez — üçü de meşru görünen
+   "sürüm varlığı" sınıfına benzer.
+2. **Raporlar dört yazar-makinesi betiğini/kaydını anmaktadır** (`norm_probe.py`,
+   `wp16_repro.py`, `host_wsx4.py`, `predictions.txt`). İkisi (`norm_probe.py`,
+   `wp16_repro.py`) hâlâ oturum çalışma dizinindedir ve depoya alınabilir; karar bekler.
+3. **`SOURCE.md` eki ilk denemede bozuk yazılmıştır**: tırnaksız bir heredoc'ta zsh, ters
+   tırnaklı yolları komut olarak çalıştırdı. Fark edilmiş, `HEAD` sürümü geri alınıp ek
+   Python ile yazılmıştır (+15 −0).
+4. **`icon.png`, gözlem:** yalnızca A'dadır; B'nin `.gitignore`'u (`*.png`) onu yoksayar; sürüm
+   zip'inde vardır. Proje 1'e aittir; dokunulmamıştır.
+5. `03a-wald-corpus.md:568` ile `15-kontroller.md:6` aynı adı taşıyan **iki farklı**
+   dosyayı anar (9 vakalık WP3A koşusu, 11 vakalık WP15 koşusu); ilki veri yolu olarak
+   doğrudur ve WP15 kaydı onu aşar.

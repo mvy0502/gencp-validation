@@ -1,0 +1,1557 @@
+{
+ "markdown_files": 31,
+ "names": 193,
+ "resolving_under_sr": 103,
+ "not_resolving": {
+  "vectors.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     72,
+     "vectors.py"
+    ]
+   ],
+   "elsewhere": "tubitak/gencp_core/vectors.py"
+  },
+  ".osm.pbf": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     85,
+     ".osm.pbf"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     276,
+     ".osm.pbf"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     456,
+     ".osm.pbf"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "rasterize.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     95,
+     "rasterize.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     336,
+     "rasterize.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     336,
+     "../../gencp_core/rasterize.py"
+    ],
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     429,
+     "rasterize.py"
+    ]
+   ],
+   "elsewhere": "tubitak/gencp_core/rasterize.py"
+  },
+  "infer.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     107,
+     "infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     110,
+     "infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     110,
+     "../../gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     263,
+     "gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     265,
+     "infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     265,
+     "../../gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     325,
+     "gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     325,
+     "../../gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     656,
+     "infer.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     656,
+     "../../gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     58,
+     "gencp_core/infer.py"
+    ],
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     428,
+     "infer.py"
+    ],
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     430,
+     "infer.py"
+    ]
+   ],
+   "elsewhere": "tubitak/gencp_core/infer.py"
+  },
+  "download_task.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     142,
+     "download_task.py"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     152,
+     "download_task.py"
+    ]
+   ],
+   "elsewhere": "tubitak/qgis_plugin/download_task.py"
+  },
+  "icon.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     144,
+     "icon.png"
+    ],
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     688,
+     "icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     49,
+     "tubitak/qgis_plugin/icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     49,
+     "icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     60,
+     "tubitak/qgis_plugin/icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     84,
+     "icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     100,
+     "icon.png"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     100,
+     "tubitak/qgis_plugin/icon.png"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gate_g_results.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     231,
+     "tubitak/data/plugin_gates/gate_g/gate_g_results.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "sentinel.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     357,
+     "sentinel.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "phase-c-config.md": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     374,
+     "phase-c-config.md"
+    ]
+   ],
+   "elsewhere": "tubitak/docs/phase-c-config.md"
+  },
+  "TCI_36TVK_20260430.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     380,
+     "tubitak/data/ankara/TCI_36TVK_20260430.tif"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     250,
+     "tubitak/data/ankara/TCI_36TVK_20260430.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "SCL_36TVK_20260430.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     381,
+     "tubitak/data/ankara/SCL_36TVK_20260430.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "SCL.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     383,
+     "tubitak/data/tiles36SVJ/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     385,
+     "tubitak/data/tiles36SWJ/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     387,
+     "tubitak/data/tiles36SXJ/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     389,
+     "tubitak/data/tiles36TUK/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     482,
+     "SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     427,
+     "/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     363,
+     "SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     364,
+     "SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     43,
+     "tiles36SXJ/SCL.tif"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     44,
+     "s2_reflectance_l2a/36SXJ_20260527/SCL.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "candidates_meta.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     430,
+     "tubitak/data/tool_runs/T1_capp/candidates_meta.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "chip_grid.csv": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     455,
+     "/chip_grid.csv"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     470,
+     "/chip_grid.csv"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     552,
+     "chip_grid.csv"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     266,
+     "chip_grid.csv"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     379,
+     "chip_grid.csv"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "target_esri_z18.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     579,
+     "tubitak/data/tool_runs/E3/target_esri_z18.tif"
+    ],
+    [
+     "tubitak/sr/docs/00-recon.md",
+     745,
+     "tool_runs/E3/target_esri_z18.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  ".modal.toml": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     686,
+     "/.modal.toml"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "kaggle.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     686,
+     "kaggle.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "train_c1_c2.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     688,
+     "train_c1_c2.py"
+    ]
+   ],
+   "elsewhere": "tubitak/kaggle/train_c1_c2.py"
+  },
+  "dataset-metadata.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     688,
+     "dataset-metadata.json"
+    ]
+   ],
+   "elsewhere": "tubitak/kaggle/dataset-metadata.json"
+  },
+  "prepare_dataset.sh": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     688,
+     "prepare_dataset.sh"
+    ]
+   ],
+   "elsewhere": "tubitak/kaggle/prepare_dataset.sh"
+  },
+  "setup_kaggle_cli.sh": {
+   "where": [
+    [
+     "tubitak/sr/docs/00-recon.md",
+     688,
+     "setup_kaggle_cli.sh"
+    ]
+   ],
+   "elsewhere": "tubitak/kaggle/setup_kaggle_cli.sh"
+  },
+  "gate_s_selftest.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     28,
+     "gate_s_selftest.json"
+    ],
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     200,
+     "tubitak/data/sr_gates/gate_s/gate_s_selftest.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "smoke_run.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     28,
+     "smoke_run.json"
+    ],
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     309,
+     "tubitak/data/sr_out/smoke_run.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "36SVJ_TCI_bicubic_x2.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     236,
+     "tubitak/data/sr_out/36SVJ_TCI_bicubic_x2.tif"
+    ],
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     307,
+     "../data/sr_out/36SVJ_TCI_bicubic_x2.tif"
+    ],
+    [
+     "tubitak/sr/docs/01-wp1.md",
+     314,
+     "tubitak/data/sr_out/36SVJ_TCI_bicubic_x2.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "B02.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     557,
+     "tubitak/data/s2_reflectance_l2a/36TVK_20260430/B02.tif"
+    ],
+    [
+     "tubitak/sr/docs/02a-reflectance-corpus.md",
+     558,
+     "tubitak/data/s2_reflectance_l2a/36TVK_20260430/B02.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "_sr_x4.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-demo-tik-sirasi.md",
+     209,
+     "_sr_x4.tif"
+    ],
+    [
+     "tubitak/sr/docs/02b-demo-tik-sirasi.md",
+     449,
+     "_sr_x4.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "DEMO_INPUT_WSX4_36SXJ_1024px_B2-B3-B4-B8_uint16DN_10m_sr_x4.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-demo-tik-sirasi.md",
+     213,
+     "DEMO_INPUT_WSX4_36SXJ_1024px_B2-B3-B4-B8_uint16DN_10m_sr_x4.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "_sr_x2.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-demo-tik-sirasi.md",
+     216,
+     "_sr_x2.tif"
+    ],
+    [
+     "tubitak/sr/docs/02b-demo-tik-sirasi.md",
+     449,
+     "_sr_x2.tif"
+    ],
+    [
+     "tubitak/sr/docs/02b-plugin.md",
+     83,
+     "_sr_x2.tif"
+    ],
+    [
+     "tubitak/sr/docs/06-wsx4-eklentide.md",
+     258,
+     "_sr_x2.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "cancel_target.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-plugin.md",
+     296,
+     "cancel_target.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  ".cancel_target.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-plugin.md",
+     298,
+     ".cancel_target.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "fixture_1024.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/02b-plugin.md",
+     361,
+     "fixture_1024.tif"
+    ],
+    [
+     "tubitak/sr/docs/02b-plugin.md",
+     363,
+     "fixture_1024.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "corpus.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     18,
+     "corpus.json"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     453,
+     "corpus.json"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     476,
+     "corpus.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "d7_radiometry.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     379,
+     "tubitak/data/sr_wald_corpus/evidence/d7_radiometry.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "chips_train.npy": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     471,
+     "chips_train.npy"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     669,
+     "tubitak/data/sr_wald_corpus/chips_train.npy"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     670,
+     "tubitak/data/sr_wald_corpus/chips_train.npy"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "chips_val.npy": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     472,
+     "chips_val.npy"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "chips_test.npy": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     473,
+     "chips_test.npy"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "chips_heldout.npy": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     474,
+     "chips_heldout.npy"
+    ],
+    [
+     "tubitak/sr/docs/08-eslestirme.md",
+     60,
+     "tubitak/data/sr_wald_corpus_x4/chips_heldout.npy"
+    ],
+    [
+     "tubitak/sr/docs/08-eslestirme.md",
+     218,
+     "tubitak/data/sr_wald_corpus_x4/chips_heldout.npy"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "manifest.csv": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     475,
+     "manifest.csv"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     671,
+     "tubitak/data/sr_wald_corpus/manifest.csv"
+    ],
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     672,
+     "tubitak/data/sr_wald_corpus/manifest.csv"
+    ],
+    [
+     "tubitak/sr/docs/15-kontroller.md",
+     212,
+     "manifest.csv"
+    ],
+    [
+     "tubitak/sr/docs/15-kontroller.md",
+     246,
+     "manifest.csv"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "bicubic_control.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/03a-wald-corpus.md",
+     503,
+     "tubitak/data/sr_wald_corpus/evidence/bicubic_control.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "torch.onnx": {
+   "where": [
+    [
+     "tubitak/sr/docs/03b-registration.md",
+     194,
+     "torch.onnx"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     225,
+     "torch.onnx"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "last.pt": {
+   "where": [
+    [
+     "tubitak/sr/docs/03b-training.md",
+     318,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     324,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     327,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     493,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/04-model-in-plugin.md",
+     364,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     291,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     299,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     442,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     238,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     241,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     153,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     157,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     14,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     91,
+     "last.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     176,
+     "last.pt"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "train_record.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/03b-training.md",
+     323,
+     "train_record.json"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     293,
+     "train_record.json"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     240,
+     "train_record.json"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     157,
+     "train_record.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "best.pt": {
+   "where": [
+    [
+     "tubitak/sr/docs/03b-training.md",
+     325,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     326,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/03b-training.md",
+     351,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     292,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     297,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     240,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     155,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     300,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     129,
+     "best.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     156,
+     "sr_train_runs_tci_v2/run1/best.pt"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     177,
+     "best.pt"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "MODEL_INPUT_36SXJ_20260527_B02-B03-B04_uint16DN_10m.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/04-model-in-plugin.md",
+     71,
+     "MODEL_INPUT_36SXJ_20260527_B02-B03-B04_uint16DN_10m.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "three_panel_36SXJ.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/04-model-in-plugin.md",
+     288,
+     "tubitak/data/sr_compare/three_panel_36SXJ.png"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "setup.cfg": {
+   "where": [
+    [
+     "tubitak/sr/docs/05-referans-arac.md",
+     44,
+     "setup.cfg"
+    ],
+    [
+     "tubitak/sr/docs/05-referans-arac.md",
+     46,
+     "setup.cfg"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "sentinel2.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/05-referans-arac.md",
+     80,
+     "sensorsio/sentinel2.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "some.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/05-referans-arac.md",
+     82,
+     "some.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "host_wsx4.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/05-referans-arac.md",
+     234,
+     "tubitak/data/wp5_reference/host_wsx4.py"
+    ],
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     137,
+     "host_wsx4.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "norm_probe.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     37,
+     "scratchpad/norm_probe.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "norm_probe.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     38,
+     "tubitak/data/sr_wald_corpus_x4/norm_probe.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eval_x4.FIRSTRUN.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     410,
+     "eval_x4.FIRSTRUN.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_sr_x4_b4.onnx": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     424,
+     "tubitak/data/plugin_models/gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/08-eslestirme.md",
+     50,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/09-devir.md",
+     38,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/09-release-notes-draft.md",
+     27,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/09-release-notes-draft.md",
+     79,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     140,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     140,
+     "//github.com/mvy0502/gencp-validation/releases/download/sr-plugin-v0.1.0/gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     255,
+     "gencp_sr_x4_b4.onnx"
+    ],
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     174,
+     "gencp_sr_x4_b4.onnx"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "export_verification.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-model.md",
+     451,
+     "export_verification.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "manifest_v2.csv": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-registration.md",
+     37,
+     "tubitak/data/sr_wald_split_v2/manifest_v2.csv"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "split_v2.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-registration.md",
+     37,
+     "split_v2.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "leakage.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/07-x4-registration.md",
+     38,
+     "tubitak/data/sr_wald_split_v2/leakage.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "wp8_arms.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/08-eslestirme.md",
+     219,
+     "tubitak/data/sr_match/wp8_arms.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_plugin.zip": {
+   "where": [
+    [
+     "tubitak/sr/docs/09-release-notes-draft.md",
+     14,
+     "gencp_plugin.zip"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     117,
+     "//github.com/mvy0502/gencp-validation/releases/download/plugin-v0.2.0/gencp_plugin.zip"
+    ],
+    [
+     "tubitak/sr/docs/11-zamanlama.md",
+     40,
+     "gencp_plugin.zip"
+    ],
+    [
+     "tubitak/sr/docs/11-zamanlama.md",
+     61,
+     "gencp_plugin.zip"
+    ],
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     127,
+     "gencp_plugin.zip"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     152,
+     "gencp_plugin.zip"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_plugin_win_amd64.zip": {
+   "where": [
+    [
+     "tubitak/sr/docs/09-release-notes-draft.md",
+     15,
+     "gencp_plugin_win_amd64.zip"
+    ],
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     128,
+     "gencp_plugin_win_amd64.zip"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_C2_fp32.onnx": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     143,
+     "gencp_C2_fp32.onnx"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     143,
+     "//github.com/mvy0502/gencp-validation/releases/download/plugin-v0.2.0/gencp_C2_fp32.onnx"
+    ],
+    [
+     "tubitak/sr/docs/11-zamanlama.md",
+     41,
+     "gencp_C2_fp32.onnx"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     152,
+     "gencp_C2_fp32.onnx"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "clcplus_2021_turkey_10m.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     144,
+     "clcplus_2021_turkey_10m.tif"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     144,
+     "//github.com/mvy0502/gencp-validation/releases/download/veri-turkiye-2026-08-31/clcplus_2021_turkey_10m.tif"
+    ],
+    [
+     "tubitak/sr/docs/11-zamanlama.md",
+     42,
+     "clcplus_2021_turkey_10m.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "turkey-2026-08-19.osm.pbf": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     145,
+     "turkey-2026-08-19.osm.pbf"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     145,
+     "//github.com/mvy0502/gencp-validation/releases/download/veri-turkiye-2026-08-31/turkey-2026-08-19.osm.pbf"
+    ],
+    [
+     "tubitak/sr/docs/11-zamanlama.md",
+     43,
+     "turkey-2026-08-19.osm.pbf"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_sr_tci_x4_b3_v2.onnx": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     254,
+     "gencp_sr_tci_x4_b3_v2.onnx"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     313,
+     "gencp_sr_tci_x4_b3_v2.onnx"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     193,
+     "tubitak/data/plugin_models/gencp_sr_tci_x4_b3_v2.onnx"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     292,
+     "gencp_sr_tci_x4_b3_v2.onnx"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     172,
+     "gencp_sr_tci_x4_b3_v2.onnx"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "SAMPLE_3band_TCI_uint8_10m_512px.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     257,
+     "SAMPLE_3band_TCI_uint8_10m_512px.tif"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     304,
+     "SAMPLE_3band_TCI_uint8_10m_512px.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "SAMPLE_4band_B02-B03-B04-B08_uint16_10m_512px.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     258,
+     "SAMPLE_4band_B02-B03-B04-B08_uint16_10m_512px.tif"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     316,
+     "SAMPLE_4band_B02-B03-B04-B08_uint16_10m_512px.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "SHA256SUMS.txt": {
+   "where": [
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     259,
+     "SHA256SUMS.txt"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     273,
+     "SHA256SUMS.txt"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     279,
+     "SHA256SUMS.txt"
+    ],
+    [
+     "tubitak/sr/docs/10-kurulum.md",
+     282,
+     "SHA256SUMS.txt"
+    ],
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     152,
+     "SHA256SUMS.txt"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "WMTSCapabilities.xml": {
+   "where": [
+    [
+     "tubitak/sr/docs/11-eox.md",
+     17,
+     "//tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_s2cloudless2024_z14_3857.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/11-eox.md",
+     37,
+     "eox_s2cloudless2024_z14_3857.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_s2cloudless2024_36SXJ_chip_10m.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/11-eox.md",
+     38,
+     "eox_s2cloudless2024_36SXJ_chip_10m.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_bicubic_x2.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/11-eox.md",
+     38,
+     "eox_bicubic_x2.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_comparison.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/11-eox.md",
+     38,
+     "eox_comparison.png"
+    ],
+    [
+     "tubitak/sr/docs/11-eox.md",
+     191,
+     "eox_comparison.png"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "gencp_demo.qgz": {
+   "where": [
+    [
+     "tubitak/sr/docs/12-qt5-uyumluluk.md",
+     114,
+     "gencp_demo.qgz"
+    ]
+   ],
+   "elsewhere": "tubitak/demo/gencp_demo.qgz"
+  },
+  "gencp_sr_tci_x4_b3.onnx": {
+   "where": [
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     362,
+     "tubitak/data/plugin_models/gencp_sr_tci_x4_b3.onnx"
+    ],
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     200,
+     "gencp_sr_tci_x4_b3.onnx"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_tci_model_x4.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/12-tci-model.md",
+     400,
+     "eox_tci_model_x4.png"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "MANIFEST.json": {
+   "where": [
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     9,
+     "MANIFEST.json"
+    ],
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     10,
+     "MANIFEST.json"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "get-pip.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     82,
+     "get-pip.py"
+    ],
+    [
+     "tubitak/sr/docs/13-cevrimdisi-kurulum.md",
+     83,
+     "get-pip.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "eox_tci_v2_model_x4.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/13-tci-model-v2.md",
+     256,
+     "eox_tci_v2_model_x4.png"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "storage.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     37,
+     ".../torch/storage.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "serialization.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     38,
+     ".../torch/serialization.py"
+    ],
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     39,
+     ".../torch/serialization.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "wp16_repro.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/16-checkpoint.md",
+     40,
+     ".../wp16_repro.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "..._2m5_sisr.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     47,
+     "..._2m5_sisr.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "_2m5_sisr.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     240,
+     "_2m5_sisr.tif"
+    ],
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     242,
+     "_2m5_sisr.tif"
+    ],
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     246,
+     "_2m5_sisr.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "_2m5_bicubic.tif": {
+   "where": [
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     240,
+     "_2m5_bicubic.tif"
+    ],
+    [
+     "tubitak/sr/docs/17-wsx4-hizalama.md",
+     241,
+     "_2m5_bicubic.tif"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "predictions.txt": {
+   "where": [
+    [
+     "tubitak/sr/docs/18-depo-tasima.md",
+     14,
+     "predictions.txt"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "coverage_block.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     48,
+     "coverage_block.py"
+    ]
+   ],
+   "elsewhere": "tubitak/tests/coverage_block.py"
+  },
+  "plugin-field-test.md": {
+   "where": [
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     60,
+     "plugin-field-test.md"
+    ]
+   ],
+   "elsewhere": "tubitak/docs/plugin-field-test.md"
+  },
+  "build_plugin_zip_windows.py": {
+   "where": [
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     63,
+     "tubitak/scripts/build_plugin_zip_windows.py"
+    ],
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     85,
+     "build_plugin_zip_windows.py"
+    ]
+   ],
+   "elsewhere": null
+  },
+  "dialog.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     75,
+     "dialog.png"
+    ]
+   ],
+   "elsewhere": "docs/plugin/dialog.png"
+  },
+  "confidence_layer.png": {
+   "where": [
+    [
+     "tubitak/sr/docs/19-proje1-fark-olcumu.md",
+     75,
+     "confidence_layer.png"
+    ]
+   ],
+   "elsewhere": "docs/plugin/confidence_layer.png"
+  }
+ }
+}
