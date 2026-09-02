@@ -89,6 +89,46 @@ CLC+ Backbone, Copernicus Land Monitoring Service ürünüdür.
 
 ---
 
+## Proje 2 — Sentinel-2 süper çözünürlük eklentisi
+
+Yukarıdaki eklentiden ayrı, ikinci bir QGIS eklentisi: **Sentinel-2 görüntüsünü süper
+çözünürlüğe çıkarır** (2 veya 4 kat). Amacı görüntü eşleştirmeye daha çok ayrıntı vermektir —
+georeferanslamada anahtar nokta eşleştirmesi böylece **daha çok ve daha iyi konumlanmış kontrol
+noktası** üretir. Kaynak, belgeler ve kurulum kılavuzu `tubitak/sr/` altındadır; 2 Eylül 2026'dan
+itibaren Proje 2'nin güncel kopyası bu depodadır ve nereden geldiği
+[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır. (Aşağıdaki KURAL
+bölümü bu taşınmadan önce yazılmıştır; oradaki "QGIS eklenti iş paketi GenCP'de devam eder"
+cümlesi Proje 1 için geçerlidir.)
+
+**İndirin — hepsi bir arada, toplam 8,1 MB:**
+**https://github.com/mvy0502/gencp-validation/releases/tag/sr-plugin-v0.1.0**
+Eklenti zip'i, üç model, doğrulama için iki örnek raster ve `SHA256SUMS.txt`. Dosya
+aktarımından sonra sağlama toplamları bu dosyaya karşı denetlenir.
+
+**Kurulum kılavuzu** (Türkçe, çevrimdışı kurulum dahil, bu depoda):
+[`tubitak/sr/docs/10-kurulum.md`](tubitak/sr/docs/10-kurulum.md)
+
+**Üç model, ve her birinin kurumun hangi verisine karşılık geldiği:**
+
+| model | ölçek | bant | normalizasyon | karşılık geldiği veri |
+|---|---|---|---|---|
+| **`gencp_sr_tci_x4_b3_v2.onnx`** | ×4 | 3, `B02,B03,B04` | `DN/255` | **kurumun bugün elindeki 8 bitlik RGB** |
+| **`gencp_sr_x4_b4.onnx`** | ×4 | 4, `+B08` | `DN/10000` | **16 bitlik yansıtım verisi, geldiğinde** |
+| `gencp_sr_x2_v1.onnx` | ×2 | 3 | `DN/5000` | daha önceki 3 bantlı çalışma; yeni kullanım için aşılmıştır |
+
+**Eşleştirme sonucu**, koşullarıyla: eğitimde hiç kullanılmamış **36SXJ granülü, 1628 çip**,
+gerçek 10 m Sentinel-2'ye karşı **40 m → 10 m** ölçülmüştür. 8 bitlik model, bikübik
+kontrolün **3,94 katı** kullanılabilir kontrol noktası verir (çip başına 491,3'e karşı 124,6
+RANSAC iç nokta) ve karşılıklılık hatasını **%40** düşürür (0,5917 px'e karşı 0,9835 px);
+1628 çipin **her birinde** daha iyidir
+([`13-tci-model-v2.md`](tubitak/sr/docs/13-tci-model-v2.md) §8). Bu bir bozup-geri-alma
+deneyidir; aracın gerçekte kullanıldığı 2,5 m çözünürlükte ölçüm yoktur, çünkü o çözünürlükte
+yer gerçeği yoktur.
+
+Eklenti **çevrimdışı çalışır**: QGIS 4.2.1 ve 3.44.13 üzerinde ağ bağlantıları kapatılarak
+ölçülmüş, çalışma sırasında **hiçbir ağ girişimi gözlenmemiştir**
+([`10-kurulum.md`](tubitak/sr/docs/10-kurulum.md) §7.6).
+
 ## Araştırma kaydı
 
 Buradan aşağısı ölçüm çalışmasının kendisidir: ön kayıtlar, sonuçlar, denetimler, kanıt

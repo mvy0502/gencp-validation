@@ -5,11 +5,20 @@ decision can be made on the actual content. Publishing is Vedat's call.
 
 | | |
 |---|---|
-| **repository** | `mvy0502/gencp-validation` — the convention the existing `plugin-v0.2.0` and `clcplus-turkey-2026-08-30` releases already follow |
+| **repository** | `mvy0502/gencp-validation` — the convention the existing `plugin-v0.2.0` release already follows |
 | **tag** | **`sr-plugin-v0.1.0`** — `version=0.1.0` in `sr_plugin/metadata.txt`, prefixed `sr-` to keep it distinct from Project 1's `plugin-v*` |
 | **title** | GenCP Super-Resolution 0.1.0 — QGIS plugin and models |
 
 ## Attachments
+
+> **Project 1's plugin now ships as TWO artefacts.** `gencp_plugin.zip` (98,410 B) is the
+> cross-platform build. `gencp_plugin_win_amd64.zip` (15,935,709 B) is a **Windows-only**
+> build with `onnxruntime` and `osmium` vendored inside it, for institution machines with no
+> internet. The cross-platform artefact was **not** made Windows-specific; both come from the
+> same source, and the vendoring code is a no-op where `_vendor/` is absent. `rasterio` is
+> deliberately not vendored in either — it carries its own GDAL and QGIS has already loaded
+> one. An offline wheel kit covers it instead (`13-cevrimdisi-kurulum.md`).
+
 
 | file | size | sha256 |
 |---|---|---|
@@ -42,10 +51,28 @@ unchanged, and each source pixel centre to fall at the centre of its output bloc
 3. For the model methods, `onnxruntime` must be importable from QGIS's Python. The bicubic
    path deliberately does not import it, so the plugin loads and completes a job without it.
 
-Verified on **QGIS 4.2.1, macOS**, installed from this zip into a throwaway profile with no
-access to the source tree: QGIS discovered, loaded and started the plugin, and bicubic ran end
-to end with the Gate S contract holding exactly. **QGIS 3.x is written for but has never been
-run. Windows is untested.**
+**Declared minimum: QGIS 3.40. Tested: 3.44.13 and 4.2.1.** These are different numbers on
+purpose — see the note below the table.
+
+| | QGIS | Qt | platform | result |
+|---|---|---|---|---|
+| **declared minimum** | **3.40** | — | — | `qgisMinimumVersion=3.40` |
+| **tested** | **4.2.1** (Belém do Pará) | Qt 6.11.1 | macOS 26.5.1, Apple silicon | headless 23/23, overlap 20/20, sidecar 6/6, e2e 82/82; bicubic end to end, Gate S exact |
+| **tested** | **3.44.13** (Solothurn, LTR) | Qt 5.15.18 | macOS 26.5.1, Apple silicon | headless 23/23, overlap 20/20, sidecar 6/6, e2e 80/82; bicubic end to end, Gate S exact |
+| **NOT tested** | **3.40 itself** | Qt5 | — | no longer downloadable from qgis.org |
+| **NOT tested** | anything below 3.44 | — | — | — |
+| **NOT tested** | any version | — | **Windows, Linux** | — |
+
+> **The declared minimum is deliberately below the tested floor. Do not "correct" it.**
+> QGIS refuses to enable a plugin whose `qgisMinimumVersion` exceeds the running version, so
+> declaring 3.44 would lock out QGIS 3.40 — the version institutions actually run, and the
+> version whose reported failure was diagnosed as a missing `rasterio`, not a Qt or API
+> incompatibility (`12-qt5-uyumluluk.md`). Every QGIS API symbol the code calls is QGIS 3.0-era;
+> the only newer one, `QgsProjectionSelectionWidget.CrsOption`, is already behind a `hasattr`
+> guard with a 3.x fallback. The field states what the code needs; this table states what was
+> actually run.
+
+See `12-qt5-uyumluluk.md`.
 
 #### The models
 
@@ -86,7 +113,7 @@ super-resolving real imagery.
 The plugin can run the Evoland/CESBIO **wsx4** model, which is **not this project's work and is
 not attached here.**
 
-To use it, download from the upstream project — **https://github.com/IGNF/sentinel2_superresolution**
+To use it, download from the upstream project — **https://github.com/Evoland-Land-Monitoring-Evolution/sentinel2_superresolution**
 — both files:
 
 - `wsx4_spatrad.onnx`
