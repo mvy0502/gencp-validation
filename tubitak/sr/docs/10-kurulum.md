@@ -12,6 +12,8 @@ belirtilerek yazılmıştır.
 | **GenCP Synthetic Reference** (Proje 1) | OpenStreetMap ve arazi örtüsünden sentetik uydu görüntüsü üretir | 0.2.0 |
 | **GenCP Super-Resolution** (Proje 2) | Sentinel-2 görüntüsünün çözünürlüğünü artırır | 0.1.0 |
 
+Proje 2, QGIS olmadan komut satırından da çalıştırılabilir ve eklentiyle piksel piksel aynı çıktıyı üretir: [`20-komut-satiri.md`](20-komut-satiri.md).
+
 ---
 
 ## 1. Ön koşullar

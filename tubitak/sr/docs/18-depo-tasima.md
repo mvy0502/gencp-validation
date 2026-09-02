@@ -1211,3 +1211,288 @@ taşımaz) — Proje 1 sürüm işi.
    eksik, dördü için de anlam satırı basılmıştır.
 3. `SHA256SUMS.txt`'nin kendi sağlaması değişmiştir (`88fe7271d2f6…` → `eae9fed8eee5…`); §14'te
    yazılı eski değer kaydıdır, güncel olan buradadır.
+
+
+## 16. WP24 — komut satırı aracı, eklentiye özdeşliği ölçülerek
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `aa1cb06f43c92c738895659434d0f32ec14ddbfd`; iki ağaç da temizdi; her izlenen dosya manifeste
+alınmıştır (A **1272**, B **1547**, `/tmp/wp24_baseline/`). §1–15 değiştirilmemiştir. **A'da
+hiçbir şey değişmemiş, hazırlanmamış, commit'lenmemiştir.** `tubitak/sr/sr_plugin/` ve
+`sr_core/` altında hiçbir dosya değişmemiştir. Dosya gövdeleri Python ile yazılmıştır.
+
+Numaralandırma notu: B'nin taban çizgisi `aa1cb06`, §15'in (WP23) üstüne 2 Eylül'de gelen
+ölçek düzeltmesi commit'idir ("the plugin still said 2x in three strings and one constant").
+O iş paketi bu deftere bölüm olarak yazılmamış, kanıt klasörü `docs/evidence/wp22/` adıyla
+kalmıştır; §14'teki WP22 (tekerlek kiti) ile ad çakışması vardır. Burada düzeltilmemiş,
+kaydedilmiştir.
+
+Soru: araç komut satırından çalışır mı? Cevap: artık evet — ve eklentiyle **aynı pikselleri**
+ürettiği, altı bağımsız referansta piksel özeti eşitliğiyle ölçülmüştür.
+
+### 16.1 Aşama 1 — iz, içe aktarılabilirlik, yapı seçimi (V1)
+
+Eklentinin girdiyi okumaktan çıktıyı yazmaya kadar izlediği yol, sırayla:
+
+| # | modül | ne yapar | modül düzeyinde `qgis`/Qt |
+|---|---|---|---|
+| 1 | `sr_plugin/dialog.py` | girdiyi `rasterio` ile okur; yöntem, ölçek, karo, bindirme, birleştirme ve kenar payını seçer; model künyesini okur ve girdiyi künyeye karşı doğrular | **EVET** (`qgis.PyQt`, `qgis.core`, `qgis.gui`) |
+| 2 | `sr_plugin/task.py` | `QgsTask` üzerinde `superresolve`'u çağırır; model yolunda `OnnxUpsampler(model_path, clip=True)` kurar | **EVET** (`qgis.core.QgsTask`) |
+| 3 | `sr_core/run.py` → `superresolve` | boru hattı: kaynağı açar, çıktı ızgarasını türetir, karolar, her karoyu yükseltir, birleştirir, atomik yazar, provenance etiketini basar | hayır (`numpy`; `rasterio` tembel) |
+| 4 | `sr_core/grid.py` | tam sayı ölçek, kuzeye dönüklük, çıktı ızgarası (Gate S aritmetiği) | hayır |
+| 5 | `sr_core/tiles.py` | karo yerleşimi | hayır |
+| 6 | `sr_core/upsample.py` | `BicubicUpsampler` (PIL) | hayır (`PIL` tembel) |
+| 7 | `sr_core/mosaic.py` | feather / crop birleştirme, `atomic_path`, `provenance` | hayır (`rasterio`, `PIL` tembel) |
+| 8 | `sr_plugin/onnx_upsample.py` | model sözleşmesi (`read_provenance`), girdi doğrulama (`validate_input`), `OnnxUpsampler` | hayır (`numpy`; `onnxruntime`, `rasterio`, `yaml` tembel) |
+| — | `sr_plugin/__init__.py` | yalnızca `classFactory`, içe aktarma fonksiyon içinde | hayır |
+
+Sonuç: pikselleri üreten yolun tamamı (3–8) QGIS'siz içe aktarılabilir. Yalnızca 1 ve 2 Qt
+ister ve ikisinin katkısı **parametre seçimi** ile iş parçacığı yönetimidir, aritmetik değil.
+**Yapı A seçilmiştir.** Araç `superresolve`'u ve `onnx_upsample`'ı içe aktarır; tek uygulama
+vardır. Yeniden ifade edilen tek şey, `dialog.py`'nin seçim kuralıdır:
+
+- `BICUBIC_SCALE` (4) ve `MODEL_INFER_TILE_PX` (512) `dialog.py`'nin **kaynağından `ast` ile
+  okunur**; ne içe aktarılır (Qt) ne de sabit olarak kopyalanır — eklentide değişirse araç
+  onu izler;
+- bikübik: karo `DEFAULT_TILE_PX` 512, bindirme `DEFAULT_OVERLAP_PX` 32, feather;
+- model: ölçek, bant sayısı, normalleştirme, birleştirme ve kenar payı `read_provenance`'tan;
+  karo, sözleşme kırpmalıysa `tile_src`, değilse `MODEL_INFER_TILE_PX`; bindirme
+  `overlap_src`; girdi `validate_input` ile künyeye karşı;
+- `clip=True`, `task.py`'nin kurduğu gibi.
+
+Bunların dördü de sapabilirdi; hepsi 16.3'teki özet eşitliğinin kapsamındadır.
+
+**Kayıtlı piksel özetleri** (adım 4). Belgelerde dört değer vardır; hiçbiri **yöntemini**
+yazmaz. `read().tobytes()` üzerinden SHA-256, bant sırası değişik varyantı ve md5 denenmiş,
+hiçbiri eşleşmemiştir. Yöntem, WP2B oturumunun karalama dizininde kalmış `pixhash.py`'de
+bulunmuştur: SHA-256, önce `"{bant}|{yükseklik}|{genişlik}|{dtype}"` başlığı, sonra her bandın
+satırları sırayla. Bu tanımla dördü de diskte duran çıktılar üzerinde yeniden üretilmiştir:
+
+| özet | nerede kayıtlı | üreten girdi ve çağrı |
+|---|---|---|
+| `ca3b4c41…a55ad03c` | `02b-plugin.md` §7.1; `04-model-in-plugin.md` §2.1; `06-wsx4-eklentide.md` §0 | `tiles36SVJ/TCI.tif` (10980², 3 bant uint8), bikübik 2×, karo 512 / bindirme 32 / feather |
+| `41b54b77…` (belgede önek; tamı `…0108f72ee`) | `02b-plugin.md` §7.1 | `sr_wp2b/fixture_1024.tif` (36SVJ kesiti), bikübik 2× |
+| `5e3de3cf…0f374cd2` | `04-model-in-plugin.md` §4 | `DEMO_INPUT_36SXJ_4096px_B02-B03-B04_uint16DN_10m.tif`, `gencp_sr_x2_v1.onnx`, karo 512 / 32 / feather |
+| `6b71d037…` (belgede önek; tamı `…e1675835`) | `06-wsx4-eklentide.md` §0 | `DEMO_INPUT_WSX4_36SXJ_1024px_B2-B3-B4-B8_uint16DN_10m.tif`, `wsx4_spatrad.onnx` + `.yaml`, karo 256 / 65 / crop kenar 130 |
+
+Dağıtılan gösteri modeli `gencp_sr_x4_b4.onnx` için **kayıtlı özet yoktur**; 4× bikübik için
+de yoktur (eklentinin bikübik varsayılanı 2 Eylül'de 4 oldu). İkisi bu iş paketinde eklentinin
+kendisinden üretilmiştir (16.3).
+
+### 16.2 Aşama 2 — araç
+
+`tubitak/sr/tools/sr_cli.py`, yalnızca `argparse`; yeni bağımlılık yok. İki konumsal
+argüman, `--method {bicubic,model,wsx4}` (eklentinin üç girdisi; `model` ve `wsx4` aynı yolu
+izler, ikisi de `--model` ister), `--model`, `--overlap` (metre), `--blend {auto,feather,crop}`,
+`--overwrite`, `--dry-run`, `--version`, ve brifingde olmayan **`--scale`** (yalnızca bikübik;
+varsayılan `BICUBIC_SCALE`; model yolunda verilirse modelinkiyle eşit olmalıdır). Eklenmesinin
+nedeni 16.3'tür: kayıtlı bikübik özetlerin ikisi de 2× iken eklentinin bugünkü varsayılanı
+4×'tir; `--scale` olmadan o iki referans çalıştırılamazdı.
+
+Varsayılanlar ve kaynağı:
+
+| seçenek | aracın varsayılanı | eklentide |
+|---|---|---|
+| ölçek | bikübik `BICUBIC_SCALE` = 4 (dialog.py'den okunur); model: künye | aynı |
+| karo | 512 (`tiles.DEFAULT_TILE_PX`); model: `tile_src` ya da `MODEL_INFER_TILE_PX` | aynı |
+| bindirme | 32 kaynak pikseli; model: künyenin `overlap_src`'i | aynı — **eklentinin birimi pikseldir**, metre değil. `--overlap` metre alır ve kaynak pikselinin tam katı değilse reddeder (kod 11); metre cinsinden bir varsayılan eklentide yoktur ve uydurulmamıştır |
+| birleştirme | `auto`: bikübik feather, model: künyenin bildirdiği | eklentide **seçim yoktur**; kural aynıdır. `auto` dışı seçim eklentiden ayrılır ve uyarı basar |
+| kırpma (clip) | açık | açık |
+| üzerine yazma | kapalı; var olan çıktı reddedilir (kod 9) | eklenti sorar |
+
+Davranış: Gate S araç tarafından iki kez uygulanır — yazmadan önce `output_grid` ile
+öngörülür (`--dry-run` bunu basar), yazdıktan sonra dosya yeniden açılıp S1–S4 tam eşitlikle
+doğrulanır (kod 16). Yeniden projeksiyon ya da yeniden örnekleme yoktur. Ağ erişimi yapı
+gereği yoktur: yalnızca `rasterio` iki yerel yolda, `onnxruntime` bir yerel dosyada; `/vsi` ve
+`://` biçimli yollar GDAL'a ulaşmadan reddedilir. Provenance etiketi ve atomik yazma
+`superresolve`'un içindedir; araç eklemez, eklentiyle aynıdır. Hata kodları 3–16 ayrıdır ve
+`--help`'te listelenir.
+
+Eklentiden **daha katı** olan tek yer: KRS'siz girdi. Eklenti KRS'siz bir rasteri reddetmez
+(`sr_core` da etmez; çıktıyı KRS'siz yazar); araç brifing gereği kod 4 ile reddeder. Bu bir
+reddetme farkıdır, piksel farkı değildir. `sr_core`'a hiçbir şey eklenmemiştir; Gate S
+yeniden doğrulama kodu araçtadır.
+
+### 16.3 Aşama 3 — kanıt: özdeşlik (V2), bilinen-yanlış (V3), kuru çalıştırma (V4)
+
+`tubitak/sr/tests/sr_cli_tests.py --all` (`--data-root` verilmezse `tubitak/data`'yı, o yoksa
+A'nın veri ağacını bulur; girdi bulamazsa NOT RUN der ve hükmü saklı tutar, çıkış 2).
+
+**V2 — özdeşlik, özet özet.** Standart bayt eşitliği; tolerans yok. Dördü kayıtlı, ikisi bu iş
+paketinde eklentinin gerçek `QgsTask`'ından üretilmiş (QGIS 4.2.1 uygulama sürecinde,
+`run_in_qgis.sh`, çıkış dosyaları `tubitak/data/sr_wp24/reference_plugin_*.tif`):
+
+| referans | girdi | eklenti / kayıt | araç | sonuç |
+|---|---|---|---|---|
+| bikübik 2×, 1024 px kesit | `fixture_1024.tif` | `41b54b778f07c98974d63cf38969e25aadf089c2a40e82aa3ddaebe0108f72ee` | aynı | **EŞİT** |
+| bikübik 2×, tam granül | `tiles36SVJ/TCI.tif` | `ca3b4c41b6661aed8cc3c771d0cdd5a44dd1f70684f18932f1644beba55ad03c` | aynı | **EŞİT** |
+| GenCP 2× modeli | `DEMO_INPUT_36SXJ_4096px` | `5e3de3cfcf4cf60910d6763712350fbfe42a1116abe4767fc77542bc0f374cd2` | aynı | **EŞİT** |
+| wsx4 4× | `DEMO_INPUT_WSX4 1024px` | `6b71d0370642b56617eee715b5ceb24b62f5139542b3fed2aa1fd498e1675835` | aynı | **EŞİT** |
+| bikübik 4×, eklenti QgsTask, 2 Eylül | `DEMO_INPUT_WSX4 1024px` | `6cd62c3859d920d1e1d5b8d6cea17d878f3b8c33a8974d8d92805a24591dd767` | aynı | **EŞİT** |
+| `gencp_sr_x4_b4.onnx`, eklenti QgsTask, 2 Eylül | `DEMO_INPUT_WSX4 1024px` | `c4794d792c156e14c687093fa1cb9de3aec541d31102ad9d537e93b31061a2ac` | aynı | **EŞİT** |
+
+**12/12** (altı özet eşitliği, altı kuru çalıştırma karşılaştırması). Ayrık özet sayısı, her
+satırda 1. Karşılaştırmanın kendi bilinen-yanlışı: yazılmış bir çıktının tek pikseli (bant 2,
+satır 37, sütun 91) bir arttırılmış; özet değişmiş ve ilk farklı piksel tam o koordinatta,
+iki değeriyle (206 → 207) raporlanmıştır. Özdeş dosya için fark yoktur.
+
+**V3 — bilinen-yanlış.** Her biri reddedilmiş, beklenen kodla, çıktı diske bırakılmadan;
+sınama aracın başarması hâlinde FAIL üretir (koşul `rc == beklenen and not çıktı.exists()`):
+
+| beslenen | beklenen | dönen | çıktı |
+|---|---|---|---|
+| KRS'siz raster | 4 | 4 | yok |
+| 3 bantlı uint16, 4 bant bekleyen `gencp_sr_x4_b4.onnx` | 6 | 6 | yok |
+| var olmayan model yolu | 8 | 8 | yok |
+| var olan çıktı, `--overwrite` yok | 9 | 9 | var olan dosya bayt bayt aynı kalmıştır |
+| döndürülmüş/eğilmiş raster | 5 | 5 | yok |
+| var olmayan girdi | 3 | 3 | yok |
+| 10 m rasterde 325 m bindirme (32,5 px) | 11 | 11 | yok |
+| **hiç argüman yok** | ≠0, kullanım basılır | 2, kullanım basıldı | — |
+| tanınmayan `--scalee` | 2 | 2 | yok |
+
+Bilinen-doğru kontrolleri: aynı sentetik raster kabul edilir (0), `--overwrite` ile ikinci
+çalıştırma kabul edilir (0). **17/17.**
+
+**V4 — kuru çalıştırma.** Altı gerçek çalıştırmanın her birinden önce aynı çağrı `--dry-run` ile
+yapılmış, bastığı KRS / piksel boyu / başlangıç noktası / boyut, yazılan dosyadan okunanla
+programatik olarak karşılaştırılmıştır: **6/6 eşit**, ayrıca sentetik rasterde varsayılan
+ölçekte 1/1. Kuru çalıştırma dosya yazmamıştır (kontrol edilmiştir).
+
+### 16.4 Aşama 4 — belge
+
+`tubitak/sr/docs/20-komut-satiri.md` (Türkçe): ne olduğu, üç çağrı, neyi neden reddettiği,
+özdeşlik satırı ve kanıtın adı. `10-kurulum.md`'ye, iki eklenti tablosunun altına **tek satır**
+eklenmiştir; kılavuz yeniden yapılandırılmamıştır.
+
+**Sürüm.** Araç hiçbir sürüme eklenmemiştir. **Bir sonraki sürüme girmelidir**: danışmanın
+sorusu tam olarak buydu; araç ek bağımlılık getirmez; özdeşliği ölçülmüştür; ve sürümdeki
+zip'in dışında tek dosyadır (`sr_cli.py`, `sr_core` ve `sr_plugin/onnx_upsample.py`'yi
+çalışma ağacındaki yerinden içe aktarır — zip'e girecekse `sr_core` ve `onnx_upsample` ile
+birlikte paketlenmesi gerekir; bu, sürüm iş paketinin kararıdır).
+
+### 16.5 V5 — `--help`, yabancı gözüyle
+
+```text
+usage: sr_cli [-h] [--method {bicubic,model,wsx4}] [--model DOSYA.onnx]
+              [--scale N] [--overlap METRE] [--blend {auto,feather,crop}]
+              [--overwrite] [--dry-run] [--version]
+              input output
+
+GenCP Süper Çözünürlük — komut satırı. Bir GeoTIFF'i, kendi ızgarasının tam tamsayı incelmesi üzerine süper çözünürlükle yazar. QGIS eklentisiyle aynı kodu çalıştırır ve aynı pikselleri üretir; çıktı ızgarası kaynağın KRS'sini, başlangıç noktasını ve kapsamını olduğu gibi korur (Gate S).
+
+positional arguments:
+  input                 girdi GeoTIFF (kuzeye dönük, KRS'li)
+  output                yazılacak GeoTIFF; önce geçici dosyaya yazılır, sonra
+                        adı değiştirilir (yarım dosya kalmaz)
+
+options:
+  -h, --help            show this help message and exit
+  --method {bicubic,model,wsx4}
+                        eklentideki yöntemler: bicubic (varsayılan; model
+                        gerekmez), model (GenCP eğitilmiş model), wsx4
+                        (referans model). model ve wsx4 aynı yolu izler; ikisi
+                        de --model ister
+  --model DOSYA.onnx    ONNX model dosyası; --method model/wsx4 için zorunlu.
+                        wsx4 için aynı adlı .yaml dosyası modelin yanında
+                        olmalıdır
+  --scale N             yalnızca bicubic: ölçek katsayısı, ikinin kuvveti
+                        (varsayılan 4, eklentinin bikübik ölçeği). Model
+                        yolunda modelin künyesinden okunur; verilirse ona eşit
+                        olmalıdır
+  --overlap METRE       karo bindirmesi, metre; kaynak pikselinin tam katı
+                        olmalıdır. Varsayılan eklentininkidir: bicubic 32
+                        kaynak pikseli, model yolunda modelin künyesindeki
+                        değer
+  --blend {auto,feather,crop}
+                        karo birleştirme. auto (varsayılan) eklentinin
+                        kuralıdır: bicubic feather, model yolunda modelin
+                        bildirdiği düzen. Başka bir seçim çıktıyı
+                        eklentininkinden ayırır ve uyarı basılır
+  --overwrite           var olan çıktının üzerine yaz (varsayılan: var olan
+                        çıktı reddedilir)
+  --dry-run             hiçbir şey yazma; yazılacak ızgarayı Gate S
+                        terimleriyle bas ve çık
+  --version             show program's version number and exit
+
+Örnekler:
+  sr_cli girdi.tif cikti.tif
+      bikübik, ölçek 4 (eklentinin bikübik varsayılanı)
+  sr_cli girdi.tif cikti.tif --method model --model gencp_sr_x4_b4.onnx
+      eğitilmiş model; ölçek, bant sayısı ve karo düzeni modelin künyesinden okunur
+  sr_cli girdi.tif cikti.tif --method model --model M.onnx --dry-run
+      hiçbir şey yazmadan, yazılacak ızgarayı Gate S terimleriyle basar
+
+Çıkış kodları: 0 başarı; 2 kullanım hatası; 3 girdi yok/okunamıyor; 4 girdinin KRS'si yok;
+  5 girdi kuzeye dönük değil ya da ızgara sözleşmesi sağlanamıyor; 6 bant sayısı modele uymuyor;
+  7 veri tipi desteklenmiyor; 8 model dosyası yok/okunamıyor; 9 çıktı var, --overwrite yok;
+  10 çıktı girdiyle aynı; 11 bindirme piksel katı değil ya da yetersiz; 12 onnxruntime yok;
+  13 rasterio yok; 14 yazma hatası; 15 ölçek geçersiz; 16 yazılan çıktı Gate S'i sağlamadı.
+Ağ erişimi yoktur: yalnızca verilen yerel dosyalar okunur ve yazılır.
+```
+
+Yabancı gözüyle: iki dosya adı ve model için `--method model --model X.onnx` yeterlidir;
+hangi dosyanın hangi modelle gittiği ve wsx4'ün `.yaml`'ı istediği yazılıdır; çıkış kodları
+açıklanmıştır. **Cevap: EVET.** İki pürüz: `argparse`'ın kendi satırları ("positional
+arguments", "show this help message") İngilizcedir ve karışık dil verir; "Gate S" terimi
+proje dışından birine bir şey söylemez, ama parantezdeki açıklama (KRS, başlangıç noktası,
+kapsam korunur) söyler.
+
+### 16.6 V6 — süre
+
+Dağıtılan gösteri modeli `gencp_sr_x4_b4.onnx`, 1024 × 1024 × 4 bant uint16 girdi → 4096 ×
+4096, 9 karo, bu makinede (Apple Silicon, onnxruntime CPU):
+
+| yol | süre |
+|---|---|
+| araç, kendi ölçtüğü (`süre` satırı) | **3,8 sn** |
+| araç, süreç toplamı (`/usr/bin/time`, başlatma dahil) | 4,00 sn gerçek |
+| eklenti, `QgsTask`, aynı girdi ve model | 4,3 sn |
+
+Tam granül bikübik 2× (10980² → 21960²): araç 25,4 ve 26,3 sn (iki çalıştırma); §7.1'deki
+CLI ölçümü 26,4 sn idi. Sunum için sayı: **gösteri kesiti 4 saniye, tam granül yarım dakika.**
+
+### 16.7 G1 — kapı
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur:
+
+```python
+changed_A = manifest_diff(baseline_A, now_A)            # eklenen, silinen, içeriği değişen
+if not changed_A and not untracked_A: print("A: PASS")
+else: print("A: FAIL", changed_A, untracked_A)
+PERMITTED_B = {"tubitak/sr/tools/sr_cli.py", "tubitak/sr/tests/sr_cli_tests.py",
+               "tubitak/sr/docs/20-komut-satiri.md", "tubitak/sr/docs/10-kurulum.md",
+               "tubitak/sr/docs/18-depo-tasima.md"}
+if set(changed_B) | set(untracked_B) <= PERMITTED_B: print("B: PASS")
+else: print("B: FAIL", (set(changed_B) | set(untracked_B)) - PERMITTED_B)
+```
+
+Sonuç, koşulduktan sonra buraya eklenmiştir (16.9).
+
+### 16.8 Brifingin öngörmediği bulgular
+
+1. **Özet yöntemi belgelerde yoktu.** Dört kayıtlı değerin hiçbiri hangi baytların özetlendiğini
+   söylemiyordu; ilk üç makul tanım eşleşmedi. Yöntem bir karalama dizinindeki `pixhash.py`'den
+   çıktı ve artık `sr_cli_tests.py`'nin içinde, depodadır. Belgesiz bir özet, yeniden
+   üretilemeyen bir özettir.
+2. İki özet belgelerde yalnızca önek olarak vardı (`41b54b77…`, `6b71d037…`); tamı oturum
+   kaydından alınmış ve diskteki çıktılarda yeniden üretilerek doğrulanmıştır.
+3. Dağıtılan model için kayıtlı özet yoktu; eklenti QGIS içinde başsız sürülerek üretilmiştir.
+   Sürücü, WP22'deki (ölçek düzeltmesi) yan etkiyi tekrarlamamıştır: `QgsSettings` bu kez
+   `sync()` ile geri yüklenmiş, `out_path` çalıştırma sonrası kontrol edilmiştir.
+4. `sr_core/run.py`'nin zaten bir CLI'sı vardır (`python -m sr_core.run`, yalnızca bikübik,
+   model yolu yok, Gate S yeniden doğrulaması yok). Dokunulmamıştır; `sr_cli.py` onun yerine
+   geçmez, eklentinin tam yolunu kapsar.
+5. Eklentinin bindirme birimi pikseldir; brifingin "metre" isteği piksel katı zorunluluğuyla
+   karşılanmıştır (16.2).
+6. `--scale` brifingde yoktu; kayıtlı 2× referansları çalıştırabilmek için eklenmiştir.
+
+### 16.9 G1 — sonuç
+
+| depo | karşılaştırılan | değişen | izlenmeyen | sınıf | hüküm |
+|---|---|---|---|---|---|
+| A | **1272 → 1272** | **hiçbiri** | yok | — | **PASS** |
+| B | **1547 → 1547** | `docs/10-kurulum.md`, `docs/18-depo-tasima.md` | `docs/20-komut-satiri.md`, `tests/sr_cli_tests.py`, `tools/sr_cli.py` (hepsi `tubitak/sr/` altında) | belgeler / sınama / araç | **PASS** |
+
+`sr_plugin/` ve `sr_core/` altında değişen dosya: 0. Sürüm dosyalarına dokunulmamıştır. Tek
+commit, B'de, beş yol tek tek hazırlanarak; uzak depo `git ls-remote` ile doğrulanmıştır.
