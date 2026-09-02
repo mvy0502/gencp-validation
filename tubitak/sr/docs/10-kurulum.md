@@ -164,7 +164,9 @@ Ek dosya gerektirmediği için doğrulama **bikübik** yöntemiyle yapılmalıd�
 
 1. Bir Sentinel-2 rasteri QGIS'e eklenmelidir.
 2. **Raster > GenCP Super-Resolution** açılmalıdır.
-3. Yöntem **Bikübik**, ölçek **2x** seçilmelidir.
+3. Yöntem **Bikübik** seçilmelidir. Ölçek seçilmez: **Ölçek katsayısı** satırı bikübik
+   yönteminde **4 ×** yazar (bikübik, karşılaştırıldığı 4× modellerle aynı çıktı
+   ızgarasını üretmek için 4× çalışır).
 4. Çıktı yolu verilip çalıştırılmalıdır.
 
 **Beklenen sonuç — sınamada ölçülmüştür.** 256 × 256 piksel, 3 bantlı, EPSG:32636, 10 m'lik
@@ -172,9 +174,9 @@ bir girdi ile:
 
 | | Girdi | Çıktı |
 |---|---|---|
-| Boyut | 256 × 256 | **512 × 512** |
+| Boyut | 256 × 256 | **1024 × 1024** |
 | KRS | EPSG:32636 | **EPSG:32636 (değişmez)** |
-| Piksel boyu | 10 m | **5 m** |
+| Piksel boyu | 10 m | **2,5 m** |
 | Başlangıç noktası | — | **değişmez** |
 
 Kırpılan değer sayısı **0**, kapsanmayan piksel sayısı **0** olmalıdır.
@@ -199,7 +201,7 @@ Model, arazi örtüsü ve OSM dosyaları hazırsa küçük bir alan için üreti
 | `onnxruntime` bulunamadı | Paket yok | **Proje 2'de bikübik yöntemi çalışmaya devam eder**; model yöntemleri için paket kurulmalıdır. Proje 1'in tamamı bu pakete bağımlıdır ve onsuz üretim yapamaz |
 | `PyYAML` bulunamadı | Paket yok | Yalnızca wsx4 için gereklidir. Kendi modellerimiz künyelerini kendi içlerinde taşır ve `PyYAML` olmadan çalışır |
 | Model dosyası seçilmemiş | Yöntem model gerektiriyor, alan boş | Model alanından `.onnx` dosyası seçilmelidir. Kurulu eklentide bu alan boş gelir; bu beklenen davranıştır |
-| Yanlış dosya yanlış yöntemle verilmiş | Örneğin 3 bantlı 2x model, 4 bant bekleyen wsx4 yerine seçilmiş | Yöntem ile model eşleştirilmelidir: 2x model 3 bant (B02,B03,B04), 4x model ve wsx4 4 bant (B02,B03,B04,B08) ister |
+| Yanlış dosya yanlış yöntemle verilmiş | Örneğin 3 bantlı eski model (`gencp_sr_x2_v1.onnx`), 4 bant bekleyen wsx4 yerine seçilmiş | Girdi ile model eşleştirilmelidir. Beklenen bant sayısı ve ölçek modelin kendi künyesinden okunur ve uyuşmazlık eklenti tarafından reddedilir: dağıtılan model `gencp_sr_x4_b4.onnx` (4×) ve wsx4 (4×) 4 bant (B02,B03,B04,B08) ister; eski `gencp_sr_x2_v1.onnx` (2×) 3 bant (B02,B03,B04) ister |
 | wsx4 seçildi fakat çalışmıyor | `.yaml` dosyası modelin yanında değil | `wsx4_spatrad.yaml`, `wsx4_spatrad.onnx` ile **aynı klasöre** konulmalıdır |
 | Çıktı yazılamıyor | Hedef klasör yok, yazma izni yok, ya da disk dolu | Yazma izni olan bir klasör seçilmelidir. Ağ sürücüleri yerine yerel disk tercih edilmelidir |
 
@@ -304,10 +306,11 @@ Kurumun kendi verisine ihtiyaç duyulmaz. Örnek rasterler bunun içindir.
 
 1. `SAMPLE_3band_TCI_uint8_10m_512px.tif` QGIS'e eklenir.
 2. **Raster > GenCP Super-Resolution** açılır.
-3. Yöntem **Bikübik**, ölçek **2×** seçilir, bir çıktı yolu verilir ve çalıştırılır.
+3. Yöntem **Bikübik** seçilir (ölçek seçilmez; satır **4 ×** yazar), bir çıktı yolu verilir
+   ve çalıştırılır.
 
-**Beklenen sonuç:** 512 × 512 girdi → **1024 × 1024** çıktı, KRS **EPSG:32636 değişmeden**,
-piksel boyu 10 m'den **5 m**'ye, başlangıç noktası **değişmeden**. Bu dördü sağlanıyorsa
+**Beklenen sonuç:** 512 × 512 girdi → **2048 × 2048** çıktı, KRS **EPSG:32636 değişmeden**,
+piksel boyu 10 m'den **2,5 m**'ye, başlangıç noktası **değişmeden**. Bu dördü sağlanıyorsa
 eklenti çalışıyordur.
 
 Model yolu ayrıca sınanacaksa aynı dosya ile yöntem **GenCP SR**, model

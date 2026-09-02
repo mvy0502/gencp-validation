@@ -1,0 +1,118 @@
+{
+ "work_package": "P2-WP22",
+ "what": "known-false first: the dialog driven headlessly inside the QGIS 4.2.1 app process (tubitak/tests/run_in_qgis.sh, QT_QPA_PLATFORM=offscreen), plugin imported from this checkout, with gencp_sr_x4_b4.onnx loaded, then switched to bicubic and run through the real QgsTask.",
+ "input": "DEMO_INPUT_WSX4_36SXJ_1024px_B2-B3-B4-B8_uint16DN_10m.tif",
+ "model": "gencp_sr_x4_b4.onnx",
+ "model_metadata_scale_factor": 4,
+ "before_fix": {
+  "model_loaded": {
+   "method_label": "Eğitilmiş model — GenCP (2×)",
+   "scale": 4,
+   "lbl_scale": "4 ×  (piksel boyu 4 kat küçülür)",
+   "lbl_est": "b> · çıktı 4096 × 4096 piksel · 2,5 m çözünürlük · yaklaşık 134 MB",
+   "caveat": "span>",
+   "model_desc": "20000",
+   "out_suggested": "testsuperres4band.tif",
+   "blocker": null,
+   "tile": 512,
+   "overlap": 32
+  },
+  "bicubic": {
+   "BICUBIC_SCALE": 2,
+   "scale": 2,
+   "lbl_scale": "2 ×  (piksel boyu 2 kat küçülür)",
+   "lbl_est": "b> · çıktı 2048 × 2048 piksel · 5 m çözünürlük · yaklaşık 34 MB",
+   "out_suggested": "testsuperres4band.tif",
+   "blocker": null,
+   "caveat_visible": false,
+   "run_status": "Bitti · 9 karo · 0,8 sn · 27 MB",
+   "run_seconds": 0.9,
+   "output": "bicubic_sr_x2.tif",
+   "output_exists": true,
+   "input_shape": [
+    1024,
+    1024
+   ],
+   "output_shape": [
+    2048,
+    2048
+   ],
+   "input_gsd": 10.0,
+   "output_gsd": 5.0
+  },
+  "gate_s_scale4_on_bicubic_output": "FAIL (2/5): S2 pixel 5.0 expected 2.5; S4 2048x2048 expected 4096x4096; S5 centres off"
+ },
+ "after_fix": {
+  "model_loaded": {
+   "method_label": "Eğitilmiş model — GenCP",
+   "scale": 4,
+   "lbl_scale": "4 ×  (piksel boyu 4 kat küçülür)",
+   "lbl_est": "b> · çıktı 4096 × 4096 piksel · 2,5 m çözünürlük · yaklaşık 134 MB",
+   "caveat": "span>",
+   "model_desc": "20000",
+   "out_suggested": "bicubic_sr_x2.tif",
+   "blocker": null,
+   "tile": 512,
+   "overlap": 32
+  },
+  "bicubic": {
+   "BICUBIC_SCALE": 4,
+   "scale": 4,
+   "lbl_scale": "4 ×  (piksel boyu 4 kat küçülür)",
+   "lbl_est": "b> · çıktı 4096 × 4096 piksel · 2,5 m çözünürlük · yaklaşık 134 MB",
+   "out_suggested": "bicubic_sr_x2.tif",
+   "blocker": null,
+   "caveat_visible": false,
+   "run_status": "Bitti · 9 karo · 2,8 sn · 107 MB",
+   "run_seconds": 2.8,
+   "output": "bicubic_sr_x4.tif",
+   "output_exists": true,
+   "input_shape": [
+    1024,
+    1024
+   ],
+   "output_shape": [
+    4096,
+    4096
+   ],
+   "input_gsd": 10.0,
+   "output_gsd": 2.5
+  },
+  "gate_s_scale4_on_bicubic_output": "PASS (5/5)"
+ },
+ "guide_remeasured_bicubic_x4": {
+  "source": "36SVJ TCI.tif window (4096,4096) 3-band uint8 EPSG:32636 10 m",
+  "256x256": {
+   "output": "1024x1024, 2.5 m, origin unchanged",
+   "gate_s_scale4": "PASS (5/5)",
+   "uncovered": 0,
+   "clipped_values": 18887
+  },
+  "512x512": {
+   "output": "2048x2048, 2.5 m, origin unchanged",
+   "gate_s_scale4": "PASS (5/5)",
+   "uncovered": 0,
+   "clipped_values": 47283
+  },
+  "clipping_note": "clipping is input-dependent, not scale-dependent: 0.60 % at scale 2 and at scale 4 on the same window"
+ },
+ "screenshot": {
+  "file": "dialog_x4_model_loaded_light.png",
+  "theme": {
+   "style": "QgsAppStyle",
+   "window_bg": "#efefef",
+   "text": "#000000",
+   "stylesheet_len": 0
+  },
+  "platform": "offscreen, QgsAppStyle"
+ },
+ "versions": {
+  "qgis": "4.2.1",
+  "onnxruntime_in_qgis": "1.29.0",
+  "numpy": "2.4.6",
+  "rasterio": "1.4.4",
+  "gdal": "3.12.3",
+  "pillow": "12.3.0"
+ },
+ "settings_side_effect": "the driver's QgsSettings restore was not synced before os._exit on the first two runs; gencp_sr/out_path was re-set to /Users/vedat/Desktop/testsuperres4band.tif (the value observed before) with an explicit sync. input_path and model_path_model now hold the demo 4-band input and gencp_sr_x4_b4.onnx; their prior values were not recorded."
+}

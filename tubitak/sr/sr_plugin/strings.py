@@ -52,8 +52,10 @@ S = {
     # ------------------------------------------------------------------ ayarlar ----
     "sec_settings": "Ayarlar",
     "scale": "Ölçek katsayısı",
-    # The scale is NOT fixed: bicubic is 2x, our model 2x, wsx4 4x. The label used to
-    # read "2 x" during a 4x run, next to an estimate that said 2,5 m.
+    # The scale is NOT fixed: a model path reads it from the model file (x4_b4 and wsx4
+    # are both 4x, the retired x2_v1 is 2x); the bicubic control is 4x so its grid matches
+    # the shipped models. The label used to read "2 x" during a 4x run, next to an
+    # estimate that said 2,5 m.
     "scale_value": "{n} ×  (piksel boyu {n} kat küçülür)",
     "method": "Yöntem",
     "method_bicubic": "Bikübik",
@@ -108,7 +110,9 @@ S = {
     "no": "Hayır",
 
     # ------------------------------------------------------------------ WP4 model ---
-    "method_model": "Eğitilmiş model — GenCP (2×)",
+    # No scale in the label: the scale is read from the model file, and the row above
+    # shows it. "(2×)" stayed here after the shipped model became 4x.
+    "method_model": "Eğitilmiş model — GenCP",
     "method_wsx4": "Referans model — wsx4 (4×)",
     "model_info": "Model künyesi",
     "model_unset": "<span style='color:gray'>model dosyası seçilmedi</span>",
@@ -125,8 +129,20 @@ S = {
     "model_tiling_feather": "yumuşak geçişli birleştirme",
     "model_steps": " · adım {done}/{sched}",
     "model_bad": "<span style='color:#a00'>Bu ONNX dosyası okunamadı: {msg}</span>",
-    "model_caveat": ("<span style='color:gray'>Model, 20 m→10 m üzerinde eğitildi ve "
-                     "10 m→5 m uygulanıyor. Çıktı doğrulanmamıştır.</span>"),
+    # The training pair and the applied pair are DERIVED from the loaded model's scale s:
+    # Wald protocol at Sentinel-2's 10 m means trained (10·s) m -> 10 m, applied
+    # 10 m -> (10/s) m. Stated once as literal numbers ("20 m→10 m ... 10 m→5 m"), the
+    # text outlived the model it described. `lo` and `hi` arrive pre-formatted (decimal
+    # comma) for the same reason `norm` and `steps` do in `model_desc`.
+    "model_caveat": ("<span style='color:gray'>Model, {lo} m→10 m üzerinde eğitildi ve "
+                     "10 m→{hi} m uygulanıyor. Çıktı doğrulanmamıştır.</span>"),
+    # A model whose contract comes from a sidecar (wsx4) was not trained by us; only the
+    # applied pair is stated.
+    "model_caveat_ref": ("<span style='color:gray'>Model 10 m→{hi} m uygulanıyor. "
+                         "Çıktı doğrulanmamıştır.</span>"),
+    # Before a model file is loaded there is no scale to derive anything from.
+    "model_caveat_unset": ("<span style='color:gray'>Eğitim ve uygulama ölçeği model "
+                           "dosyasından okunur. Çıktı doğrulanmamıştır.</span>"),
     "wsx4_note": ("<span style='color:gray'>wsx4 ağırlıkları bu eklentiyle birlikte "
                   "dağıtılmaz; dosyayı kendiniz seçersiniz. Ölçek, bant sırası, "
                   "normalleştirme ve karo birleştirme yöntemi modelin kendi "
@@ -189,9 +205,9 @@ TIP = {
     "input_file": ("İşlenecek GeoTIFF. Kuzeye dönük ve döndürülmemiş olmalıdır."),
     "src_info": ("Girdinin okunan gerçek özellikleri: boyut, bant sayısı, veri tipi, "
                  "KRS ve piksel boyu. Bunlar dosyadan okunur, tahmin edilmez."),
-    "scale": ("Çıktının girdiye göre kaç kat ince olacağı. Seçilen yöntemin kendisi "
-              "belirler: bikübik ve GenCP modeli 2×, wsx4 modeli 4×. Kaynak "
-              "ızgarasının tam katı olmalıdır."),
+    "scale": ("Çıktının girdiye göre kaç kat ince olacağı. Model yolunda modelin kendi "
+              "künyesinden okunur; bikübik 4× çalışır, böylece karşılaştırıldığı modelle "
+              "aynı çıktı ızgarasını üretir. Kaynak ızgarasının tam katı olmalıdır."),
     "method": ("Ara değer yöntemi. Bikübik bir taban çizgisidir, eğitilmiş model değildir; "
                "yeni bilgi üretmez, var olanı yeniden örnekler."),
     "model_file": ("Eğitilmiş model dosyası. Bikübik yönteminde kullanılmaz ve bu yüzden "

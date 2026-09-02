@@ -31,13 +31,19 @@ from .task import LOG_TAG
 
 SETTINGS_PREFIX = "gencp_sr/"
 
-# The scale factor is FIXED at 2 for this work package. It is a named constant rather than
-# a literal 2 scattered through the file so that WP4 changes it in one place, and so that
-# the estimate, the run parameters and the label can never disagree about it.
 #: Scale for the BICUBIC path only. A model path takes its scale from the model itself
-#: (WP6): wsx4 is x4, ours is x2, and a constant here would silently misdescribe one of
-#: them. Gate S asserts exact equality at both, four and two being powers of two.
-BICUBIC_SCALE = 2
+#: (WP6); this constant never describes a model.
+#:
+#: It is 4 because bicubic is the CONTROL: the demonstration puts its output beside the
+#: model's, and two rasters on different grids cannot be compared. Both shipped models
+#: (gencp_sr_x4_b4, wsx4) are 4x. It is a constant, not "the scale of the last loaded
+#: model", because the bicubic path must also work with no model loaded at all and no
+#: onnxruntime installed - it is the demonstration's recovery path - and because an output
+#: grid that depends on session history is the same class of defect as the label that read
+#: "2 x" through a 4x run. It was 2 while the shipped model was x2_v1; the estimate row,
+#: the `_sr_x{n}` output suffix and the run parameters all read it through `_scale()`.
+#: Gate S asserts exact equality at 4 as at 2, both being powers of two.
+BICUBIC_SCALE = 4
 
 #: Inference tile for OUR model path, in source pixels. NOT the training tile: the network
 #: is fully convolutional and the graph was exported with dynamic spatial axes, so the
@@ -156,9 +162,10 @@ class SRDialog(QDialog):
 
         # The scale is SHOWN, not editable: a disabled spinbox would invite the user to try
         # to change it, and a label does not pretend to be a control. It is NOT constant,
-        # though - bicubic and our model are 2x, wsx4 is 4x - so it is refreshed by
-        # `_refresh_scale_label()` whenever the method or the model changes. It used to read
-        # "2 x" through an entire 4x run, beside an estimate that said 2,5 m.
+        # though - a model path reads it from the model file, bicubic uses BICUBIC_SCALE -
+        # so it is refreshed by `_refresh_scale_label()` whenever the method or the model
+        # changes. It used to read "2 x" through an entire 4x run, beside an estimate that
+        # said 2,5 m.
         self.lbl_scale = QLabel(t("scale_value", n=BICUBIC_SCALE))
         self._row(f_set, "scale", self.lbl_scale, "scale")
 
@@ -178,7 +185,8 @@ class SRDialog(QDialog):
         self.lbl_model = QLabel(t("model_unset"))
         self.lbl_model.setWordWrap(True)
         self._row(f_set, "model_info", self.lbl_model, "model_info")
-        self.lbl_caveat = QLabel(t("model_caveat"))
+        # Filled from the model's own scale once one loads; see `_on_model_changed`.
+        self.lbl_caveat = QLabel(t("model_caveat_unset"))
         self.lbl_caveat.setWordWrap(True)
         f_set.addRow(QLabel(""), self.lbl_caveat)
         outer.addWidget(g_set)
@@ -379,7 +387,8 @@ class SRDialog(QDialog):
         #    the correct outcome for wsx4, whose weights we deliberately do not ship.
         root = self._repo_root()
         cands = {"wsx4": ["tubitak/data/wp5_reference/models/wsx4_spatrad.onnx"],
-                 "model": ["tubitak/data/sr_models/gencp_sr_x2_v1.onnx"]}.get(kind, [])
+                 "model": ["tubitak/data/plugin_models/gencp_sr_x4_b4.onnx",
+                           "tubitak/data/sr_models/gencp_sr_x2_v1.onnx"]}.get(kind, [])
         if root:
             for c in cands:
                 f = Path(root) / c
@@ -419,6 +428,7 @@ class SRDialog(QDialog):
     def _on_model_changed(self):
         """Read the model's own provenance. Nothing about it is assumed or hard-coded."""
         self._model, self._model_err = None, None
+        self.lbl_caveat.setText(t("model_caveat_unset"))
         path = self.model_w.filePath().strip()
         if not self._is_model() or not path:
             self.lbl_model.setText(t("model_unset"))
@@ -454,6 +464,17 @@ class SRDialog(QDialog):
                                      scale=prov["scale"], ch=prov["in_channels"],
                                      order=prov["band_order"], tiling=tiling, steps=steps))
             self._remember(f"model_path_{self.method_cb.currentData()}", path)
+            # The caveat's numbers come from the model, never from a literal: Wald at
+            # 10 m means trained (10*s) m -> 10 m and applied 10 m -> (10/s) m. Only our
+            # own models (contract inside the ONNX file) were trained that way; a sidecar
+            # model gets the applied pair only.
+            s_ = int(prov["scale"])
+            hi = _tr_num("%g" % (10.0 / s_))
+            if prov["contract_source"] == "ONNX metadata_props":
+                self.lbl_caveat.setText(t("model_caveat", lo=_tr_num("%g" % (10.0 * s_)),
+                                          hi=hi))
+            else:
+                self.lbl_caveat.setText(t("model_caveat_ref", hi=hi))
             # D8: the network consumes 128 SOURCE pixels because its input is the 20 m
             # image; the bicubic path tiles at 512. Read from the model, never a literal.
             # For a crop-tiled model the overlap is NOT free: it must be at least
