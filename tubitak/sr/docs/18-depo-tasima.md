@@ -265,11 +265,17 @@ ve altındaki dört madde işareti (`tubitak-tr` birleştirilmez; ters yön kapa
 WP17'nin Proje 2 bölümüne eklediği not artık doğru olmadığından **silinmiştir** (99–101.
 satırlar). Silinen metin:
 
-> `[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır. (Aşağıdaki KURAL`
-> `bölümü bu taşınmadan önce yazılmıştır; oradaki "QGIS eklenti iş paketi GenCP'de devam eder"`
-> `cümlesi Proje 1 için geçerlidir.)`
+```text
+[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır. (Aşağıdaki KURAL
+bölümü bu taşınmadan önce yazılmıştır; oradaki "QGIS eklenti iş paketi GenCP'de devam eder"
+cümlesi Proje 1 için geçerlidir.)
+```
 
-Kalan satır: `[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır.`
+Kalan satır:
+
+```text
+[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır.
+```
 README toplamı: **+11 −9**.
 
 ### 10.3 Madde 3 — sürüm notlarındaki ikinci bağlantı
@@ -574,3 +580,112 @@ bağlantı yoktur.
    V1 ölçütü üçüncüyü zorunlu kılmıştır. Değişiklik aynen alıntılanmıştır.
 3. **B'nin Proje 1 kopyası A'dan geridedir** (§11.3 V4, madde 6). Bu seride bilerek
    dokunulmamıştır.
+
+---
+
+## 12. WP20 — alıntı bağlantıları ve Proje 1 fark ölçümü
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `b47d4222373d86b08e1be9336f859dd3a37d7edf`; iki ağaç da temizdi; her izlenen dosya
+manifeste alınmıştır (A **1272**, B **1538**, `/tmp/wp20/`). §1–11, §10.2'deki iki alıntının
+sınırlayıcıları dışında değiştirilmemiştir. **A'da hiçbir şey değişmemiş, hazırlanmamış,
+commit'lenmemiştir.** Hiçbir sürüme dokunulmamıştır.
+
+### 12.1 Bölüm A — §10.2'deki iki alıntı
+
+İki alıntı bölgesi (silinen üç README satırı, ve "Kalan satır") `> `…`` blok-alıntı
+biçiminden ```` ```text ```` çitli kod bloğuna alınmıştır. Alıntının içindeki hiçbir bayt
+değişmemiştir; yalnızca sınırlayıcılar.
+
+**V1 — bayt karşılaştırması.** Düzenlemeden önce her bölgenin alıntı baytları (satır başındaki
+"> `" ve sonundaki "`" sınırlayıcıları çıkarılarak) `/tmp/wp20/quote_before_{1,2}.txt`'ye,
+düzenlemeden sonra çitin içindekiler `quote_after_{1,2}.txt`'ye yazılmış ve `cmp` ile
+karşılaştırılmıştır:
+
+| bölge | önce | sonra | sha256 (ilk 16) | sonuç |
+|---|---|---|---|---|
+| 1 — silinen üç satır | 233 bayt | 233 bayt | `5d1b0a7b655c5007` = `5d1b0a7b655c5007` | **aynı** |
+| 2 — "Kalan satır" | 73 bayt | 73 bayt | `861cbcbcdc4e210c` = `861cbcbcdc4e210c` | **aynı** |
+
+Rapor: +10 −4, tümü sınırlayıcı.
+
+**Brifingin öncülü ölçülmüş ve doğru çıkmamıştır.** Brifing (ve WP19 §11.3) bu alıntıların
+GitHub'da canlı 404 bağlantısı olarak işlendiğini söylüyordu. Bu iddia WP19'da kod
+aralıklarını (`` `…` ``) tanımayan bir düzenli ifadeden gelmişti, işlemeden değil. Bu kez
+GitHub'ın kendi işleyicisine (`POST /markdown`, `gfm`) tam kalıplar verilmiştir:
+
+| kalıp | `<a>` etiketi |
+|---|---|
+| §10.2 özgün 268. satır (blok-alıntı + ters tırnak) | **0** |
+| §10.2 özgün 272. satır (satır içi ters tırnak) | **0** |
+| §11.3'teki kalan anma (satır içi ters tırnak) | **0** |
+| kontrol: çıplak README-göreli bağlantı | 1 (`href="tubitak/sr/SOURCE.md"`) |
+| kontrol: yeni çit | 0 |
+
+CommonMark kod aralıklarını bağlantılardan önce çözdüğünden `` `[` `` bir kod aralığıdır ve
+bağlantı hiç oluşmaz. Alıntılar hiçbir zaman gezinme olarak işlenmemiştir; kusur, WP19'un
+denetleyicisindeydi. Çit yine de doğru biçimdir — aynen alıntı metin olarak durmalıdır — ve
+brifingin istediği gibi yapılmıştır.
+
+**V2 — bağlantı denetimi.** Denetleyici artık işleyiciyi modellemektedir: çitli kod blokları
+**ve** satır içi kod aralıkları bağlantı taramasından çıkarılır; bu davranış yukarıdaki
+işleyici tablosuyla doğrulanmıştır, varsayılmamıştır. B `tubitak/sr/**/*.md`: **24 göreli
+bağlantı taranmış, 0 kırık.** (Yalnızca çitleri çıkaran ara koşu 28/1 vermişti; o "1",
+§11.3'teki kod aralığıydı — işleyiciye göre bağlantı değil.)
+
+### 12.2 Bölüm B — ölçüm, ayrı belgede
+
+Proje 1 fark ölçümü [`19-proje1-fark-olcumu.md`](19-proje1-fark-olcumu.md)'dedir:
+karşılaştırılan commit'ler, 12 farklı yolun tablosu (tarih, tek cümle, kova), tek taraflı
+dosya listeleri (A'da 4, B'de 269), işin büyüklüğü ve seçenekler. Hiçbir Proje 1 dosyası
+değiştirilmemiştir. Ölçümün en belirleyici bulgusu buraya bir cümleyle alınır: **kurumun
+kurduğu `plugin-v0.2.0` zip'i B'nin ağacıyla bayt bayt aynıdır; A hem ağacın hem sürümün
+önündedir ve WP12'nin QGIS 3.x düzeltmesi hiçbir Proje 1 sürümüne girmemiştir.**
+
+### 12.3 G1
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| depo | karşılaştırılan | yol kümesi | sağlaması değişen | izinli |
+|---|---|---|---|---|
+| A | **1272** | aynı; izlenmeyen 0 | **hiçbiri** | — (V3) |
+| B | **1538** | aynı; beliren/kaybolan/taşınan yok; izlenmeyen 1 (yeni belge) | `tubitak/sr/docs/18-depo-tasima.md` | 1 |
+| | | | `tubitak/sr/docs/19-proje1-fark-olcumu.md` (yeni) | 2 |
+
+**V3:** A'nın manifesti taban çizgisiyle aynıdır, 0 değişen dosya. Kapı geçilmiştir.
+
+### 12.4 V4 — `19-proje1-fark-olcumu.md`, hiç görmemiş gözle
+
+Belge kendi başına şunları verir: neyin hangi commit'lerde karşılaştırıldığı; 12 farklı
+yolun her biri için hangi tarafın yeni olduğu (commit tarihiyle), farkın tek cümlelik
+anlatımı ve kovası; tek taraflı dosyaların ne olduğu; K kovasının 10 dosya olduğu ve
+yenilemenin beş adımı; beş seçenek, her birinin bedeli ve riskiyle, önerisiz. Karar için
+yeterli görünen olgu, kurumun kurduğu zip'in B ile aynı olmasıdır — belge bunu önden verir.
+
+Okuyucunun yine de sormak zorunda kalacağı iki şey vardır ve belge bunları
+**yanıtlamaz**: (1) WP12'nin QGIS 3.x düzeltmesinin kurum için gerçekten gerekli olup
+olmadığı — yani kurumun makinelerinde `rasterio`'nun QGIS'in Python'unda bulunup
+bulunmadığı; bu, `12-qt5-uyumluluk.md`'de kurumun bildirdiği arızadan çıkarılır ama bu
+belgede ölçülmemiştir. (2) Proje 1'in "bitmiş ve teslim edilmiş" statüsünün yeni bir sürümü
+dışlayıp dışlamadığı — bu bir sözleşme/teslim sorusudur, ölçüm sorusu değil. Bu iki soru
+dışında belge karar için yeterlidir.
+
+### 12.5 Commit
+
+- **B** (`main`): bu raporu ve yeni belgeyi içeren commit; `git ls-remote origin main` ile
+  doğrulanmıştır. **A'ya commit yapılmamıştır.**
+
+### 12.6 Brifingin öngörmediği bulgular
+
+1. **"Canlı 404 bağlantısı" öncülü yanlıştı** (§12.1); WP19'un V3 bulgusu denetleyici
+   hatasıydı. Düzeltme yine de doğru biçim olduğundan yapılmıştır.
+2. **B'deki iki Proje 2 belgesi, B'de olmayan iki dosyayı anmaktadır**
+   (`13-cevrimdisi-kurulum.md` → `tubitak/tool/qgis_ortam_raporu.py`;
+   `15-kontroller.md` ve `03a-wald-corpus.md` → `tubitak/docs/evidence/wp15/corpus_checks.json`).
+   İkisi de `tubitak/sr/` dışında durduğu için WP17'nin alt-ağaç kopyasına girmemiştir;
+   atıflar düz metin olduğundan bağlantı denetimi görmemiştir. Düzeltilmemiş, `19`'un K
+   kovasına yazılmıştır.
+3. **B'nin `.gitignore`'u `icon.png`'yi yutar**; Proje 1 ağacı B'ye yenilense bile simge
+   izlenmez. `19` §3'te kayıtlıdır.
+4. Kurumun kurduğu zip'in kaynağının B olduğu (§12.2) bu brifingin sorduğu bir şey değildi;
+   karar için en belirleyici olgu olduğu için ölçülmüştür.
