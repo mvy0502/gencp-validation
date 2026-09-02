@@ -232,7 +232,7 @@ interface. **It is already ONNX.** There is nothing to export and no export to f
 ### 6.2 It was driven by our interface, and it worked
 
 I wrote a 30-line adapter — `tubitak/data/wp5_reference/host_wsx4.py`, outside the repository
-tree — presenting their graph as an `sr_core.upsample.Upsampler`: `scale = 4`, `name`,
+tree, and **not preserved**: it exists only on the author's machine — presenting their graph as an `sr_core.upsample.Upsampler`: `scale = 4`, `name`,
 `n_clipped`, `n_total`, and `upsample(H×W×C) → sH×sW×C`. It fed
 `sr_core.run.superresolve(..., scale=4, upsampler=...)` **with `sr_core` unmodified**, using
 the `upsampler=` seam WP4 added.

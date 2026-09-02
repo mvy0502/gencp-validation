@@ -134,7 +134,8 @@ domain, and irrelevant here, because the only thing being measured is a translat
 > against the vendor's own bicubic on a grid that matches ours to 0.0015 px. WP8's finding
 > stands, and WP5's `--l1c` open item is closed.
 
-Nothing in this changes any GenCP number. `host_wsx4.py` and our seam are exonerated; wsx4 was
+Nothing in this changes any GenCP number. `host_wsx4.py` (WP5's adapter, not preserved in the
+repository) and our seam are exonerated; wsx4 was
 never used to produce a GenCP result, only as a comparison arm.
 
 ---

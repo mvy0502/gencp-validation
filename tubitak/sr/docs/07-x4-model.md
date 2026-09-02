@@ -34,7 +34,7 @@ same code path (`degrade_chip` -> `BicubicUpsampler` -> the same metric function
 only the band subset and the divisor. The scale-2 control is three bands at divisor 5000, so
 that cell is the like-for-like one.
 
-Path: `scratchpad/norm_probe.py`, written for this question; artefact
+Path: `tubitak/sr/tools/norm_probe.py` (preserved in WP22; it lived only in a session scratchpad until then), written for this question; artefact
 `tubitak/data/sr_wald_corpus_x4/norm_probe.json`. The upsampler's `n_clipped` was asserted to
 be 0 in every cell, so the path is linear and the comparison is not distorted by clipping.
 

@@ -20,3 +20,17 @@ A'dakiyle aynıdır):
 
 A'daki `tubitak/sr/` aynası dondurulmuştur ve bu iki dosyayı **içermez**; A ile B arasındaki
 bu fark bir kopya hatası değil, bu ekin sonucudur.
+
+## Ek — oturum çalışma dizininden alınan iki betik (WP22, 2 Eylül 2026)
+
+İki rapor, hiçbir depoda bulunmayan betikleri anıyordu. İkisi de oturum çalışma dizininde
+hâlâ duruyordu ve olduğu gibi alınmıştır; hiçbir depoda önceki bir sürümleri yoktur, bu
+yüzden "A'daki commit" sütunu boştur.
+
+| burada | kaynak | yazıldığı tarih | blob |
+|---|---|---|---|
+| `tubitak/sr/tools/norm_probe.py` | oturum çalışma dizini (`scratchpad/norm_probe.py`) | 30 Ağustos 2026 21:06 | `435d49e84821` |
+| `tubitak/sr/tools/wp16_repro.py` | oturum çalışma dizini (`scratchpad/wp16_repro.py`) | 1 Eylül 2026 16:42 | `76fa66c1b01e` |
+
+`host_wsx4.py` (WP5) ve `predictions.txt` (WP17) alınmamıştır; ilki yalnızca yazarın
+makinesindedir, ikincisinin içeriği `18-depo-tasima.md` §14.4'te aynen verilmiştir.

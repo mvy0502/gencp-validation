@@ -40,6 +40,9 @@ Thread 0x00000001ed69de80 (most recent call first):
   File ".../wp16_repro.py", line 87 in main
 ```
 
+The harness is `tubitak/sr/tools/wp16_repro.py` (preserved in WP22; until then it existed only
+in a session scratchpad).
+
 `torch.save` → `_save` → `storage.cpu()`. It is blocked copying a device storage to the host,
 inside the serialiser. The two threads with no Python frame are the MPS backend's. The output
 file at that moment is **8192 bytes** — the production signature exactly.

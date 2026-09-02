@@ -7,7 +7,10 @@ gerektirmez; her adım birebir uygulanabilir biçimde yazılmıştır.
 ## 1. Kitin içinde ne var
 
 `kit/` klasörü, **16 adet `.whl` dosyası** ve bir `MANIFEST.json` içerir; toplam
-**57,6 MB**. Sürümler ve SHA-256 özetleri `MANIFEST.json` içinde kayıtlıdır; kurulan
+**57,6 MB**. Kit, bu deponun `kit-win_amd64-py312-2026-08-31` sürümünde
+`gencp_kit_win_amd64_py312.zip` olarak yayımlanmıştır (`https://github.com/mvy0502/gencp-validation/releases/tag/kit-win_amd64-py312-2026-08-31`); açıldığında bu klasör
+elde edilir. Sürüm notları hangi paketin hangi eklenti için olduğunu ve kitin **neyi
+kapsamadığını** listeler. Sürümler ve SHA-256 özetleri `MANIFEST.json` içinde kayıtlıdır; kurulan
 dosyaların sınanan dosyalarla aynı olduğu bu şekilde gösterilebilir.
 
 | Paket | Sürüm | Boyut |

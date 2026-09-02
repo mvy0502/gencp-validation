@@ -11,7 +11,8 @@ dokunulmamıştır. Bu bir alt-ağaç kopyası ve belge düzeltmesidir; tarih bi
 
 ## 1. Öngörüler ve ölçümler
 
-Üç sayı ölçümden önce dosyaya yazılmıştır (`predictions.txt`, 10:02:30 +03); ölçümden sonra
+Üç sayı ölçümden önce dosyaya yazılmıştır (`predictions.txt`, 10:02:30 +03; dosya depoya
+alınmamıştır, içeriği §14.4'te aynen verilmiştir); ölçümden sonra
 değiştirilmemiştir.
 
 | | öngörü | ölçüm | yol |
@@ -845,3 +846,220 @@ yapılmamıştır. **İş bitmiş ilan edilmemektedir.**
 5. `03a-wald-corpus.md:568` ile `15-kontroller.md:6` aynı adı taşıyan **iki farklı**
    dosyayı anar (9 vakalık WP3A koşusu, 11 vakalık WP15 koşusu); ilki veri yolu olarak
    doğrudur ve WP15 kaydı onu aşar.
+
+
+---
+
+## 14. WP22 — çevrimdışı tekerlek kitinin yayımlanması, ve depoda olmayan dosyaların anılmaması
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `7b9e975d7ad12ea7d62ebb6d2852d2147bf14fce`; iki ağaç da temizdi; her izlenen dosya manifeste
+alınmıştır (A **1272**, B **1543**, `/tmp/wp22/`). §1–13 değiştirilmemiştir — tek istisna, §1'de
+`predictions.txt`'yi anan cümledir; Adım 4 her anan cümlenin düzeltilmesini istediğinden,
+o cümleye "dosya depoya alınmamıştır, içeriği §14.4'te" eklenmiştir (+2 −1, aşağıda). **A'da
+hiçbir şey değişmemiş, hazırlanmamış, commit'lenmemiştir.** Var olan hiçbir sürüme
+dokunulmamıştır; bir sürüm **oluşturulmuştur**. Dosya içerikleri Python ile yazılmıştır;
+tırnaksız heredoc kullanılmamıştır.
+
+### 14.1 Adım 1 — kit, yayımlanmadan önce (V1, V2)
+
+**Kaynak:** A `tubitak/data/kit/` (yoksayılan yol), 31 Ağustos 2026'da macOS üzerinde
+`pip download --only-binary=:all: --platform win_amd64 --python-version 3.12 --implementation cp`
+ile `rasterio onnxruntime osmium` için indirilmiştir. Her tekerleğin sağlaması **diskteki
+dosyadan** hesaplanmış, manifestle karşılaştırılmıştır: **16/16 aynı, 0 uyuşmazlık**; toplam
+60.446.086 bayt (57,6 MiB), manifestle aynı.
+
+| dosya | dağıtım | sürüm | py | abi | platform | bayt | sha256 (ilk 16) | lisans |
+|---|---|---|---|---|---|---|---|---|
+| affine-3.0.1-py3-none-any.whl | affine | 3.0.1 | py3 | none | any | 10.887 | `cda3b303325e7bf2` | BSD-3 |
+| attrs-26.1.0-py3-none-any.whl | attrs | 26.1.0 | py3 | none | any | 67.548 | `c647aa4a12dfbad9` | MIT |
+| certifi-2026.7.22-py3-none-any.whl | certifi | 2026.7.22 | py3 | none | any | 136.983 | `62f22742b58a1a33` | MPL-2.0 |
+| charset_normalizer-3.5.1-cp312-cp312-win_amd64.whl | charset_normalizer | 3.5.1 | cp312 | cp312 | win_amd64 | 200.551 | `3617ac3cfd8b9888` | MIT |
+| click-8.5.0-py3-none-any.whl | click | 8.5.0 | py3 | none | any | 125.251 | `255bc9599cf7748b` | BSD-3 |
+| flatbuffers-25.12.19-py2.py3-none-any.whl | flatbuffers | 25.12.19 | py2.py3 | none | any | 26.661 | `7634f50c427838bb` | Apache-2.0 |
+| idna-3.19-py3-none-any.whl | idna | 3.19 | py3 | none | any | 68.550 | `815e7be7a7806d54` | BSD-3 |
+| numpy-2.5.2-cp312-cp312-win_amd64.whl | numpy | 2.5.2 | cp312 | cp312 | win_amd64 | 12.464.674 | `28ac63476ec76514` | BSD-3 (+0BSD, MIT, Zlib) |
+| onnxruntime-1.29.0-cp312-cp312-win_amd64.whl | onnxruntime | 1.29.0 | cp312 | cp312 | win_amd64 | 14.001.407 | `4acf2b4948b7ede8` | MIT |
+| osmium-4.3.1-cp312-cp312-win_amd64.whl | osmium | 4.3.1 | cp312 | cp312 | win_amd64 | 1.811.488 | `0604b866d4e875fa` | BSD-2 |
+| packaging-26.3-py3-none-any.whl | packaging | 26.3 | py3 | none | any | 129.956 | `d7193f7c8e4e93f4` | Apache-2.0 / BSD-2 |
+| protobuf-7.36.0-cp310-abi3-win_amd64.whl | protobuf | 7.36.0 | cp310 | abi3 | win_amd64 | 453.731 | `1781cc1de61249b7` | BSD-3 |
+| pyparsing-3.3.2-py3-none-any.whl | pyparsing | 3.3.2 | py3 | none | any | 122.781 | `850ba148bd908d7e` | MIT |
+| rasterio-1.5.1-cp312-cp312-win_amd64.whl | rasterio | 1.5.1 | cp312 | cp312 | win_amd64 | 30.621.456 | `6fbafe970d44ec06` | BSD-3 |
+| requests-2.34.2-py3-none-any.whl | requests | 2.34.2 | py3 | none | any | 73.075 | `2a0d60c172f83ac6` | Apache-2.0 |
+| urllib3-2.7.0-py3-none-any.whl | urllib3 | 2.7.0 | py3 | none | any | 131.087 | `9fb4c81ebbb1ce95` | MIT |
+
+Lisanslar tekerleklerin `METADATA`'sından okunmuştur; on altısı da yeniden dağıtıma izin
+verir, hiçbiri dışarıda bırakılmamıştır.
+
+**Platform ve Python.** Etiketler `win_amd64` + `cp312` (`protobuf` `abi3`, saf-Python olanlar
+`any`); hedef **Windows 64 bit, CPython 3.12**. Kılavuz bunu söyler mi? `10-kurulum.md`
+söylemez; delege ettiği `13-cevrimdisi-kurulum.md` 24. satırda **"Windows 64 bit, Python 3.12
+(cp312)"** der ve 36. satırda "Python sürümü 3.12 değilse bu kit kullanılmamalıdır; rapordaki
+`abi tag` `cp312` yazmalıdır" diye ölçmeyi şart koşar. Etiketlerle uyuşur; çözülecek bir
+çelişki bulunmamıştır.
+
+**Kapanış (V2), iki yolla.** (i) Her tekerleğin `Requires-Dist` beyanı, `sys_platform=win32`
+/ `python_version=3.12` işaretleyicileri değerlendirilerek çözülmüş: **kit kendi beyan ettiği
+bağımlılıklar altında kapalıdır**, eksik yoktur. (ii) `pip download --no-index
+--find-links=<kit> --platform win_amd64 --python-version 3.12` ağ olmadan çözmüştür:
+`rasterio onnxruntime osmium` → **16 tekerlek**; `rasterio onnxruntime` → **11 tekerlek**.
+
+**Kapanış, eklenti başına — Adım 1B.** Her eklentinin kodundan (B'deki), üçüncü taraf içe
+aktarmaları dosya ve düzey (modül / işlev içi) ayrımıyla çıkarılmıştır:
+
+| eklenti | çalışma zamanı ihtiyacı | kitte | kitte **değil** |
+|---|---|---|---|
+| **Proje 2** (`sr_plugin`, `sr_core`) | `rasterio`, `onnxruntime` (yalnızca model yöntemleri), `numpy`, `PIL` (`upsample.py`, `mosaic.py` — bikübik dahil **her yöntem**), `yaml` (yalnızca `.yaml` künyeli model) | rasterio, onnxruntime, numpy | **Pillow**, **PyYAML** |
+| **Proje 1** (`qgis_plugin`, `gencp_core`) | `rasterio`, `onnxruntime`, `numpy`, `PIL`, `scipy` (`confidence`, `mosaic`, `rasterize`), `shapely` (`rasterize`, `index_cache`, `_pbf_rows`), `osmium` (`.pbf`), **`geopandas`** (`PbfIndex`, `fetch_pbf` — yani çevrimdışı `.pbf` yolunun kendisi), `osmnx`+`geopandas` (yalnızca çevrimiçi `fetch`) | rasterio, onnxruntime, osmium, numpy, requests | **Pillow, scipy, shapely, geopandas, osmnx** |
+
+Verdikt, ikiye ayrılarak: **Proje 2 için kit, `rasterio`/`onnxruntime` eksiğini kapatır; `Pillow`
+QGIS Windows kurulumuyla geliyorsa yeterlidir** — bu bir varsayımdır ve ortam raporu betiği
+`Pillow`'u ölçmemektedir (ölçtükleri: rasterio, onnxruntime, osmium, numpy, shapely, pyproj).
+**Proje 1 için kit yeterli değildir:** çevrimdışı `.osm.pbf` yolu `geopandas` ister; `geopandas`
+kitte yoktur ve QGIS'in Windows kurulumuyla gelmez. Bu, kağıt üstünde kapatılmamış, sürüm
+notlarına ve buraya olduğu gibi yazılmıştır; Proje 1 sürüm işinin açık maddesidir.
+
+**Doğrulamanın sınırı.** Bu makine macOS'tur. Manifest, etiketler, lisanslar ve kapanış
+doğrulanmıştır; **kurulum Windows'ta çalıştırılmamıştır.** Sürüm notları bunu aynen söyler.
+
+### 14.2 Adım 2 — sürüm (V3)
+
+Adı ne olduğuna göre konmuştur, projeye göre değil (Adım 1B): etiket
+**`kit-win_amd64-py312-2026-08-31`**, başlık "Çevrimdışı kurulum kiti — Windows 64 bit,
+Python 3.12 tekerlekleri, iki QGIS eklentisi için (2026-08-31)". Var olan etiket biçimini izler
+(`veri-turkiye-2026-08-31`), platformu ve Python sürümünü adında taşır; başka bir platform için
+ikinci bir kit yan yana durabilir. `latest` **değildir** (`plugin-v0.2.0` kalmıştır).
+
+Zip yalnızca `wheels/` (16) ve `MANIFEST.json` içerir. Kit klasöründeki `KURULUM.md` ve
+`qgis_ortam_raporu.py` kopyaları **alınmamıştır**: ikincisi B'dekiyle aynıdır, ilki
+`13-cevrimdisi-kurulum.md`'nin 29. satırda geride kalmış bir sürümüdür — yayımlanmış ikinci bir
+kopya kayar. Zip içindeki 16 tekerlek `MANIFEST.json`'a karşı yeniden sağlanmıştır: 16/16.
+
+Notlar Türkçedir: ne olduğu, hedef, **paket-paket hangi eklentinin ihtiyaç duyduğu**, neyi
+kapsamadığı (iki eklenti için ayrı ayrı), `certutil` ile aktarım doğrulaması,
+`13-cevrimdisi-kurulum.md` ve `10-kurulum.md` §7.5'e işaret, Windows'ta çalıştırılmadığı
+cümlesi, lisanslar.
+
+**API'den geri okuma:** üç varlık indirilmiş ve yeniden sağlanmıştır.
+
+| varlık | API boyut | indirilen sha256 | yerel sha256 | |
+|---|---|---|---|---|
+| `gencp_kit_win_amd64_py312.zip` | 59.959.899 | `c9fabbebed86…` | `c9fabbebed86…` | **aynı** |
+| `MANIFEST.json` | 3.274 | `bb2658bf6818…` | `bb2658bf6818…` | **aynı** |
+| `SHA256SUMS.txt` | 176 | `88fe7271d2f6…` | `88fe7271d2f6…` | **aynı** |
+
+`sha256sum -c SHA256SUMS.txt` indirilen dosyalarda: ikisi de OK. `sr-plugin-v0.1.0` 7 varlık,
+`plugin-v0.2.0` 2 varlık, dokunulmamış.
+
+### 14.3 Adım 3 — kılavuz
+
+Kiti anan yerler aranmıştır (`kit/`, `tekerlek kiti`, `.whl`, `MANIFEST.json`, `wheel`):
+`10-kurulum.md` §7.5 ve §3, `13-cevrimdisi-kurulum.md` §1 ve komutlar (`C:\gencp_kit\wheels`
+— makinedeki klasör, değişmez), `09-release-notes-draft.md:20` (taslak kayıt, değişmez),
+`00-recon.md:268` ("wheel" genel anlamda). Üç düzenleme:
+
+- `10-kurulum.md` §3 tablosuna bir satır **eklenmiştir** (§7.5 "§3'teki kit" diyordu, §3'te kit
+  **yoktu** — sarkık bir çapraz atıf; brifing bunu öngörmemişti):
+  `| **Her ikisi — çevrimdışı Python paketleri** … | gencp_kit_win_amd64_py312.zip … | <sürüm URL'si> … |`
+- `10-kurulum.md` §7.5 adım 2, önce: `2. YOK ise §3'teki çevrimdışı tekerlek kiti ile kurulur ve **QGIS yeniden başlatılır.**`
+  sonra: `2. YOK ise §3'teki çevrimdışı tekerlek kiti (kit-win_amd64-py312-2026-08-31 sürümündeki gencp_kit_win_amd64_py312.zip) ile kurulur ve **QGIS yeniden başlatılır.**`
+- `13-cevrimdisi-kurulum.md` §1, "toplam 57,6 MB." cümlesinden sonra üç cümle **eklenmiştir**:
+  kitin hangi sürümde hangi dosya olarak yayımlandığı, açılınca bu klasörün elde edildiği,
+  notların kapsamı listelediği.
+
+İki Proje 1 zip'ini anlatan cümlelere dokunulmamıştır.
+
+### 14.4 Adım 4 — dört betik
+
+| betik | durum | yapılan |
+|---|---|---|
+| `norm_probe.py` | oturum çalışma dizininde duruyordu (2.393 bayt, 30 Ağu 21:06) | `tubitak/sr/tools/`'a alındı (yoksayılmıyor); `07-x4-model.md:37` yolu adlandırır |
+| `wp16_repro.py` | duruyordu (5.359 bayt, 1 Eyl 16:42) | `tubitak/sr/tools/`'a alındı; `16-checkpoint.md` yığın izinin altına yolu adlandıran bir cümle eklendi (iz aynen kaldı) |
+| `host_wsx4.py` | yalnızca yazarın makinesinde | `05-referans-arac.md:234` ve `17-wsx4-hizalama.md:137` "korunmamıştır" diyecek biçimde düzeltildi |
+| `predictions.txt` | **brifing "yok" demişti; oturum çalışma dizininde duruyor** (221 bayt) | betik değil, izinli listede yok; depoya alınmadı. §1'deki cümle düzeltildi; içeriği aşağıda aynen |
+
+`predictions.txt`, aynen:
+
+```text
+WP17 predictions, written before measurement
+P1 files under tubitak/sr/ in A            : 130
+P2 md links in tubitak/sr/ leaving the tree : 40
+P3 files under tubitak/sr/ in B @5c55b4f    : 90
+Wed Sep  2 10:02:30 +03 2026
+```
+
+Düzeltilen cümleler, önce/sonra:
+
+- `07-x4-model.md`: `Path: scratchpad/norm_probe.py, written for this question;` →
+  `Path: tubitak/sr/tools/norm_probe.py (preserved in WP22; it lived only in a session scratchpad until then), written for this question;`
+- `05-referans-arac.md`: `…host_wsx4.py, outside the repository tree — presenting…` →
+  `…host_wsx4.py, outside the repository tree, and **not preserved**: it exists only on the author's machine — presenting…`
+- `17-wsx4-hizalama.md`: `host_wsx4.py and our seam are exonerated;` →
+  `host_wsx4.py (WP5's adapter, not preserved in the repository) and our seam are exonerated;`
+- `18-depo-tasima.md` §1: `(predictions.txt, 10:02:30 +03); ölçümden sonra` →
+  `(predictions.txt, 10:02:30 +03; dosya depoya alınmamıştır, içeriği §14.4'te aynen verilmiştir); ölçümden sonra`
+
+Kaynak kaydı `SOURCE.md`'ye ek olarak yazılmıştır (blob'lar, tarihler, "A'da commit yok").
+
+### 14.5 Adım 5 — denetimler (V4)
+
+| | WP21 | WP22 |
+|---|---|---|
+| ayrı ad | 193 | **197** |
+| `tubitak/sr/` altında çözülen | 103 | **108** |
+| çözülmeyen | 90 | **89** |
+| okuyucuya verilmiş, B'den tutulamayan söz | 3 (kit, iki Proje 1 zip'i) | **1 grup: iki Proje 1 zip'i** (`gencp_plugin.zip` 98.410 B, `gencp_plugin_win_amd64.zip`) — kapsam dışı |
+
+Yeni adlar: `gencp_kit_win_amd64_py312.zip`, `SHA256SUMS.txt`, `MANIFEST.json` artık **sürüm
+varlığı** sınıfındadır; `norm_probe.py` ve `wp16_repro.py` çözülür; `host_wsx4.py` ve
+`predictions.txt` "korunmadı/alınmadı" diye etiketlidir. Bağlantı denetimi: **25 göreli
+bağlantı, 0 kırık.**
+
+### 14.6 G1 ve V6
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| depo | karşılaştırılan | yol kümesi | değişen / eklenen | sınıf |
+|---|---|---|---|---|
+| A | **1272** | aynı; izlenmeyen 0 | **hiçbiri** (V6) | — |
+| B | **1543** | aynı; beliren/kaybolan/taşınan yok | değişen: `SOURCE.md`; `docs/05-referans-arac.md`, `07-x4-model.md`, `10-kurulum.md`, `13-cevrimdisi-kurulum.md`, `16-checkpoint.md`, `17-wsx4-hizalama.md`, `18-depo-tasima.md` | 3 / 2 / 4 |
+| | | | eklenen: `tools/norm_probe.py`, `tools/wp16_repro.py` | 1 |
+
+Hepsi `tubitak/sr/` altındadır; 60 MB'lık zip hazırlanmamıştır (staged listede yalnızca metin
+dosyaları vardır). Kapı geçilmiştir.
+
+### 14.7 V5 — okuyucu sınaması, düşen durum için
+
+Yalnızca B ve B'nin sürümleri elde, internetsiz bir Windows makinesi, `onnxruntime` yok:
+`10-kurulum.md` baştan sona izlenmiştir.
+
+- §2: ortam raporu betiği `tubitak/sr/tools/`'da — bulunur. Python 3.12 / `cp312` ölçülür.
+- §3 tablosu: kit satırı var; `kit-win_amd64-py312-2026-08-31` sürümü, üç varlık — indirilir,
+  `SHA256SUMS.txt` ile doğrulanır.
+- §7.5 adım 2 → `13-cevrimdisi-kurulum.md` §3.1: `pip install --no-index --find-links=C:\gencp_kit\wheels
+  … rasterio onnxruntime osmium` — kit kapalıdır, `pip` ağ istemez (V2).
+- `gencp_super_resolution.zip`, üç model, örnekler: `sr-plugin-v0.1.0`'da.
+
+**Cevap: EVET — bir varsayımla.** `rasterio` ve `onnxruntime` artık B'den kurulabilir; belgelerin
+anlattığı yol baştan sona B'den yürütülebilir. Varsayım: **`Pillow`, QGIS'in Windows kurulumuyla
+gelir.** Kitte yoktur, kılavuzun §2 tablosunda ölçülmez, ortam raporu betiği ölçmez. Gelmiyorsa
+Proje 2'nin bikübik yolu dahil hiçbir yöntemi çalışmaz ve okuyucunun bunu makinede öğrenmesi
+dışında yolu yoktur. Bu varsayım kapatılmadan "sınanmış" denemez; kapatmanın yolu, betiğe
+`PIL` (ve `yaml`) satırı eklemek ya da kite Pillow tekerleğini katmaktır — ikisi de bu iş
+paketinin izinli listesinde değildir, açık madde olarak yazılmıştır.
+
+**Proje 1 için cevap HAYIR, iki sebeple:** iki zip yayımlanmamıştır (bilinen, kapsam dışı), ve
+kit `geopandas`'ı kapsamaz (yeni bulgu, §14.1). İkisi de Proje 1 sürüm işine aittir.
+
+### 14.8 Brifingin öngörmediği bulgular
+
+1. **Proje 1'in çevrimdışı `.pbf` yolu `geopandas` ister** ve kit onu içermez; QGIS de getirmez.
+   Kit Proje 1 için yeterli değildir — sürüm notlarında ve burada açıkça yazılmıştır.
+2. **Proje 2 `Pillow`'a bağımlıdır** (bikübik dahil) ve ne kit ne ortam raporu bunu görür. Açık
+   madde: ortam raporu betiğine `PIL` ve `yaml` satırları.
+3. **`10-kurulum.md` §7.5 "§3'teki kit" diyordu, §3'te kit yoktu.** Satır eklenerek giderilmiştir.
+4. **`predictions.txt` duruyordu**; brifing yok saymıştı. İçeriği §14.4'te korunmuştur.
+5. Kit klasöründeki `KURULUM.md`, `13-cevrimdisi-kurulum.md`'nin **eski** bir kopyasıdır (29.
+   satırda hâlâ `tubitak/tool/…` der); zip'e alınmamıştır.
+6. `pip download` ilk denemede "geçersiz gereksinim" verdi: zsh, `$set` değişkenini kelimelere
+   bölmez; `${=set}` ile yeniden koşulmuştur. İlk başarısızlık bulgu sayılmamıştır.
