@@ -357,51 +357,54 @@ def build_parser(consts, version):
         prog=TOOL,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "GenCP Süper Çözünürlük — komut satırı. Bir GeoTIFF'i, kendi ızgarasının tam "
-            "tamsayı incelmesi üzerine süper çözünürlükle yazar. QGIS eklentisiyle aynı "
-            "kodu çalıştırır ve aynı pikselleri üretir; çıktı ızgarası kaynağın KRS'sini, "
-            "başlangıç noktasını ve kapsamını olduğu gibi korur (Gate S)."),
+            "GenCP Süper Çözünürlük, komut satırı. Bir GeoTIFF'i kendi ızgarasının tam "
+            "tamsayı incelmesi üzerine süper çözünürlükle yazar. QGIS eklentisiyle aynı kodu "
+            "çalıştırır ve aynı pikselleri üretir; çıktının KRS'si, başlangıç noktası ve "
+            "kapsamı kaynağınkiyle aynıdır (ızgara sözleşmesi, Gate S)."),
         epilog=(
             "Örnekler:\n"
             f"  {TOOL} girdi.tif cikti.tif\n"
-            f"      bikübik, ölçek {consts['BICUBIC_SCALE']} (eklentinin bikübik varsayılanı)\n"
+            f"      bikübik yöntem, ölçek {consts['BICUBIC_SCALE']} (eklentinin bikübik varsayılanı)\n"
             f"  {TOOL} girdi.tif cikti.tif --method model --model gencp_sr_x4_b4.onnx\n"
             "      eğitilmiş model; ölçek, bant sayısı ve karo düzeni modelin künyesinden okunur\n"
             f"  {TOOL} girdi.tif cikti.tif --method model --model M.onnx --dry-run\n"
-            "      hiçbir şey yazmadan, yazılacak ızgarayı Gate S terimleriyle basar\n\n"
-            "Çıkış kodları: 0 başarı; 2 kullanım hatası; 3 girdi yok/okunamıyor; 4 girdinin "
-            "KRS'si yok;\n  5 girdi kuzeye dönük değil ya da ızgara sözleşmesi sağlanamıyor; "
-            "6 bant sayısı modele uymuyor;\n  7 veri tipi desteklenmiyor; 8 model dosyası "
-            "yok/okunamıyor; 9 çıktı var, --overwrite yok;\n  10 çıktı girdiyle aynı; "
-            "11 bindirme piksel katı değil ya da yetersiz; 12 onnxruntime yok;\n  13 rasterio "
-            "yok; 14 yazma hatası; 15 ölçek geçersiz; 16 yazılan çıktı Gate S'i sağlamadı.\n"
+            "      hiçbir şey yazmadan, yazılacak ızgarayı Gate S terimleriyle gösterir\n\n"
+            "Çıkış kodları: 0 başarı; 2 kullanım hatası; 3 girdi yok ya da okunamıyor; "
+            "4 girdinin KRS'si yok;\n  5 girdi kuzeye dönük değil ya da ızgara sözleşmesi "
+            "sağlanamıyor; 6 bant sayısı modele uymuyor;\n  7 veri tipi desteklenmiyor; "
+            "8 model dosyası yok ya da okunamıyor; 9 çıktı var, --overwrite yok;\n  10 çıktı "
+            "girdiyle aynı; 11 bindirme piksel katı değil ya da yetersiz; 12 onnxruntime yok;\n"
+            "  13 rasterio yok; 14 yazma hatası; 15 ölçek geçersiz; 16 yazılan çıktı Gate S'i "
+            "sağlamadı.\n"
             "Ağ erişimi yoktur: yalnızca verilen yerel dosyalar okunur ve yazılır."))
-    p.add_argument("input", help="girdi GeoTIFF (kuzeye dönük, KRS'li)")
+    p.add_argument("input", help="girdi GeoTIFF; kuzeye dönük ve KRS'li olmalıdır")
     p.add_argument("output", help="yazılacak GeoTIFF; önce geçici dosyaya yazılır, sonra "
-                                  "adı değiştirilir (yarım dosya kalmaz)")
+                                  "adı değiştirilir, yarım dosya kalmaz")
     p.add_argument("--method", choices=("bicubic", "model", "wsx4"), default="bicubic",
                    help="eklentideki yöntemler: bicubic (varsayılan; model gerekmez), "
                         "model (GenCP eğitilmiş model), wsx4 (referans model). model ve "
                         "wsx4 aynı yolu izler; ikisi de --model ister")
     p.add_argument("--model", metavar="DOSYA.onnx",
-                   help="ONNX model dosyası; --method model/wsx4 için zorunlu. wsx4 için "
-                        "aynı adlı .yaml dosyası modelin yanında olmalıdır")
+                   help="ONNX model dosyası; --method model ve wsx4 için zorunludur. wsx4 "
+                        "için aynı adlı .yaml dosyası modelin yanında bulunmalıdır")
     p.add_argument("--scale", type=int, metavar="N",
-                   help=f"yalnızca bicubic: ölçek katsayısı, ikinin kuvveti (varsayılan "
+                   help=f"yalnızca bicubic için: ölçek katsayısı, ikinin kuvveti (varsayılan "
                         f"{consts['BICUBIC_SCALE']}, eklentinin bikübik ölçeği). Model "
-                        "yolunda modelin künyesinden okunur; verilirse ona eşit olmalıdır")
+                        "yolunda ölçek modelin künyesinden okunur; verilirse ona eşit olmalıdır")
     p.add_argument("--overlap", type=float, metavar="METRE",
-                   help="karo bindirmesi, metre; kaynak pikselinin tam katı olmalıdır. "
-                        "Varsayılan eklentininkidir: bicubic 32 kaynak pikseli, model "
-                        "yolunda modelin künyesindeki değer")
+                   help="karo bindirmesi, metre cinsinden; kaynak pikselinin tam katı "
+                        "olmalıdır. Varsayılan eklentininkidir: bicubic için 32 kaynak "
+                        "pikseli, model yolunda modelin künyesindeki değer")
     p.add_argument("--blend", choices=("auto", "feather", "crop"), default="auto",
-                   help="karo birleştirme. auto (varsayılan) eklentinin kuralıdır: bicubic "
-                        "feather, model yolunda modelin bildirdiği düzen. Başka bir seçim "
-                        "çıktıyı eklentininkinden ayırır ve uyarı basılır")
+                   help="karo birleştirme düzeni. auto (varsayılan) eklentinin kuralıdır: "
+                        "bicubic için feather, model yolunda modelin bildirdiği düzen. Başka "
+                        "bir seçim çıktıyı eklentininkinden ayırır; uyarı basılır")
     p.add_argument("--overwrite", action="store_true",
-                   help="var olan çıktının üzerine yaz (varsayılan: var olan çıktı reddedilir)")
+                   help="var olan çıktının üzerine yazılır (varsayılan: var olan çıktı "
+                        "reddedilir)")
     p.add_argument("--dry-run", action="store_true",
-                   help="hiçbir şey yazma; yazılacak ızgarayı Gate S terimleriyle bas ve çık")
+                   help="hiçbir şey yazılmaz; yazılacak ızgara Gate S terimleriyle "
+                        "gösterilir ve çıkılır")
     p.add_argument("--version", action="version",
                    version=f"{TOOL} {version} (GenCP Super-Resolution eklentisi "
                            f"{version} ile aynı sr_core ve model çekirdeği)")
@@ -421,7 +424,7 @@ def main(argv=None):
         plan = _plan(args, consts)
         lines = _grid_lines(plan)
         if args.dry_run:
-            print("Kuru çalıştırma — yazılacak ızgara (Gate S terimleriyle):")
+            print("Kuru çalıştırma: yazılacak ızgara (Gate S terimleriyle)")
             for ln in lines:
                 print("  " + ln)
             print("Hiçbir şey yazılmadı.")

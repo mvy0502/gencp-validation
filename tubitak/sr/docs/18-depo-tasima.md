@@ -1496,3 +1496,245 @@ Sonuç, koşulduktan sonra buraya eklenmiştir (16.9).
 
 `sr_plugin/` ve `sr_core/` altında değişen dosya: 0. Sürüm dosyalarına dokunulmamıştır. Tek
 commit, B'de, beş yol tek tek hazırlanarak; uzak depo `git ls-remote` ile doğrulanmıştır.
+
+
+## 17. WP25: kurumun okuduğu her yüzey, anadil düzeyinde Türkçe
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `dffb293bdec88ec99b1c6b39e1cd96f3275f0996`; iki ağaç da temizdi; her izlenen dosya manifeste
+alınmıştır (A **1272**, B **1550**, `/tmp/wp25_baseline/`). §1–16 değiştirilmemiştir. A'da hiçbir
+şey değişmemiş, hazırlanmamış, commit'lenmemiştir. `sr_plugin/`, `sr_core/`, `sr_data/`,
+`sr_train/`, `tests/sr_cli_tests.py` ve kanıt klasörlerinin adları dokunulmadan kalmıştır;
+`docs/evidence/wp22/` adının §14'teki WP22 ile çakışması kayıtlıdır, çözülmemiştir. Dosya
+gövdeleri Python ile yazılmıştır.
+
+Bu bir çeviri işi değildi; ölçüt, her cümlenin baştan Türkçe yazılmış gibi okunmasıydı.
+İçerik korunmuş (17.4), yazı yeniden yazılmıştır (17.5).
+
+### 17.1 Ölçütler ve kaynakları (V1)
+
+Beş kaynak okunmuştur; hafızadan değil, sayfanın kendisinden: rasterio'nun `README.rst`
+dosyası ve kurulum kılavuzu (`installation.html`), GDAL'in `README.md` ve `NEWS.md` dosyaları,
+Keep a Changelog 1.1.0, ve bakımlı bir QGIS eklentisi olarak QuickOSM'un `README.md` ile
+`CHANGELOG.md` dosyaları. rasterio ve GDAL, aynı yığının kendisi olduğu için; Keep a Changelog,
+sürüm notu geleneğinin en çok atıf alan tanımı olduğu için; QuickOSM, QGIS eklenti deposunda
+yıllardır sürdürülen ve QGIS sürüm desteğini açıkça yazan bir eklenti olduğu için seçilmiştir.
+Çıkarılan, denetlenebilir ölçütler:
+
+| # | Ölçüt | Kaynak, gözlem |
+|---|---|---|
+| A | İlk ekran, kaydırmadan, şu dördünü söyler: bu nedir, kim için, hangi sürümlerle çalışır, belgeler nerede | rasterio README: 1. paragraf tanım, 2. paragraf `Python >= 3.12, Numpy >= 2, GDAL >= 3.8` ve ikili paketlerin yeri, 3. paragraf belge bağlantısı |
+| B | Kurulum ayrıntısı ayrı bir kılavuzdadır; README yalnızca kısa yolu ve bağlantıyı verir | rasterio README: `Installation` bölümü kılavuza yönlendirir |
+| C | Kurulum kılavuzu kolay yolu ve ileri yolu ayırır ve kurulumu zorlaştıran ön koşulu ilk paragrafta söyler | rasterio kurulum: `Easy installation` / `Advanced installation`; ilk cümle `libgdal` bağımlılığı |
+| D | Tanımdan hemen sonra “ne nerede” listesi: site, depo, hata izleyici, indirme | GDAL README: tek cümle tanım, ardından beş bağlantılık liste |
+| E | Sürüm notu tek cümleyle sürümün türünü söyleyerek açılır; içerik bileşene göre bölümlenir; her madde bir referans taşır | GDAL NEWS: `GDAL 3.13.3 is a bugfix release.`, `### Port`, `### Raster drivers`, her satırda `#NNNNN` |
+| F | Her sürümde tarih; maddeler türe göre gruplanır; her madde kaynağa bağlanır | rasterio CHANGES: `1.5.1 (2026-08-07)`, `Bug fixes:`, her satırda `gh-NNNN` |
+| G | Sürüm notu insan için yazılır; değişiklikler türe göre gruplanır; en yeni üstte; tarih ISO biçiminde; kullanımdan kalkan ve çalışmayan şeyler açıkça yazılır | Keep a Changelog: yol gösterici ilkeler, `Added/Changed/Deprecated/Removed/Fixed/Security`, “git günlüğü dökülmez”, “tarihler tutarsız olmaz” |
+| H | Eklenti README'si desteklenen QGIS sürümlerini açıkça yazar ve kullanıcı kılavuzuna bağlanır; değişiklik günlüğü kullanıcının göreceği değişiklikleri satır satır yazar | QuickOSM README: `Versions`, `Documentation`; CHANGELOG: `## 2.5.3 - 2026-06-05`, her satır bir kullanıcı değişikliği |
+| I | Yalnızca indirip kurmak isteyen okuyucu ilk ekrandan yolu bulur | GDAL README `Download` bağlantısı; rasterio `pip` yolu; QuickOSM eklenti yöneticisi |
+| J | Kurulum belgesi neyin sınanmadığını ve tekerleklerin nerede geçerli olmadığını açıkça yazar | rasterio kurulum: tekerleklerin QGIS ile uyumunun sınanmadığı açıkça yazılıdır |
+
+Aşama 4'teki her yapısal değişiklik bu tabloya bağlanır: `10-kurulum.md` ve
+`13-cevrimdisi-kurulum.md` başına eklenen **Kısaca** paragrafı (A, I); README'nin Proje 2
+bölümündeki kısa yönlendirme ve komut satırı belgesine bağlantı (D); sürüm notlarının sırası
+(ne var, hangi dosya kimin için, aktarım doğrulaması, kurulum, neyin çalışmadığı) (E, G, J);
+sürüm notlarının tek cümlelik açılışı (E); sözlüğe bağlantılar (D).
+
+### 17.2 Envanter ve denetim (V2)
+
+| Yüzey | Dil, kayıt | Kusurlar |
+|---|---|---|
+| README açılış | Türkçe, kişisiz | uzun çizgi 1; “üç iş bir arada durmaktadır” (gereksiz süreklilik eki) |
+| README Proje 2 | Türkçe, kişisiz | uzun çizgi 3; terim kayması: “normalizasyon” (sözlük: normalleştirme), “yansıtım” (yansıtma), “×4” ile “4×” karışık, “kontrol noktası” (yer kontrol noktası); çeviri kokusu: “bozup-geri-alma deneyi”, “karşılıklılık hatası” (correspondence error); “Kaynak, belgeler ve kurulum kılavuzu” (kaynak kod) |
+| README KURAL | Türkçe, kişisiz | uzun çizgi 1; İngilizce sözcük: “merge yok” (birleştirme), “Senkron noktası” (eşitleme) |
+| `10-kurulum.md` | Türkçe, kişisiz; bir kayma | uzun çizgi 32, kısa çizgi 1 (“3.28 (kısa çizgi) 3.x”), düz tırnak 2, birinci çoğul 1 (`Kendi modellerimiz`); çeviri kokusu: “**bu makine olmayan** bir bilgisayar”, “Ölçülmüş davranış (uzun çizgi) paket eksikken ne olur” (measured behaviour); terim kayması: “kısa koşu” (çalıştırma), “GenCP SR, 2x” (eğitilmiş model 2×); yapısal: §7 birinci düzey başlık, ilk ekranda özet yok (A, I); yanlış çapraz başvurular: §7.5 “§2'deki ortam raporu” ve “§3'teki kit” (bu belgede öyle bölüm yok), §7.3 “Kurulum adımlarının kendisi §3'tedir” (§2); §7.4 “yöntem GenCP SR … ölçek 4× seçilir” (eklentide böyle bir yöntem adı ve ölçek seçimi yok) |
+| `13-cevrimdisi-kurulum.md` | Türkçe, kişisiz | uzun çizgi 9, düz tırnak 2; “`kit/` klasörü” (zip böyle açılmaz); “makine” ile “bilgisayar” karışık; çeviri kokusu: “o sızıntı olmayacaktır” (leak); “Üç durum da koşuldu”; yapısal: Katman 2 bölümü hangi eklentiyi ve yayımlanmış olup olmadığını söylemiyor; “# Katman 2” birinci düzey başlık |
+| `20-komut-satiri.md` | Türkçe, kişisiz | uzun çizgi 1 (başlık); “provenance etiketi” (künye); ilk ekranda sözlüğe bağlantı yok |
+| `sr-plugin-v0.1.0` başlık ve gövde | **İngilizce** | dil kuralı ihlali (tüm gövde); İngilizce binlik ayırıcı 6, ondalık nokta 3, uzun çizgi 12; başlıkta uzun çizgi |
+| kit sürümü başlık ve gövde | Türkçe, kişisiz | uzun çizgi 10; “kılavuz §2” yanlış başvuru (ortam raporu `13-cevrimdisi-kurulum.md` §2'dedir); “makine”; başlıkta uzun çizgi |
+| `sr_cli.py --help` | Türkçe, buyurgan | uzun çizgi 1; “verin”, “seçin”, “bas ve çık” (kişisiz kayıt dışı); `argparse` kalıp satırları İngilizce |
+| `qgis_ortam_raporu.py` | ASCII Türkçe | noktalı/noktasız i ve bütün aksanlar yapı gereği yok (“CALISTIRILIR”, “menusunu acin”); birinci çoğul (`olcmek istedigimiz sey budur`); buyurgan (“acin”, “yapistirin”) |
+
+Mekanik sayım, öncesi (kod alanları, komutlar ve adresler ayıklanarak; betik
+`/tmp/wp25_baseline/typo_before_refined.txt`):
+
+| Yüzey | I/İ | ı/i | kesme | ondalık nokta | uzun çizgi | kısa çizgi | emoji | 1. çoğul | düz tırnak |
+|---|---|---|---|---|---|---|---|---|---|
+| README açılış | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| README Proje 2 | 0 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | 0 |
+| README KURAL | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| `10-kurulum.md` | 0 | 0 | 0 | 0 | 32 | 1 | 0 | 1 | 2 |
+| `13-cevrimdisi-kurulum.md` | 0 | 0 | 0 | 0 | 9 | 0 | 0 | 0 | 2 |
+| `20-komut-satiri.md` | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| `sr-plugin-v0.1.0` gövdesi | 0 | 0 | 0 | 9 | 12 | 0 | 0 | 0 | 0 |
+| kit gövdesi | 0 | 0 | 0 | 0 | 10 | 0 | 0 | 0 | 0 |
+| `sr_cli.py --help` | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| **Toplam** | **0** | **0** | **0** | **9** | **70** | **1** | **0** | **1** | **4** |
+
+Sayaçların sınırı: I/İ ve kesme sayaçları örüntü tabanlıdır ve yalnızca sık görülen
+sözcükleri ve özel adları bilir; sıfır, “bulunmadı” demektir, “yoktur” demek değil. Bu iki
+sınıf yeniden yazımda elle de okunmuştur. `qgis_ortam_raporu.py` tabloya alınmamıştır: ASCII
+yazıldığı için sayaç anlamsızdır.
+
+### 17.3 Sözlük
+
+`tubitak/sr/docs/sozluk.md`: 52 kavram, her biri için tek terim, yerine geçtiği biçimler ve
+İngilizce karşılık. Baskın terim korunmuştur; değiştirilen üç yer ve nedeni: “koşu” yerine
+**çalıştırma** (koşu araştırma kaydının dilidir, kurum belgesinin değil); “kontrol noktası”
+yerine **yer kontrol noktası** (görüntü eşleştirmede “kontrol noktası” çok anlamlıdır);
+“makine” yerine **bilgisayar** (kurum yazışmasının sözcüğü). Sürüm notlarından gelen
+“provenance/metadata” için belgelerde zaten baskın olan **künye** seçilmiştir.
+
+### 17.4 Yeniden yazım ve iddia koruması (V3)
+
+Her yüzey baştan yazılmıştır; cümle cümle yama yapılmamıştır. `sr-plugin-v0.1.0` gövdesi
+İngilizce metinden çevrilmemiş, gerçeklerden Türkçe yazılmıştır. README'de yalnızca üç blok
+değiştirilmiştir (açılış, Proje 2 bölümü, KURAL bölümü); Proje 1 bloğu (3661 bayt), “Araştırma
+kaydı” bloğu (776 bayt) ve doğrulama çalışması bölümleri (18057 bayt) bayt bayt aynıdır,
+programla doğrulanmıştır.
+
+İddia karşılaştırması (`wp25_claims.py`: sayılar ayırıcıdan arındırılarak, birimler
+eşlenerek, dosya adları, adresler, etiketler, sağlama toplamları ve komut satırları küme
+olarak; kendi bilinen-yanlışı `49.379 → 49.380` değişikliğini iki tarafta da yakalamıştır):
+
+| Belge | Sonuç | Farkın açıklaması |
+|---|---|---|
+| README açılış, Proje 2, KURAL | üç blokta da **aynı küme** | |
+| `10-kurulum.md` | +`sozluk.md`, +`7` | sözlüğe bağlantı; özet paragrafındaki “§7'ye” bölüm numarası |
+| `13-cevrimdisi-kurulum.md` | +`sozluk.md`, +`3`, +`4`, +`2026` | sözlüğe bağlantı; özetteki §3 ve §4; “2 Eylül 2026'da” (öncesinde “2026:” ayıklayıcıya takılmıyordu) |
+| `20-komut-satiri.md` | +`sozluk.md` | sözlüğe bağlantı |
+| `sr-plugin-v0.1.0` gövdesi | komut satırı yorumu çevrildi; +`8`, +`16`, +`30`; `40 %` → `%40`; +`512 px` | `certutil` satırı aynı, yalnızca `#` yorumu Türkçe; “8-bit/16-bit/3.0-era” tireli yazımı ayıklayıcı sayı saymıyordu; yüzde işaretinin Türkçe konumu; “512 × 512 piksel” birim çifti |
+| kit gövdesi | **aynı küme** | |
+| `sr_cli.py --help` | **aynı küme** | |
+
+Kaybolan iddia yoktur; kazanılanların tamamı çapraz başvuru ya da ayıklayıcı yapaylığıdır.
+
+Anlamı belirsiz olup kaynağından çözülenler: (1) `10-kurulum.md` §7.5'teki “§2'deki ortam
+raporu” ve “§3'teki kit”, `13-cevrimdisi-kurulum.md`'nin §2 ve §3'ünü kastediyordu; belge
+adıyla yazılmıştır. (2) §7.3 “Kurulum adımlarının kendisi §3'tedir” §2'yi kastediyordu.
+(3) §7.4'teki “yöntem GenCP SR, ölçek 4× seçilir”: `strings.py`'deki kutu adı **Eğitilmiş
+model**'dir ve ölçek seçilmez, modelden okunur; öyle yazılmıştır. (4) `13-cevrimdisi-kurulum.md`
+“`kit/` klasörü”: sürüm zip'i indirilip listelenmiştir, açıldığında `MANIFEST.json` ve 18
+tekerlekli `wheels/` klasörü çıkar; komut satırındaki `C:\gencp_kit\wheels` bununla tutarlıdır.
+(5) Kit sürüm notundaki “kılavuz §2” ortam raporunu kastediyordu; `13-cevrimdisi-kurulum.md`
+§2 yazılmıştır. (6) Katman 2'nin Proje 1'e ait, yayımlanmamış bir yapıyı anlattığı `§15` ve
+sürüm listesinden doğrulanmış ve bölümün başına yazılmıştır.
+
+### 17.5 Kalite kapısı (V4)
+
+Üç okuma geçişi. **1. geçiş** altı cümle buldu: “Paket eksikken ne olduğu, ölçülerek” başlığı;
+wsx4 dosyalarının indirilmesini anlatan devrik cümle; “ölçek satırı modelden 4× okur”;
+`13`'te “Doğrulanmamış olan, ve” virgülü; sürüm notunda “gerçekte koşulan adım sayısı”
+(sözlük dışı “koşu”); kit notunda “Kapsamadığı; dikkatle okunmalıdır”. Ayrıca sürüm notuna
+yazımda giren bir birinci çoğul (`kendi uyguladığımız`) bu geçişte yakalanmıştır. **2. geçiş**
+düzyazıda bir şey bulmadı; mekanik sayaç iki kalıntı gösterdi: sözlüğün uzun çizgiyi
+karakteriyle anması (`U+2014` yazımına çevrildi) ve sayacın `+3,520 dB` ondalığını İngilizce
+binlik sanması (sayaç işaretli ondalıkları dışlayacak biçimde düzeltildi). **3. geçiş** hiçbir
+şey bulmadı; son geçiş budur.
+
+Mekanik sayım, sonrası (`/tmp/wp25_baseline/typo_after.txt`): on yüzeyin (üç README bloğu,
+üç kılavuz, sözlük, iki sürüm gövdesi, `--help`) dokuz sütununda **her değer 0**.
+
+### 17.6 Okuyucu sınamaları (V5)
+
+**Yönetici README'yi açıyor.** İlk paragraf üç işi ve iki eklentinin ne yaptığını söyler:
+sentetik referans görüntü üretimi (Proje 1) ve Sentinel-2 süper çözünürlük (Proje 2), her biri
+neden var olduğuyla. **EVET.**
+
+**Teknisyen `sr-plugin-v0.1.0` sayfasını açıyor.** İlk ekranda dosya tablosu (ad, bayt, MB,
+SHA-256), hemen altında aktarım doğrulama komutu ve “Her satır `OK` demelidir”, ardından dört
+adımlık kurulum ve hangi dosyanın hangi yöntemle kullanılacağı tablosu. Kılavuz bağlantısı
+yalnızca çevrimdışı ayrıntı içindir. **EVET.**
+
+**Çevrimdışı bilgisayardaki kişi `10-kurulum.md`'yi izliyor.** **Kısaca** paragrafı onu §7'ye
+gönderir; §7.1 dosyaları ve boyutları, §7.2 sağlama komutunu işletim sistemine göre, §7.3 her
+dosyanın yerini, §7.4 beklenen sayılarla doğrulamayı, §7.5 model yöntemi çalışmıyorsa ne
+yapılacağını belge adıyla verir. Belirsiz kalan bir nokta bulunamamıştır. Sınır, belgede
+zaten yazılıdır: adımlar İngilizce arayüzde denenmiştir ve wsx4 dosyaları üst kaynaktan,
+internet erişimi olan bilgisayarda indirilmelidir. **EVET.**
+
+### 17.7 Sürüm gövdeleri (V6)
+
+İki sürümün başlığı ve gövdesi API üzerinden tam baytla yazılmış, geri okunmuş ve
+karşılaştırılmıştır:
+
+| Sürüm | Yeni başlık | Gövde | Geri okuma |
+|---|---|---|---|
+| `sr-plugin-v0.1.0` | `GenCP Super-Resolution 0.1.0: QGIS eklentisi ve modeller` | 9139 bayt, sha256 `cc1886206455…` | **bayt bayt aynı**; 7 dosya dokunulmamış |
+| `kit-win_amd64-py312-2026-08-31` | `Çevrimdışı kurulum kiti: Windows 64 bit, Python 3.12 tekerlekleri, iki QGIS eklentisi için (2026-08-31)` | 5256 bayt, sha256 `48644561774f…` | **bayt bayt aynı**; 3 dosya dokunulmamış |
+
+Etiketler ve dosya adları değişmemiştir. Diğer üç sürüme dokunulmamıştır.
+
+### 17.8 Proje 1 yüzeylerinde dil kuralı (V7)
+
+Proje 1'in ajanı için, değiştirilmeden kaydedilmiştir:
+
+| Yüzey | Kusur |
+|---|---|
+| README Proje 1 bölümü (satır 12–93, bayt bayt korunmuştur) | ikinci kişi anlatım (“İndirin”, “seçersiniz”, “basarsınız”; 27 yer); uzun çizgi 1 |
+| README doğrulama çalışması bölümleri | uzun çizgi 34; birinci çoğul 3 (`teslim ettiğimiz`, `kendi rasterizer'ımız`, `Devraldığımız`); İngilizce sözcükler düzyazıda (“upstream”, “history rewrite”, “stage'leme”) |
+| `plugin-v0.2.0` başlık ve gövde | Türkçe; başlıkta uzun çizgi; ikinci kişi (“Seçtiğiniz”) |
+| `veri-turkiye-2026-08-31` gövdesi | **İngilizce ile Türkçe karışık** (İngilizce durak sözcük sayısı Türkçeyle eşit); uzun çizgi 6; başlıkta uzun çizgi |
+| `osm-turkey-2026-08-19` başlık ve gövde | Türkçe; uzun çizgi 3; başlıkta uzun çizgi |
+| `docs/plugin/QUICKSTART.md` | Türkçe; uzun çizgi 4; zip boyutunu 73 KB yazıyor, yayımlanmış dosya 94.987 bayt |
+| `tubitak/README.md` | **İngilizce**; README'nin “Nereden başlamalı” listesinden yeni gelene 3. adım olarak gösteriliyor |
+| `tubitak/qgis_plugin/README.md` | **İngilizce**; README'nin “Ayrıntı” tablosundan “eklentinin mimarisi ve bilinen sınırları” olarak gösteriliyor |
+| `tubitak/DEVIR.md` | Türkçe; uzun çizgi 45 |
+
+### 17.9 `sr_plugin/strings.py` denetimi (V8)
+
+Yalnızca liste; hiçbir şey değiştirilmemiştir. Eklenti dondurulmuştur ve gösteri bu yapıya
+karşı prova edilmiştir.
+
+1. Uzun çizgi üç dizede: `method_model` (“Eğitilmiş model (uzun çizgi) GenCP”), `method_wsx4` (“Referans
+   model (uzun çizgi) wsx4 (4×)”) ve `tile_model_note` çevresindeki yorumlarda değil, dizelerde ikisi;
+   `model_desc` ayırıcı olarak orta nokta kullanır, sorun değildir.
+2. Ölçek yazımı: `scale_value` “{n} ×” (boşluklu), belgeler “4×”; sözlükle uyumsuz.
+3. “{gsd} m çözünürlük” (`src_value`, `out_estimate_value`): sözlükte piksel boyu.
+4. Kırpma kenarı: `model_tiling_crop` “kırpmalı birleştirme (kenar {m} px)”; sözlükte kırpma
+   kenarı.
+5. Kayıt karışıklığı: buyurgan (“Önce bir girdi rasterı seçin”, “Model dosyasını seçin”,
+   “Gösteri için değiştirmeyin”, `err_dtype` içinde “seçin”), ikinci kişi (“dosyayı kendiniz
+   seçersiniz”, “kullanabilirsiniz”) ve kişisiz (“kurulmalıdır”) aynı pencerede. Arayüz
+   dizelerinde buyurgan kip Türkçe yazılım geleneğinde kabul görür; karışıklık kusurdur.
+6. Bayat metin: `TIP["model_file"]` “eğitilmiş model hazır olduğunda burası açılacaktır”; model
+   hazırdır.
+7. `TIP` sözlüğünde `method` ve `model_file` anahtarları iki kez tanımlıdır; ikinci tanım
+   birincisini sessizce ezer, birinci tanımlar ölü metindir.
+8. `wsx4_note` “ağırlıkları bu eklentiyle birlikte dağıtılmaz”: sözlükte model dosyası;
+   ağırlık, sürüm notlarından kaldırılan sözcüktür.
+9. `err_range` “%99,9 dilimi”: kesme ve yüzde konumu doğru; kusur değil, kayıt için.
+
+`qgis_ortam_raporu.py` de değiştirilmemiştir. Sebep: betik raporu `open(f, "w")` ile, kodlama
+belirtmeden yazar. İngilizce yerel ayarlı bir Windows'ta (cp1252) aksanlı Türkçe harfler
+`UnicodeEncodeError` üretir ve rapor dosyası yazılmaz; metni anadil yazımına çevirmek
+`encoding="utf-8"` kod değişikliğini gerektirir. Bu iş paketi yalnızca yardım metnine izin
+verir; kod değişikliği bir sonraki kod iş paketine bırakılmıştır. ASCII yazım o zamana kadar
+bilinçli bir sınırdır.
+
+### 17.10 Brifingin öngörmediği bulgular
+
+1. Kurulum kılavuzunun çevrimdışı bölümü, var olmayan bölümlere başvuruyordu (§7.3, §7.5); bir
+   okuyucu bu belgeyi tek başına izleyemezdi. Dil işi olarak başlayan iş, bir yönlendirme
+   kusuru bulmuştur.
+2. Kit kılavuzu zip'in açılış biçimini yanlış anlatıyordu (`kit/`); dosyanın kendisi indirilip
+   listelenmeden düzeltilemezdi.
+3. `sr_cli.py` yardım metni WP24'te uzun çizgiyle ve buyurgan kipte yazılmıştı; aynı gün
+   düzeltilmiştir. Yazma kuralı yazan kişi de kuralı ihlal edebilir; sayaç bunun içindir.
+4. Mekanik sayaç iki kez düzeltilmiştir: Türkçe binlik grupları (1.964.122) ondalık nokta
+   sayılıyordu; işaretli üç basamaklı ondalık (+3,520 dB) İngilizce binlik sayılıyordu. Sayaç,
+   sınadığı belgenin diliyle eğitilmeden doğru saymaz.
+5. Sürüm gövdesindeki `certutil` satırının `#` yorumu Türkçeye çevrilmiştir; komutun kendisi
+   aynıdır. Yorum düzyazıdır, komut değil.
+
+### 17.11 G1 ve commit
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| Depo | Karşılaştırılan | Değişen | İzlenmeyen | Hüküm |
+|---|---|---|---|---|
+| A | **1272 → 1272** | hiçbiri | yok | **PASS** |
+| B | **1550 → 1550** | `README.md`, `tubitak/sr/docs/10-kurulum.md`, `13-cevrimdisi-kurulum.md`, `20-komut-satiri.md`, `18-depo-tasima.md`, `tubitak/sr/tools/sr_cli.py` | `tubitak/sr/docs/sozluk.md` | **PASS** |
+
+Yasaklı yolların hiçbiri değişmemiştir. Tek commit, B'de, yedi yol tek tek hazırlanarak;
+uzak depo `git ls-remote` ile doğrulanmıştır.

@@ -1,14 +1,13 @@
 # GenCP Doğrulama Çalışması
 
-Bu depoda üç iş bir arada durmaktadır. Birincisi, harita verisinden sentetik uydu görüntüsü üreten
+Bu depoda üç iş bir arada durur. Birincisi, harita verisinden sentetik uydu görüntüsü üreten
 ESA/Telespazio **GenCP** sisteminin ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP))
-bağımsız ölçüm ve doğrulama çalışması — TÜBİTAK UZAY stajı, Ağustos 2026. İkincisi, o
-çalışmadan çıkan **QGIS eklentisi** (Proje 1): seçilen bir alan için OpenStreetMap ve arazi örtüsü
-verisinden georeferanslı sentetik referans görüntü üretir, terminal gerektirmez. Üçüncüsü,
-Sentinel-2 görüntüsünü süper çözünürlüğe çıkaran ikinci bir **QGIS eklentisi** (Proje 2);
-kendi bölümü aşağıdadır.
+bağımsız ölçüm ve doğrulama çalışmasıdır; TÜBİTAK UZAY stajı, Ağustos 2026. İkincisi, o
+çalışmadan çıkan **QGIS eklentisi** (Proje 1): seçilen bir alan için OpenStreetMap ve arazi
+örtüsü verisinden georeferanslı sentetik referans görüntü üretir; terminal gerektirmez.
+Üçüncüsü, Sentinel-2 görüntüsünü süper çözünürlüğe çıkaran ikinci bir **QGIS eklentisi**
+(Proje 2); kendi bölümü aşağıdadır.
 
----
 
 ## Kurulum
 
@@ -91,38 +90,38 @@ CLC+ Backbone, Copernicus Land Monitoring Service ürünüdür.
 
 ---
 
-## Proje 2 — Sentinel-2 süper çözünürlük eklentisi
+## Proje 2: Sentinel-2 süper çözünürlük eklentisi
 
 Yukarıdaki eklentiden ayrı, ikinci bir QGIS eklentisi: **Sentinel-2 görüntüsünü süper
-çözünürlüğe çıkarır** (2 veya 4 kat). Amacı görüntü eşleştirmeye daha çok ayrıntı vermektir —
-georeferanslamada anahtar nokta eşleştirmesi böylece **daha çok ve daha iyi konumlanmış kontrol
-noktası** üretir. Kaynak, belgeler ve kurulum kılavuzu `tubitak/sr/` altındadır; 2 Eylül 2026'dan
-itibaren Proje 2'nin güncel kopyası bu depodadır ve nereden geldiği
+çözünürlüğe çıkarır** (2× ya da 4×). Amacı, görüntü eşleştirmeye daha çok ayrıntı vermektir;
+georeferanslamadaki anahtar nokta eşleştirmesi böylece **daha çok ve daha iyi konumlanmış yer
+kontrol noktası** üretir. Kaynak kod, belgeler ve kurulum kılavuzu `tubitak/sr/` altındadır.
+2 Eylül 2026'dan itibaren Proje 2'nin güncel kopyası bu depodadır; nereden geldiği
 [`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır.
 
-**İndirin — hepsi bir arada, toplam 8,1 MB:**
+**İndirme, hepsi bir arada, toplam 8,1 MB:**
 **https://github.com/mvy0502/gencp-validation/releases/tag/sr-plugin-v0.1.0**
-Eklenti zip'i, üç model, doğrulama için iki örnek raster ve `SHA256SUMS.txt`. Dosya
-aktarımından sonra sağlama toplamları bu dosyaya karşı denetlenir.
+Eklentinin zip dosyası, üç model, doğrulama için iki örnek raster ve `SHA256SUMS.txt`.
+Aktarımdan sonra dosyaların sağlama toplamları bu listeye karşı denetlenir.
 
-**Kurulum kılavuzu** (Türkçe, çevrimdışı kurulum dahil, bu depoda):
-[`tubitak/sr/docs/10-kurulum.md`](tubitak/sr/docs/10-kurulum.md)
+**Kurulum kılavuzu** (Türkçe, çevrimdışı kurulum dâhil, bu depoda):
+[`tubitak/sr/docs/10-kurulum.md`](tubitak/sr/docs/10-kurulum.md).
 
-**Üç model, ve her birinin kurumun hangi verisine karşılık geldiği:**
+**Üç model ve her birinin kurumun hangi verisine karşılık geldiği:**
 
-| model | ölçek | bant | normalizasyon | karşılık geldiği veri |
+| Model | Ölçek | Bant | Normalleştirme | Karşılık geldiği veri |
 |---|---|---|---|---|
-| **`gencp_sr_tci_x4_b3_v2.onnx`** | ×4 | 3, `B02,B03,B04` | `DN/255` | **kurumun bugün elindeki 8 bitlik RGB** |
-| **`gencp_sr_x4_b4.onnx`** | ×4 | 4, `+B08` | `DN/10000` | **16 bitlik yansıtım verisi, geldiğinde** |
-| `gencp_sr_x2_v1.onnx` | ×2 | 3 | `DN/5000` | daha önceki 3 bantlı çalışma; yeni kullanım için aşılmıştır |
+| **`gencp_sr_tci_x4_b3_v2.onnx`** | 4× | 3, `B02,B03,B04` | `DN/255` | **kurumun bugün elindeki 8 bit RGB görüntü** |
+| **`gencp_sr_x4_b4.onnx`** | 4× | 4, `+B08` | `DN/10000` | **16 bit yansıtma verisi, geldiğinde** |
+| `gencp_sr_x2_v1.onnx` | 2× | 3 | `DN/5000` | önceki 3 bantlı çalışma; yeni kullanım için aşılmıştır |
 
-**Eşleştirme sonucu**, koşullarıyla: eğitimde hiç kullanılmamış **36SXJ granülü, 1628 çip**,
-gerçek 10 m Sentinel-2'ye karşı **40 m → 10 m** ölçülmüştür. 8 bitlik model, bikübik
-kontrolün **3,94 katı** kullanılabilir kontrol noktası verir (çip başına 491,3'e karşı 124,6
-RANSAC iç nokta) ve karşılıklılık hatasını **%40** düşürür (0,5917 px'e karşı 0,9835 px);
-1628 çipin **her birinde** daha iyidir
-([`13-tci-model-v2.md`](tubitak/sr/docs/13-tci-model-v2.md) §8). Bu bir bozup-geri-alma
-deneyidir; aracın gerçekte kullanıldığı 2,5 m çözünürlükte ölçüm yoktur, çünkü o çözünürlükte
+**Eşleştirme sonucu**, koşullarıyla birlikte: eğitimde hiç kullanılmamış **36SXJ granülünün 1628
+çipi** üzerinde, gerçek 10 m Sentinel-2 görüntüsüne karşı, **40 m → 10 m** ölçülmüştür. 8 bit
+model, bikübik karşılaştırma tabanının **3,94 katı** kullanılabilir kontrol noktası verir (çip
+başına 491,3 RANSAC iç noktasına karşı 124,6) ve eşleşme hatasını **%40** düşürür (0,5917 px'e
+karşı 0,9835 px); 1628 çipin **her birinde** daha iyidir
+([`13-tci-model-v2.md`](tubitak/sr/docs/13-tci-model-v2.md) §8). Bu bir bozup geri kazanma
+deneyidir: aracın gerçekte kullanıldığı 2,5 m çözünürlükte ölçüm yoktur, çünkü o çözünürlükte
 yer gerçeği yoktur.
 
 Eklenti **çevrimdışı çalışır**: QGIS 4.2.1 ve 3.44.13 üzerinde ağ bağlantıları kapatılarak
@@ -147,28 +146,27 @@ Modelin yaptığı iş: soldaki haritadan sağdaki görüntü üretiliyor.
 
 ## KURAL: BU DEPO VE GenCP KALICI OLARAK AYRILDI
 
-**Hiçbir yönde merge yok, hiçbir zaman.** Bu bir uyarı değil, kuraldır.
+**Hiçbir yönde birleştirme yoktur, hiçbir zaman.** Bu bir uyarı değil, kuraldır.
 
-Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler,
-kanıt artefaktları ve düzeltme kaydı. Fork ve **Proje 1** QGIS eklenti iş paketi
-[mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında
-devam eder, çünkü GenCP modelinden türemektedir. **Proje 2** (süper çözünürlük,
-`tubitak/sr/`) bu depoda bulunmaktadır; fork'taki kopyası dondurulmuştur. Makale çalışması
-`mvy0502/gencp-letter` deposundadır — **bu depo özeldir**, bağlantı
-verilmemiştir çünkü herkese açık bir ziyaretçi için 404 döner.
+Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler, kanıt
+dosyaları ve düzeltme kaydı. Fork ve **Proje 1** QGIS eklenti iş paketi
+[mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında devam
+eder, çünkü GenCP modelinden türemektedir. **Proje 2** (süper çözünürlük, `tubitak/sr/`) bu
+depodadır; fork'taki kopyası dondurulmuştur. Makale çalışması `mvy0502/gencp-letter`
+deposundadır; **o depo özeldir** ve bağlantı verilmemiştir, çünkü herkese açık bir ziyaretçi
+için 404 döner.
 
-- **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı
-  siler; o dal buraya merge edilirse silme buraya yayılır ve **araştırma kaydını yok
-  eder**.
+- **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı siler;
+  o dal buraya birleştirilirse silme buraya yayılır ve **araştırma kaydını yok eder**.
 - **Ters yön de kapalıdır.** Bu deponun `main` dalı GenCP'ye birleştirilmez.
-- **Bekleyen tek tamamlayıcı aktarım `cherry-pick` ile yapılır**, merge ile değil.
-  Senkron noktası `844dbec`; oraya kadar her şey burada (birleştirme `f9e0de6`,
-  ardından kanıt rasterları `284571b`).
-- **O aktarımdan sonra senkron KAPANIR.** İki depo bir daha birleşmez.
+- **Bekleyen tek tamamlayıcı aktarım `cherry-pick` ile yapılır**, birleştirmeyle değil. Eşitleme
+  noktası `844dbec`; oraya kadar her şey buradadır (birleştirme `f9e0de6`, ardından kanıt
+  rasterları `284571b`).
+- **O aktarımdan sonra eşitleme KAPANIR.** İki depo bir daha birleşmez.
 
-Tarih yeniden yazılmadı ve yazılmayacak: iki depo `96503b7` birleşme tabanından
-itibaren aynı tarihi paylaşır, bu yüzden araştırma kaydında anılan 49 commit SHA'sının
-hepsi her iki depoda da çözülür. `filter-repo` hiç kullanılmadı ve kullanılmayacak.
+Tarih yeniden yazılmamıştır ve yazılmayacaktır: iki depo `96503b7` birleşme tabanından
+itibaren aynı tarihi paylaşır; bu yüzden araştırma kaydında anılan 49 commit SHA'sının hepsi
+iki depoda da çözülür. `filter-repo` hiç kullanılmamıştır ve kullanılmayacaktır.
 
 ## Öne çıkanlar
 
