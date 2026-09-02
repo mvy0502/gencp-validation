@@ -432,3 +432,145 @@ Her depoda tek commit, açık yollarla.
    karşılaştırma yeniden koşulmuştur. Bu projede alışılmış olanın tersi bir arıza —
    geçmesi gerekirken düşen bir denetim — ve yakalanması, listenin çıktıda görünür
    olmasındandır.
+
+---
+
+## 11. WP19 — WP18'den kalan iki madde
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `ef14cb475bb9632c615926678db6b10deee8fa5e`,
+B `632d9bbf29d815d570338de04c1248722db3c85f`; iki ağaç da temizdi; her izlenen dosya
+manifeste alınmıştır (A **1272**, B **1538**, `/tmp/wp19/`). §1–10 değiştirilmemiştir.
+Hiçbir sürüme dokunulmamıştır.
+
+### 11.1 Madde 1 — A'nın `CLAUDE.md`'si kendi içinde tutarlı hâle getirildi
+
+**(a) tablo satırı, önce:**
+
+> `| `mvy0502/gencp-validation` | **Handover copy** for whoever takes the project over | Destination only — see below |`
+
+**sonra:**
+
+> `| `mvy0502/gencp-validation` | **The repository the institute has access to.** Holds both releases (`plugin-v0.2.0`, `sr-plugin-v0.1.0`) and the **canonical home of Project 2** (`tubitak/sr/`) | Project 2 work happens there; for Project 1 it is a destination only — see rule 2 |`
+
+**(b) kural 1, önce:**
+
+> `1. All work happens here, on `tubitak-tr`. This is where you push.`
+
+**sonra:**
+
+> `1. Project 1 work happens here, on `tubitak-tr`; this is where Project 1 is pushed. Project 2`
+> `   work happens in `gencp-validation` (rule 2).`
+
+**Brifingin saymadığı üçüncü satır — açıkça belirtilir.** GenCP satırının "Who writes"
+hücresi de "All agent work happens here" demekteydi: kural 1'in tablo biçimi, aynı cümle.
+Bırakılsaydı V1'in "Proje 2 işinin burada yapılacağını ima eden cümle kalmamalı" ölçütü
+sağlanamazdı. Değiştirilmiştir:
+
+> önce `| `mvy0502/GenCP` (this one), branch `tubitak-tr` | **Working repository.** Research record, gate registrations, results, code, QGIS plugin | All agent work happens here |`
+> sonra `| `mvy0502/GenCP` (this one), branch `tubitak-tr` | **Working repository.** Research record, gate registrations, results, code, QGIS plugin | Project 1 agent work happens here |`
+
+Dosyada başka hiçbir satır değişmemiştir (+4 −3, üçü de yukarıda). Kural 2 ve sonrası,
+fork ilişkisi ve Proje 1'i bağlayan her şey aynen durmaktadır.
+
+### 11.2 Madde 2 — `00-recon.md`'deki "203"
+
+Doğrulama, bu prompt'tan aktarılarak değil ölçülerek yapılmıştır: diğer on bir çapanın
+sabitlendiği `f386da375e78173ecb715167afe375a027b75ccb` commit'inde `extent.py`'nin 199–204.
+satırları okunmuştur:
+
+```
+199     if not 0.0 <= overlap_m < TILE_M:
+200         raise ExtentError(f"overlap must be in [0, {TILE_M}) m, got {overlap_m}")
+201     stride = TILE_M - overlap_m
+202     ox, oy = align_origin if align_origin else (xmin, ymax)
+203     tiles = []
+```
+
+`stride = TILE_M - overlap_m` yalnızca **201.** satırdadır; B'nin `HEAD`'indeki blob
+sabitlenen blob'la aynıdır. Metin 201 yapılmış, çapa `#L201` olarak, aynı commit'e
+sabitlenerek geri konmuştur:
+
+> önce `| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:203](../../gencp_core/extent.py) |`
+> sonra `| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:201](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L201) |`
+
+`00-recon.md`: +1 −1. On iki çapanın on ikisi de artık aynı commit'e bağlıdır.
+
+**A'daki `00-recon.md` dondurulmuş bir aynadır ve bu kusuru — `#L203` çapası ve "203"
+metniyle — bilerek korumaktadır; iki dosya arasındaki fark bir kopya hatası değildir.**
+
+### 11.3 Doğrulama
+
+**G1 — her izlenen dosya, tüm düzenlemelerden sonra, commit'ten önce** (bu bölüm dahil).
+Karşılaştırma ifadesi bu kez depo başına tek `if/else`'tir; WP18'deki zincirlenmiş
+`&& ||` kullanılmamıştır ve ifade koşulmadan önce okunmuştur.
+
+| depo | karşılaştırılan | yol kümesi | sağlaması değişen | izinli |
+|---|---|---|---|---|
+| A | **1272** | aynı; beliren/kaybolan/taşınan yok; izlenmeyen 0 | `CLAUDE.md` | 1 |
+| B | **1538** | aynı; beliren/kaybolan/taşınan yok; izlenmeyen 0 | `tubitak/sr/docs/00-recon.md` | 2 |
+| | | | `tubitak/sr/docs/18-depo-tasima.md` | 3 |
+
+Üç izinli dosyadan başkası yoktur. **Kapı geçilmiştir.**
+
+**V1 — A'nın `CLAUDE.md`'si baştan sona, gelecekteki bir oturumun gözüyle.** "work",
+"push", "here", "gencp-validation", "destination", "frozen" geçen her cümle okunmuştur:
+
+- satır 9 (GenCP satırı): "Project 1 agent work happens here" — Proje 1'e sınırlı;
+- satır 10 (gencp-validation satırı): "…canonical home of Project 2… Project 2 work happens
+  there; for Project 1 it is a destination only" — taşınmayla uyumlu;
+- satır 15–16 (kural 1): "Project 1 work happens here… Project 2 work happens in
+  gencp-validation" — uyumlu;
+- satır 17–22 (kural 2): "destination, never a source, for Project 1… Project 2 is the
+  exception… frozen mirror and must not be edited" — uyumlu;
+- kalan kurallar (3–12), sahiplik sınırı, eşzamanlılık ve commit politikası: hiçbiri Proje
+  2'nin yerinden söz etmez.
+
+Proje 2 işinin A'da yapılacağını ima eden cümle **kalmamıştır.**
+
+**V2 — B'nin `CLAUDE.md`'si.** "Work on this project happens in `mvy0502/GenCP`… Do not
+develop here" ve altındaki "Exception… Project 2 lives here… The copy left in GenCP is
+frozen. Documentation and installation fixes for Project 2 happen here." A: Proje 1 burada,
+Proje 2 orada. B: Proje 1 GenCP'de, Proje 2 burada. İki dosya artık iki projenin de yeri
+konusunda **aynı şeyi söylemektedir.**
+
+**V3 — B `tubitak/sr/` ağacında bağlantı çözümlemesi: 28 taranmış, 2 kırık. Sıfır değil.**
+İkisi de bu raporun §10.2'sinde, WP18'in README'den **aynen** alıntıladığı satırların
+içindedir: `[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md)`. Yol README'ye görelidir;
+`docs/` altından `tubitak/sr/docs/tubitak/sr/SOURCE.md`'ye çözülür ve GitHub bunu bağlantı
+olarak işleyip 404 verir. **WP18'in V4'ü raporu yazılmadan önce koşulmuştu** ve rapor bu
+iki bağlantıyı sonradan getirmiştir; WP18'in "0 kırık" sonucu kendi raporunu kapsamamıştır.
+Düzeltmek §10'a dokunmayı gerektirir; bu brifing §1–10'u dondurduğundan **düzeltilmemiş,
+karar için bırakılmıştır** (bkz. §11.5). Bu iş paketinin dokunduğu iki dosyada kırık
+bağlantı yoktur.
+
+**V4 — §9'daki maddelerin durumu:**
+
+| §9 | madde | durum |
+|---|---|---|
+| 1 | P2'nin öncülü yanlıştı | bulgu; eylem gerektirmez — **kapalı** |
+| 2 | sürüm notlarındaki ikinci GenCP bağlantısı | WP18 §10.3 — **kapalı** |
+| 3 | README girişi "iki iş" | WP18 §10.1 — **kapalı** |
+| 4 | README KURAL cümlesi | WP18 §10.2 — **kapalı** |
+| 5 | A'nın `CLAUDE.md`'si | WP18 §10.4 kural 2; WP19 §11.1 tablo ve kural 1 — **kapalı** |
+| 6 | `extent.py` A ve B'de farklı; çapalar | çapalar WP18/WP19 ile sabitlendi — o kısım **kapalı**. Altta yatan olgu — B'nin **Proje 1** kopyasının A'nın `tubitak-tr`'sinden (`75332cb`, 31 Ağustos) geride olması — **açıktır** ve bu seride kapsam dışıdır: Proje 1 dondurulmuştur, yenilemek ayrı bir devir kararıdır |
+| 7 | bayat B klonu | kalıcı klon alındı — **kapalı** |
+| 8 | `--notes-file` sondaki satır sonu | WP18 §10.3 ölçüldü — **kapalı** |
+
+**Seri bitmiş ilan edilmemektedir.** Açık kalanlar §11.5'tedir.
+
+### 11.4 Commit'ler
+
+- **A** (`tubitak-tr`): `e5a3d225f71c84d4105fe16c823c6b71b5545152` — yalnızca `CLAUDE.md`; `git ls-remote origin tubitak-tr`
+  yerel `HEAD` ile eşleşmiştir.
+- **B** (`main`): bu raporu içeren commit — `00-recon.md` ve bu rapor; `git ls-remote origin
+  main` ile doğrulanmıştır.
+
+### 11.5 Brifingin öngörmediği bulgular ve karar bekleyenler
+
+1. **§10.2'deki iki kırık bağlantı** (V3). Karar: ya §10.2'deki alıntı satırlarında bağlantı
+   sözdizimi etkisizleştirilir (ör. kod bloğuna alınır — alıntı metni değişmez, yalnızca
+   biçimi), ya da kabul edilip kayda geçirilir. İkisi de §10'a dokunur; burada yapılmamıştır.
+2. **A `CLAUDE.md`'de üçüncü bir satır değiştirilmiştir** (§11.1): brifing iki yer saymıştı,
+   V1 ölçütü üçüncüyü zorunlu kılmıştır. Değişiklik aynen alıntılanmıştır.
+3. **B'nin Proje 1 kopyası A'dan geridedir** (§11.3 V4, madde 6). Bu seride bilerek
+   dokunulmamıştır.

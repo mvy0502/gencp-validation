@@ -328,7 +328,7 @@ probe distinguishes present from absent per module and did report `torch ABSENT
 | default overlap `DEFAULT_OVERLAP_M` | 640.0 m | [extent.py:27](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L27) — comment: "measured default: seam ratio 1.008, no point clustering" |
 | UI default overlap | 640 | [qgis_plugin/dialog.py:86](../../qgis_plugin/dialog.py#L86), set at [dialog.py:377](../../qgis_plugin/dialog.py#L377) |
 | overlap legal range | `[0, 2570)`, whole multiples of 10 m | enforced in [dialog.py:126-157](../../qgis_plugin/dialog.py#L126) and [extent.py:200-202](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L200) |
-| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:203](../../gencp_core/extent.py) |
+| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:201](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L201) |
 | overlap in pixels | `int(round(overlap_m / TRUE_GSD))` = 64 px at 640 m | [mosaic.py:53](../../gencp_core/mosaic.py#L53) |
 | **blend function** | separable raised cosine, `0.5 - 0.5*cos(pi*(arange(r)+0.5)/r)`, ramped over the first and last `r` columns/rows and 1.0 in the interior, made 2-D by outer product | [mosaic.py:29-37](../../gencp_core/mosaic.py#L29) |
 | blend accumulation | weighted average: `reproject` weight and `arr*weight` separately, then `acc/wac`; `valid = wac > 1e-6` | [mosaic.py:54-79](../../gencp_core/mosaic.py#L54) |
