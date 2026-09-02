@@ -1,8 +1,8 @@
 # Kurulum kılavuzu: iki QGIS eklentisi
 
-Bu kılavuz, eklentileri başka bir bilgisayara kuracak kişi için yazılmıştır. Anlatılan her
-adım, 31 Ağustos 2026'da yayımlanmış zip dosyaları indirilerek, hiçbir şeyin kurulu olmadığı
-yeni bir QGIS profilinde denenmiştir. Denenmemiş her şey, denenmediği belirtilerek yazılmıştır.
+Bu kılavuz, eklentileri başka bir bilgisayara kuracak kişi için yazılmıştır. Anlatılan her adım,
+31 Ağustos 2026'da yayımlanmış zip dosyaları indirilerek, hiçbir şeyin kurulu olmadığı yeni bir
+QGIS profilinde sınanmıştır. Sınanmamış her şey, sınanmadığı belirtilerek yazılmıştır.
 
 **Kısaca.** İki eklenti vardır, birbirinden bağımsızdır ve ikisi de aynı yoldan kurulur:
 zip dosyası indirilir, QGIS'te **Deneysel eklentileri de göster** kutusu işaretlenir,
@@ -33,7 +33,7 @@ Proje 2, QGIS olmadan komut satırından da çalıştırılabilir ve eklentiyle 
 | Windows, Linux | yok | **Sınanmamıştır** |
 
 Sınanmamış bir yapılandırmanın çalışacağı taahhüt edilmez. Bu, desteklenmediği anlamına da
-gelmez; yalnızca denenmemiştir.
+gelmez; yalnızca sınanmamıştır.
 
 ### 1.2 Python paketleri
 
@@ -52,18 +52,18 @@ konsola tek tek yapıştırılıp Enter'a basılarak denenmelidir.
 
 Bir sürüm numarası yazdırılıyorsa paket vardır; `ModuleNotFoundError` alınıyorsa yoktur.
 
-**Paket eksikken ne olur: ölçülmüştür.** Aşağıdaki tablo, paketler sınama sırasında QGIS'in
+**Paket eksikken ne olduğu ölçülmüştür.** Aşağıdaki tablo, paketler sınama sırasında QGIS'in
 Python ortamından kaldırılarak elde edilmiştir; kaynak kod okunarak değil.
 
 | Eksik paket | Eklenti | Gözlenen sonuç |
 |---|---|---|
 | `rasterio` | Proje 2 | Eklenti açılırken uyarı verir ve çalışmaz |
-| `rasterio` | Proje 1 | Üretim başlarken **ham Python hatası**: `ImportError`, `gencp_core/extent.py` satır 65 |
+| `rasterio` | Proje 1 | Üretim başlarken **Python'un kendi hata iletisi**: `ImportError`, `gencp_core/extent.py` satır 65 |
 | `onnxruntime` | Proje 2 | **Eklenti sorunsuz yüklenir; bikübik yöntem çalışır.** Yalnızca model yöntemleri kullanılamaz |
-| `onnxruntime` | Proje 1 | Üretim, çıkarım aşamasında **ham Python hatası** verir: `ImportError`, `gencp_core/infer.py` satır 54 |
+| `onnxruntime` | Proje 1 | Üretim, çıkarım aşamasında **Python'un kendi hata iletisini** verir: `ImportError`, `gencp_core/infer.py` satır 54 |
 
-Proje 1, eksik paket için Türkçe bir ileti üretmez; kullanıcı ham bir Python hatası görür. Bu
-bir bulgudur ve düzeltilmemiştir: eklenti kodu dondurulmuştur.
+Proje 1, eksik paket için Türkçe bir ileti üretmez; kullanıcı Python'un kendi hata iletisini
+görür. Bu bir bulgudur ve düzeltilmemiştir: eklenti kodu dondurulmuştur.
 
 Proje 2'nin gösterdiği Türkçe iletiler, eklentiden birebir alınmıştır.
 
@@ -212,11 +212,11 @@ Model, arazi örtüsü ve OSM dosyaları hazırsa küçük bir alan için üreti
 
 ## 6. Sınanmış ve sınanmamış olanlar
 
-**Ne kadar sürer.** İndirme ve üretim süreleri, ölçüldükleri makine, ağ ve girdilerle birlikte
-[`11-zamanlama.md`](11-zamanlama.md) belgesinde kayıtlıdır. Özet: dört dosyanın indirilmesi,
-1,78 GB için **1,6 dakika** (20 MB/s bağlantıda ölçülmüştür; ağa bağlıdır); 10 × 10 km'lik
-bir sahnenin **ilk** üretimi, ülke geneli OSM dosyasıyla ve önbellek boşken **16,6 dakika**;
-aynı sahnenin yeniden üretimi **1,3 saniye**.
+**Ne kadar sürer.** İndirme ve üretim süreleri, ölçüldükleri bilgisayar, ağ ve girdilerle
+birlikte [`11-zamanlama.md`](11-zamanlama.md) belgesinde kayıtlıdır. Özet: dört dosyanın
+indirilmesi, 1,78 GB için **1,6 dakika** (20 MB/s bağlantıda ölçülmüştür; ağa bağlıdır);
+10 × 10 km'lik bir sahnenin **ilk** üretimi, ülke geneli OSM dosyasıyla ve önbellek boşken
+**16,6 dakika**; aynı sahnenin yeniden üretimi **1,3 saniye**.
 
 **Sınanmıştır** (31 Ağustos 2026, QGIS 4.2.1 Belém do Pará, macOS):
 
@@ -236,7 +236,7 @@ aynı sahnenin yeniden üretimi **1,3 saniye**.
   çalıştırılması; yalnızca bikübik çalıştırılmıştır.
 - `PyYAML` ve `onnxruntime` eksikken Türkçe iletilerin ekranda belirmesi; metinler eklentiden
   birebir alınmıştır, ekrana geldikleri gözlenmemiştir.
-- Bu belgedeki adımların Türkçe arayüzlü bir QGIS'te denenmesi; sınama İngilizce arayüzde
+- Bu belgedeki adımların Türkçe arayüzlü bir QGIS'te sınanması; sınama İngilizce arayüzde
   yapılmıştır. Menü adlarının İngilizce karşılıkları parantez içinde verilmiştir.
 
 ---
@@ -265,7 +265,7 @@ taşınmalıdır; her dosyanın boyutu aşağıda ayrıca verilmiştir.
 | `SAMPLE_4band_B02-B03-B04-B08_uint16_10m_512px.tif` | 1.636.956 bayt | Kurulum doğrulaması için örnek girdi, 16 bit |
 | `SHA256SUMS.txt` | 577 bayt | Sağlama toplamları |
 
-**wsx4 ağırlıkları bu sürüme dâhil değildir**; bu çalışmanın ürünü değildir. Gerekiyorsa
+**wsx4 model dosyaları bu sürüme dâhil değildir**; bu çalışmanın ürünü değildir. Gerekiyorsa
 `wsx4_spatrad.onnx` ve `wsx4_spatrad.yaml` üst kaynaktan birlikte indirilmeli ve **aynı klasöre
 yan yana** konulmalıdır. Eklenti `.yaml` dosyasını modelin yanında arar;
 ölçek, normalleştirme ve kırpma kenarı oradan okunur. Kaynak:
@@ -273,9 +273,9 @@ yan yana** konulmalıdır. Eklenti `.yaml` dosyasını modelin yanında arar;
 
 ### 7.2 Aktarımdan sonra, kurulumdan önce: sağlama toplamı doğrulanmalıdır
 
-**Bu adım atlanmamalıdır.** Aktarım sisteminden geçen bir dosya bozulmuş olarak varabilir ve
-bozuk bir `.onnx` dosyası, taşıma hatası gibi değil model hatası gibi görünen bir biçimde
-başarısız olur. Kaybedilecek zaman, bu kontrolün süresinin kat kat üstündedir.
+**Bu adım atlanmamalıdır.** Aktarım sisteminden geçen bir dosya bozuk gelebilir; bozuk bir
+`.onnx` dosyasının verdiği hata ise aktarım hatasına değil model hatasına benzer. Kaybedilecek
+zaman, bu kontrolün süresinin kat kat üstündedir.
 
 `SHA256SUMS.txt` diğer dosyalarla aynı klasöre konulur ve şu satır çalıştırılır:
 
@@ -289,7 +289,7 @@ başarısız olur. Kaybedilecek zaman, bu kontrolün süresinin kat kat üstünd
   shasum -a 256 -c SHA256SUMS.txt
   ```
 
-Her satır **`OK`** demelidir. Bir satır `FAILED` diyorsa o dosya yeniden taşınmalıdır;
+Her satırda **`OK`** yazmalıdır. Bir satırda `FAILED` yazıyorsa o dosya yeniden aktarılmalıdır;
 kurulmamalıdır.
 
 ### 7.3 Hangi dosya nereye konulur
@@ -301,7 +301,7 @@ kurulmamalıdır.
 | `SAMPLE_*.tif` örnek girdiler | Herhangi bir klasöre; yalnızca doğrulama içindir |
 | `wsx4_spatrad.onnx` ve `.yaml` | **İkisi aynı klasörde**, yan yana |
 
-Kurulum adımlarının kendisi §2'dedir. **Deneysel eklentileri de göster** kutusu §2.1'de
+Kurulum adımları §2'de anlatılmıştır. **Deneysel eklentileri de göster** kutusu §2.1'de
 anlatıldığı gibi işaretlenmeden eklenti listede görünmez.
 
 ### 7.4 Kurulum yalnızca örnek dosyalarla doğrulanır
@@ -327,7 +327,7 @@ kullanılmalıdır.
 ### 7.5 Yalnızca bikübik çalışıyorsa
 
 **Bu beklenen bir durumdur, arıza değildir.** Bikübik yöntem `onnxruntime` paketini bilerek içe
-aktarmaz; böylece o paketin olmadığı bir bilgisayarda eklenti yüklenir ve iş tamamlar. Model
+aktarmaz; böylece o paketin olmadığı bir bilgisayarda eklenti yüklenir ve çalışır. Model
 yöntemleri ise o pakete bağlıdır.
 
 Yapılacak işlem, sırasıyla:
@@ -344,9 +344,9 @@ Yapılacak işlem, sırasıyla:
 
 ### 7.6 Çalışma sırasında internet gerekmez
 
-Ölçülmüştür: QGIS 4.2.1 ve QGIS 3.44.13 üzerinde, Python düzeyindeki ağ bağlantıları
-kapatılarak bikübik yöntem, model çıkarımı ve bir koordinat dönüşümü çalıştırılmış; **hiçbir
-ağ girişimi gözlenmemiştir**.
+Ölçülmüştür: QGIS 4.2.1 ve QGIS 3.44.13 üzerinde, Python düzeyindeki ağ bağlantıları kapatılarak
+bikübik yöntem, model çıkarımı ve bir koordinat dönüşümü çalıştırılmış; **ağa hiçbir erişim
+girişimi gözlenmemiştir**.
 
 PROJ'un CDN üzerinden datum ızgarası indirme özelliği iki sürümde de öntanımlı olarak
 kapalıdır: `PROJ_NETWORK` ortam değişkeni tanımsız, `osr.GetPROJEnableNetwork()` ve
@@ -364,4 +364,4 @@ from osgeo import gdal; gdal.SetConfigOption("PROJ_NETWORK", "NO")
 ```
 
 `PROJ_NETWORK=ON` iken ağ erişimi olmasa da dönüşümler tamamlanmıştır: PROJ, QGIS ile gelen
-yerel ızgaralara döner; hata vermez.
+yerel ızgaraları kullanır; hata vermez.

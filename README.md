@@ -102,7 +102,7 @@ kontrol noktası** üretir. Kaynak kod, belgeler ve kurulum kılavuzu `tubitak/s
 **İndirme, hepsi bir arada, toplam 8,1 MB:**
 **https://github.com/mvy0502/gencp-validation/releases/tag/sr-plugin-v0.1.0**
 Eklentinin zip dosyası, üç model, doğrulama için iki örnek raster ve `SHA256SUMS.txt`.
-Aktarımdan sonra dosyaların sağlama toplamları bu listeye karşı denetlenir.
+Aktarımdan sonra dosyaların sağlama toplamları bu listeyle karşılaştırılarak doğrulanır.
 
 **Kurulum kılavuzu** (Türkçe, çevrimdışı kurulum dâhil, bu depoda):
 [`tubitak/sr/docs/10-kurulum.md`](tubitak/sr/docs/10-kurulum.md).
@@ -113,19 +113,19 @@ Aktarımdan sonra dosyaların sağlama toplamları bu listeye karşı denetlenir
 |---|---|---|---|---|
 | **`gencp_sr_tci_x4_b3_v2.onnx`** | 4× | 3, `B02,B03,B04` | `DN/255` | **kurumun bugün elindeki 8 bit RGB görüntü** |
 | **`gencp_sr_x4_b4.onnx`** | 4× | 4, `+B08` | `DN/10000` | **16 bit yansıtma verisi, geldiğinde** |
-| `gencp_sr_x2_v1.onnx` | 2× | 3 | `DN/5000` | önceki 3 bantlı çalışma; yeni kullanım için aşılmıştır |
+| `gencp_sr_x2_v1.onnx` | 2× | 3 | `DN/5000` | önceki 3 bantlı çalışmadan kalmıştır; yeni kullanımda yerini üstteki iki model almıştır |
 
 **Eşleştirme sonucu**, koşullarıyla birlikte: eğitimde hiç kullanılmamış **36SXJ granülünün 1628
-çipi** üzerinde, gerçek 10 m Sentinel-2 görüntüsüne karşı, **40 m → 10 m** ölçülmüştür. 8 bit
-model, bikübik karşılaştırma tabanının **3,94 katı** kullanılabilir kontrol noktası verir (çip
-başına 491,3 RANSAC iç noktasına karşı 124,6) ve eşleşme hatasını **%40** düşürür (0,5917 px'e
-karşı 0,9835 px); 1628 çipin **her birinde** daha iyidir
+çipi** üzerinde, gerçek 10 m Sentinel-2 görüntüsü referans alınarak, **40 m → 10 m** için
+ölçülmüştür. 8 bit model, bikübiğin verdiğinin **3,94 katı** kullanılabilir yer kontrol noktası
+verir (çip başına 491,3 RANSAC iç noktası; bikübikte 124,6) ve eşleşme hatasını **%40** düşürür
+(bikübikte 0,9835 px, modelde 0,5917 px); 1628 çipin **her birinde** daha iyidir
 ([`13-tci-model-v2.md`](tubitak/sr/docs/13-tci-model-v2.md) §8). Bu bir bozup geri kazanma
 deneyidir: aracın gerçekte kullanıldığı 2,5 m çözünürlükte ölçüm yoktur, çünkü o çözünürlükte
 yer gerçeği yoktur.
 
 Eklenti **çevrimdışı çalışır**: QGIS 4.2.1 ve 3.44.13 üzerinde ağ bağlantıları kapatılarak
-ölçülmüş, çalışma sırasında **hiçbir ağ girişimi gözlenmemiştir**
+ölçülmüş, çalışma sırasında **ağa hiçbir erişim girişimi gözlenmemiştir**
 ([`10-kurulum.md`](tubitak/sr/docs/10-kurulum.md) §7.6).
 
 ## Araştırma kaydı
@@ -146,15 +146,14 @@ Modelin yaptığı iş: soldaki haritadan sağdaki görüntü üretiliyor.
 
 ## KURAL: BU DEPO VE GenCP KALICI OLARAK AYRILDI
 
-**Hiçbir yönde birleştirme yoktur, hiçbir zaman.** Bu bir uyarı değil, kuraldır.
+**Hiçbir yönde, hiçbir zaman birleştirme yapılmaz.** Bu bir uyarı değil, kuraldır.
 
 Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler, kanıt
-dosyaları ve düzeltme kaydı. Fork ve **Proje 1** QGIS eklenti iş paketi
-[mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında devam
-eder, çünkü GenCP modelinden türemektedir. **Proje 2** (süper çözünürlük, `tubitak/sr/`) bu
-depodadır; fork'taki kopyası dondurulmuştur. Makale çalışması `mvy0502/gencp-letter`
-deposundadır; **o depo özeldir** ve bağlantı verilmemiştir, çünkü herkese açık bir ziyaretçi
-için 404 döner.
+dosyaları ve düzeltme kaydı. Fork ve **Proje 1** QGIS eklenti iş paketi, GenCP modelinden
+türedikleri için [mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda `tubitak-tr`
+dalında devam eder. **Proje 2** (süper çözünürlük, `tubitak/sr/`) bu depodadır; fork'taki
+kopyası dondurulmuştur. Makale çalışması `mvy0502/gencp-letter` deposundadır; **o depo özeldir**
+ve dışarıdan bir ziyaretçiye 404 döndürdüğü için bağlantı verilmemiştir.
 
 - **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı siler;
   o dal buraya birleştirilirse silme buraya yayılır ve **araştırma kaydını yok eder**.
@@ -164,9 +163,9 @@ için 404 döner.
   rasterları `284571b`).
 - **O aktarımdan sonra eşitleme KAPANIR.** İki depo bir daha birleşmez.
 
-Tarih yeniden yazılmamıştır ve yazılmayacaktır: iki depo `96503b7` birleşme tabanından
-itibaren aynı tarihi paylaşır; bu yüzden araştırma kaydında anılan 49 commit SHA'sının hepsi
-iki depoda da çözülür. `filter-repo` hiç kullanılmamıştır ve kullanılmayacaktır.
+Geçmiş yeniden yazılmamıştır ve yazılmayacaktır: iki depo `96503b7` birleşme tabanından itibaren
+aynı geçmişi paylaşır; bu yüzden araştırma kaydında anılan 49 commit SHA'sının hepsi iki depoda
+da çözümlenir. `filter-repo` hiç kullanılmamıştır ve kullanılmayacaktır.
 
 ## Öne çıkanlar
 

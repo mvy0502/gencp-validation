@@ -2,11 +2,11 @@
 
 Proje 2'nin süper çözünürlük işlemi QGIS olmadan, bir terminalden de çalıştırılabilir.
 `tubitak/sr/tools/sr_cli.py` bir girdi GeoTIFF alır ve süper çözünürlüklü bir GeoTIFF yazar.
-Araç ince bir kabuktur: eklentinin çalıştırdığı kodun aynısını (`sr_core.run.superresolve` ve
-`sr_plugin.onnx_upsample`) içe aktarır ve çağırır; kendi içinde süper çözünürlük aritmetiği
-yoktur. Bu yüzden çıktısı eklentininkiyle **piksel piksel aynıdır**. Bu özdeşlik kod
-paylaşımından çıkarılmamış, ölçülmüştür (aşağıda). Terimler [`sozluk.md`](sozluk.md)
-dosyasında sabitlenmiştir.
+Araç yalnızca bir sarmalayıcıdır: eklentinin çalıştırdığı kodun aynısını
+(`sr_core.run.superresolve` ve `sr_plugin.onnx_upsample`) içe aktarır ve çağırır; kendi içinde
+süper çözünürlük aritmetiği yoktur. Bu yüzden çıktısı eklentininkiyle **piksel piksel aynıdır**.
+Bu özdeşlik kod paylaşımından çıkarılmamış, ölçülmüştür (aşağıda). Terimler
+[`sozluk.md`](sozluk.md) dosyasında sabitlenmiştir.
 
 Gereksinimler eklentininkilerle aynıdır: Python 3, `numpy`, `Pillow`, `rasterio`; model
 yöntemleri için `onnxruntime`; wsx4 için ayrıca `PyYAML`. Araç ağa hiçbir zaman erişmez;
@@ -33,19 +33,19 @@ Yazmadan önce, yazılacak ızgarayı görmek için:
 python tubitak/sr/tools/sr_cli.py girdi.tif cikti.tif --method model --model gencp_sr_x4_b4.onnx --dry-run
 ```
 
-`--help` bütün seçenekleri ve çıkış kodlarını listeler. Her seçeneğin varsayılanı
-eklentinin varsayılanıdır: karo 512 kaynak pikseli; bindirme 32 kaynak pikseli (model
-yolunda modelin bildirdiği değer); birleştirme bikübik ve GenCP modellerinde yumuşak geçişli
-(`feather`), wsx4'te kırpmalı (`crop`). `--overlap` metre alır ve kaynak pikselinin tam katı
+`--help` bütün seçenekleri ve çıkış kodlarını listeler. Her seçeneğin varsayılanı eklentinin
+varsayılanıdır: karo 512 kaynak pikseli; bindirme 32 kaynak pikseli (model yolunda modelin
+bildirdiği değer); birleştirme bikübik ve eğitilmiş modellerde yumuşak geçişli (`feather`),
+wsx4'te kırpmalı (`crop`). `--overlap` metre cinsinden verilir ve kaynak pikselinin tam katı
 olmalıdır. `--blend`, eklentinin kuralından ayrılmak içindir; ayrılınca uyarı basılır.
 
 ## Neyi reddeder, neden
 
-Araç, çıktının kaynak ızgarasının **tam** incelmesi olmasını şart koşar: aynı KRS, piksel boyu
+Araç, çıktı ızgarasının kaynak ızgarasına **tam** oturmasını şart koşar: aynı KRS, piksel boyu
 tam olarak kaynağınkinin ölçeğe bölümü, aynı başlangıç noktası, boyut tam olarak ölçek çarpı
-kaynak (ızgara sözleşmesi, Gate S). Bu koşulu hem yazmadan önce öngörür hem de yazdıktan sonra
-dosyada yeniden doğrular. Koşulu sağlayamayacak bir girdi yeniden projeksiyon ya da yeniden
-örnekleme ile uydurulmaz; açık bir iletiyle ve ayrı bir çıkış koduyla reddedilir:
+kaynak (ızgara sözleşmesi, Gate S). Bu koşulu hem yazmadan önce hesaplayarak denetler hem de
+yazdıktan sonra dosyada yeniden doğrular. Koşulu sağlayamayacak bir girdi yeniden projeksiyon ya
+da yeniden örnekleme ile uydurulmaz; açık bir iletiyle ve ayrı bir çıkış koduyla reddedilir:
 
 | Durum | Çıkış kodu |
 |---|---|
@@ -70,9 +70,9 @@ eklentininkiyle aynı mekanizmayla ve aynı içerikle yazılır.
 ## Eklentiyle özdeşlik
 
 Araç, projenin kayıtlı her piksel özetinin girdisi üzerinde çalıştırılmış ve çıktısının piksel
-özeti (SHA-256) kayıtlı değere **eşit** çıkmıştır; tolerans yoktur. Referanslar: bikübik 2×
-tam granül (`ca3b4c41…`), bikübik 2× 1024 px kesit (`41b54b77…`), GenCP 2× modeli
-(`5e3de3cf…`), wsx4 (`6b71d037…`); ayrıca eklentinin 2 Eylül 2026'da QGIS içinde kendi
-görevinden ürettiği bikübik 4× (`6cd62c38…`) ve `gencp_sr_x4_b4.onnx` (`c4794d79…`) çıktıları.
-Kanıt: `tubitak/sr/tests/sr_cli_tests.py --all` (özdeşlik 12/12, bilinen-yanlış 17/17) ve
+özeti (SHA-256) kayıtlı değere **eşit** çıkmıştır; tolerans yoktur. Referanslar: bikübik 2× tam
+granül (`ca3b4c41…`), bikübik 2× 1024 px kesit (`41b54b77…`), eğitilmiş 2× model (`5e3de3cf…`),
+wsx4 (`6b71d037…`); ayrıca eklentinin 2 Eylül 2026'da QGIS içinde kendi görevinden ürettiği
+bikübik 4× (`6cd62c38…`) ve `gencp_sr_x4_b4.onnx` (`c4794d79…`) çıktıları. Kanıt:
+`tubitak/sr/tests/sr_cli_tests.py --all` (özdeşlik 12/12, bilinen-yanlış 17/17) ve
 `18-depo-tasima.md` §16.

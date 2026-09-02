@@ -355,10 +355,11 @@ def _gate_s_recheck(plan):
 def build_parser(consts, version):
     p = argparse.ArgumentParser(
         prog=TOOL,
+        add_help=False,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "GenCP Süper Çözünürlük, komut satırı. Bir GeoTIFF'i kendi ızgarasının tam "
-            "tamsayı incelmesi üzerine süper çözünürlükle yazar. QGIS eklentisiyle aynı kodu "
+            "GenCP Super-Resolution, komut satırı. Bir GeoTIFF'i süper çözünürlüğe çıkarır; "
+            "çıktı ızgarası kaynak ızgarasına tam oturur. QGIS eklentisiyle aynı kodu "
             "çalıştırır ve aynı pikselleri üretir; çıktının KRS'si, başlangıç noktası ve "
             "kapsamı kaynağınkiyle aynıdır (ızgara sözleşmesi, Gate S)."),
         epilog=(
@@ -368,7 +369,7 @@ def build_parser(consts, version):
             f"  {TOOL} girdi.tif cikti.tif --method model --model gencp_sr_x4_b4.onnx\n"
             "      eğitilmiş model; ölçek, bant sayısı ve karo düzeni modelin künyesinden okunur\n"
             f"  {TOOL} girdi.tif cikti.tif --method model --model M.onnx --dry-run\n"
-            "      hiçbir şey yazmadan, yazılacak ızgarayı Gate S terimleriyle gösterir\n\n"
+            "      hiçbir şey yazmadan, yazılacak ızgarayı Gate S ölçütleriyle gösterir\n\n"
             "Çıkış kodları: 0 başarı; 2 kullanım hatası; 3 girdi yok ya da okunamıyor; "
             "4 girdinin KRS'si yok;\n  5 girdi kuzeye dönük değil ya da ızgara sözleşmesi "
             "sağlanamıyor; 6 bant sayısı modele uymuyor;\n  7 veri tipi desteklenmiyor; "
@@ -377,37 +378,42 @@ def build_parser(consts, version):
             "  13 rasterio yok; 14 yazma hatası; 15 ölçek geçersiz; 16 yazılan çıktı Gate S'i "
             "sağlamadı.\n"
             "Ağ erişimi yoktur: yalnızca verilen yerel dosyalar okunur ve yazılır."))
-    p.add_argument("input", help="girdi GeoTIFF; kuzeye dönük ve KRS'li olmalıdır")
-    p.add_argument("output", help="yazılacak GeoTIFF; önce geçici dosyaya yazılır, sonra "
-                                  "adı değiştirilir, yarım dosya kalmaz")
-    p.add_argument("--method", choices=("bicubic", "model", "wsx4"), default="bicubic",
-                   help="eklentideki yöntemler: bicubic (varsayılan; model gerekmez), "
-                        "model (GenCP eğitilmiş model), wsx4 (referans model). model ve "
-                        "wsx4 aynı yolu izler; ikisi de --model ister")
-    p.add_argument("--model", metavar="DOSYA.onnx",
-                   help="ONNX model dosyası; --method model ve wsx4 için zorunludur. wsx4 "
-                        "için aynı adlı .yaml dosyası modelin yanında bulunmalıdır")
-    p.add_argument("--scale", type=int, metavar="N",
-                   help=f"yalnızca bicubic için: ölçek katsayısı, ikinin kuvveti (varsayılan "
-                        f"{consts['BICUBIC_SCALE']}, eklentinin bikübik ölçeği). Model "
-                        "yolunda ölçek modelin künyesinden okunur; verilirse ona eşit olmalıdır")
-    p.add_argument("--overlap", type=float, metavar="METRE",
-                   help="karo bindirmesi, metre cinsinden; kaynak pikselinin tam katı "
-                        "olmalıdır. Varsayılan eklentininkidir: bicubic için 32 kaynak "
-                        "pikseli, model yolunda modelin künyesindeki değer")
-    p.add_argument("--blend", choices=("auto", "feather", "crop"), default="auto",
-                   help="karo birleştirme düzeni. auto (varsayılan) eklentinin kuralıdır: "
-                        "bicubic için feather, model yolunda modelin bildirdiği düzen. Başka "
-                        "bir seçim çıktıyı eklentininkinden ayırır; uyarı basılır")
-    p.add_argument("--overwrite", action="store_true",
-                   help="var olan çıktının üzerine yazılır (varsayılan: var olan çıktı "
-                        "reddedilir)")
-    p.add_argument("--dry-run", action="store_true",
-                   help="hiçbir şey yazılmaz; yazılacak ızgara Gate S terimleriyle "
-                        "gösterilir ve çıkılır")
-    p.add_argument("--version", action="version",
-                   version=f"{TOOL} {version} (GenCP Super-Resolution eklentisi "
-                           f"{version} ile aynı sr_core ve model çekirdeği)")
+    pos = p.add_argument_group("konumsal argümanlar")
+    opt = p.add_argument_group("seçenekler")
+    opt.add_argument("-h", "--help", action="help",
+                     help="bu yardım metnini gösterir ve çıkar")
+    pos.add_argument("input", help="girdi GeoTIFF; kuzeye dönük ve KRS'li olmalıdır")
+    pos.add_argument("output", help="yazılacak GeoTIFF; önce geçici dosyaya yazılır, sonra "
+                                    "adı değiştirilir, yarım dosya kalmaz")
+    opt.add_argument("--method", choices=("bicubic", "model", "wsx4"), default="bicubic",
+                     help="eklentideki yöntemler: bicubic (varsayılan; model gerekmez), "
+                          "model (GenCP eğitilmiş model), wsx4 (referans model). model ve "
+                          "wsx4 aynı yolu izler; ikisi de --model ister")
+    opt.add_argument("--model", metavar="DOSYA.onnx",
+                     help="ONNX model dosyası; --method model ve wsx4 için zorunludur. wsx4 "
+                          "için aynı adlı .yaml dosyası modelin yanında bulunmalıdır")
+    opt.add_argument("--scale", type=int, metavar="N",
+                     help=f"yalnızca bicubic için: ölçek katsayısı, ikinin kuvveti (varsayılan "
+                          f"{consts['BICUBIC_SCALE']}, eklentinin bikübik ölçeği). Model "
+                          "yolunda ölçek modelin künyesinden okunur; verilirse ona eşit olmalıdır")
+    opt.add_argument("--overlap", type=float, metavar="METRE",
+                     help="karo bindirmesi, metre cinsinden; kaynak pikselinin tam katı "
+                          "olmalıdır. Varsayılan eklentininkidir: bicubic için 32 kaynak "
+                          "pikseli, model yolunda modelin künyesindeki değer")
+    opt.add_argument("--blend", choices=("auto", "feather", "crop"), default="auto",
+                     help="karo birleştirme düzeni. auto (varsayılan) eklentinin kuralıdır: "
+                          "bicubic için feather, model yolunda modelin bildirdiği düzen. Başka "
+                          "bir seçim çıktıyı eklentininkinden ayırır; uyarı basılır")
+    opt.add_argument("--overwrite", action="store_true",
+                     help="var olan çıktının üzerine yazılır (varsayılan: var olan çıktı "
+                          "reddedilir)")
+    opt.add_argument("--dry-run", action="store_true",
+                     help="hiçbir şey yazılmaz; yazılacak ızgara Gate S ölçütleriyle "
+                          "gösterilir ve çıkılır")
+    opt.add_argument("--version", action="version",
+                     version=f"{TOOL} {version} (GenCP Super-Resolution eklentisi "
+                             f"{version} ile aynı sr_core ve model çekirdeği)",
+                     help="sürüm numarasını gösterir ve çıkar")
     return p
 
 

@@ -1738,3 +1738,272 @@ bilinçli bir sınırdır.
 
 Yasaklı yolların hiçbiri değişmemiştir. Tek commit, B'de, yedi yol tek tek hazırlanarak;
 uzak depo `git ls-remote` ile doğrulanmıştır.
+
+## 18. WP26: Türkçenin, onu yazmayan bir oturum tarafından bağımsız okunması
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `8b60336586188ca3c602f5b14e391e37d0d5fc9f`; iki ağaç da temizdi; her izlenen dosya ve her dosyanın
+sağlama toplamı manifeste alınmıştır (A 1272 izlenen dosya, B 1551; `/tmp/wp26/`). §1–17
+değiştirilmemiştir. A'da hiçbir şey değişmemiş, hazırlanmamış, commit'lenmemiştir. `sr_plugin/`,
+`sr_core/`, `sr_data/`, `sr_train/` ve `tests/` altına dokunulmamıştır; hiçbir dosya, klasör, etiket
+ya da sürüm dosyası yeniden adlandırılmamıştır. Dosya gövdeleri Python ile yazılmıştır.
+
+WP25'in yazdığı yüzeyler, onları daha önce görmemiş bir oturum tarafından okunmuştur. Ölçüt, her
+cümlenin baştan Türkçe yazılmış gibi okunmasıdır; aranan yalnızca üç şeydir: **çeviri kokusu (Ç)**,
+Türkçe sözcüklerle yazılmış İngilizce cümle yapısı; **sözlük kaçağı (S)**, `sozluk.md`'nin
+sabitlediği bir terimin başka biçimde görünmesi; **kayıt kayması (K)**, birinci çoğul, konuşma dili
+ya da çevresi kişisiz yazılmışken okuyucuya seslenen cümle. Brifingin verdiği ayar örnekleri
+(“kendi ızgarasının tam tamsayı incelmesi üzerine”, “karşılaştırma tabanı”) ilk yüzeyde ve
+`--help` çıktısında olduğu gibi bulunmuştur.
+
+### 18.1 Aşama 1: okuma ve bulgu listesi
+
+Her yüzey baştan sona bir kez okunmuştur: README'nin açılışı, Proje 2 bölümü ve KURAL bölümü;
+`sr-plugin-v0.1.0` ile `kit-win_amd64-py312-2026-08-31` sürümlerinin başlıkları ve gövdeleri (API
+ile indirilerek); `10-kurulum.md`, `13-cevrimdisi-kurulum.md`, `20-komut-satiri.md`, `sozluk.md`;
+`sr_cli.py --help` çıktısı (çalıştırılarak). Okumanın ardından gözün kaçırdığını yakalamak için
+mekanik bir tarama yapılmıştır: sözlüğün “yerine geçtiği biçimler” sütunundaki her biçim ve
+şüpheli kalıplar bütün yüzeylerde aranmış, birinci ve ikinci kişi ekleri taranmıştır. Tarama
+yeni bulgu eklememiş, gözle bulunanların tamamını doğrulamıştır; kişi eki hiçbir yüzeyde yoktur.
+
+Toplam **71 bulgu**: README 9 (açılış 0), `10-kurulum.md` 15, `13-cevrimdisi-kurulum.md` 12,
+`20-komut-satiri.md` 6, `sozluk.md` 2, `sr-plugin-v0.1.0` gövdesi 15, kit gövdesi 8,
+`sr_cli.py --help` 4. İki sürüm başlığında bulgu yoktur. Sınıflara göre: Ç 56, S 17, K 3;
+beş cümle iki sınıf taşır ve ikisine de sayılmıştır. Tam liste, cümle olduğu gibi ve yeniden
+yazımıyla:
+
+**README**, 9 bulgu (açılış 0, Proje 2 bölümü 5, KURAL 4):
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| R1 | Ç | Aktarımdan sonra dosyaların sağlama toplamları bu listeye karşı denetlenir. | Aktarımdan sonra dosyaların sağlama toplamları bu listeyle karşılaştırılarak doğrulanır. |
+| R2 | Ç | önceki 3 bantlı çalışma; yeni kullanım için aşılmıştır | önceki 3 bantlı çalışmadan kalmıştır; yeni kullanımda yerini üstteki iki model almıştır |
+| R3, R4 | Ç, S | çipi** üzerinde, gerçek 10 m Sentinel-2 görüntüsüne karşı, **40 m → 10 m** ölçülmüştür. 8 bit model, bikübik karşılaştırma tabanının **3,94 katı** kullanılabilir kontrol noktası verir (çip başına 491,3 RANSAC iç noktasına karşı 124,6) ve eşleşme hatasını **%40** düşürür (0,5917 px'e karşı 0,9835 px); 1628 çipin **her birinde** daha iyidir | çipi** üzerinde, gerçek 10 m Sentinel-2 görüntüsü referans alınarak, **40 m → 10 m** için ölçülmüştür. 8 bit model, bikübiğin verdiğinin **3,94 katı** kullanılabilir yer kontrol noktası verir (çip başına 491,3 RANSAC iç noktası; bikübikte 124,6) ve eşleşme hatasını **%40** düşürür (bikübikte 0,9835 px, modelde 0,5917 px); 1628 çipin **her birinde** daha iyidir |
+| R5 | Ç | **hiçbir ağ girişimi gözlenmemiştir** | **ağa hiçbir erişim girişimi gözlenmemiştir** |
+| R6 | Ç | **Hiçbir yönde birleştirme yoktur, hiçbir zaman.** Bu bir uyarı değil, kuraldır. | **Hiçbir yönde, hiçbir zaman birleştirme yapılmaz.** Bu bir uyarı değil, kuraldır. |
+| R7 | Ç | Fork ve **Proje 1** QGIS eklenti iş paketi [mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında devam eder, çünkü GenCP modelinden türemektedir. | Fork ve **Proje 1** QGIS eklenti iş paketi, GenCP modelinden türedikleri için [mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda `tubitak-tr` dalında devam eder. |
+| R8 | Ç | deposundadır; **o depo özeldir** ve bağlantı verilmemiştir, çünkü herkese açık bir ziyaretçi için 404 döner. | deposundadır; **o depo özeldir** ve dışarıdan bir ziyaretçiye 404 döndürdüğü için bağlantı verilmemiştir. |
+| R9 | Ç | Tarih yeniden yazılmamıştır ve yazılmayacaktır: iki depo `96503b7` birleşme tabanından itibaren aynı tarihi paylaşır; bu yüzden araştırma kaydında anılan 49 commit SHA'sının hepsi iki depoda da çözülür. | Geçmiş yeniden yazılmamıştır ve yazılmayacaktır: iki depo `96503b7` birleşme tabanından itibaren aynı geçmişi paylaşır; bu yüzden araştırma kaydında anılan 49 commit SHA'sının hepsi iki depoda da çözümlenir. |
+
+**`10-kurulum.md`**, 15 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| K1 | S | yeni bir QGIS profilinde denenmiştir. Denenmemiş her şey, denenmediği belirtilerek yazılmıştır. | yeni bir QGIS profilinde sınanmıştır. Sınanmamış her şey, sınanmadığı belirtilerek yazılmıştır. |
+| K2 | S | gelmez; yalnızca denenmemiştir. | gelmez; yalnızca sınanmamıştır. |
+| K3 | Ç | **Paket eksikken ne olur: ölçülmüştür.** | **Paket eksikken ne olduğu ölçülmüştür.** |
+| K4 | Ç | Üretim başlarken **ham Python hatası**: `ImportError` | Üretim başlarken **Python'un kendi hata iletisi**: `ImportError` |
+| K5 | Ç | Üretim, çıkarım aşamasında **ham Python hatası** verir: `ImportError` | Üretim, çıkarım aşamasında **Python'un kendi hata iletisini** verir: `ImportError` |
+| K6 | Ç | kullanıcı ham bir Python hatası görür. | kullanıcı Python'un kendi hata iletisini görür. |
+| K7 | S | ölçüldükleri makine, ağ ve girdilerle birlikte | ölçüldükleri bilgisayar, ağ ve girdilerle birlikte |
+| K8 | S | Türkçe arayüzlü bir QGIS'te denenmesi; sınama İngilizce arayüzde | Türkçe arayüzlü bir QGIS'te sınanması; sınama İngilizce arayüzde |
+| K9 | S | **wsx4 ağırlıkları bu sürüme dâhil değildir** | **wsx4 model dosyaları bu sürüme dâhil değildir** |
+| K10 | Ç, S | Aktarım sisteminden geçen bir dosya bozulmuş olarak varabilir ve bozuk bir `.onnx` dosyası, taşıma hatası gibi değil model hatası gibi görünen bir biçimde başarısız olur. Kaybedilecek zaman | Aktarım sisteminden geçen bir dosya bozuk gelebilir; bozuk bir `.onnx` dosyasının verdiği hata ise aktarım hatasına değil model hatasına benzer. Kaybedilecek zaman |
+| K11 | Ç, S | Her satır **`OK`** demelidir. Bir satır `FAILED` diyorsa o dosya yeniden taşınmalıdır; kurulmamalıdır. | Her satırda **`OK`** yazmalıdır. Bir satırda `FAILED` yazıyorsa o dosya yeniden aktarılmalıdır; kurulmamalıdır. |
+| K12 | Ç | Kurulum adımlarının kendisi §2'dedir. | Kurulum adımları §2'de anlatılmıştır. |
+| K13 | Ç | eklenti yüklenir ve iş tamamlar. | eklenti yüklenir ve çalışır. |
+| K14 | Ç | çalıştırılmış; **hiçbir ağ girişimi gözlenmemiştir**. | çalıştırılmış; **ağa hiçbir erişim girişimi gözlenmemiştir**. |
+| K15 | Ç | PROJ, QGIS ile gelen yerel ızgaralara döner; hata vermez. | PROJ, QGIS ile gelen yerel ızgaraları kullanır; hata vermez. |
+
+**`13-cevrimdisi-kurulum.md`**, 12 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| C1 | S | içinde **18 adet `.whl` dosyası** bulunan bir `wheels` klasörü | içinde **18 tekerlek (`.whl`)** bulunan bir `wheels` klasörü |
+| C2 | Ç | `rasterio` bilerek kite alınmıştır; Windows QGIS'in onu zaten getiriyor olma ihtimaline rağmen. | Windows QGIS'in onu zaten getiriyor olma ihtimaline rağmen `rasterio` bilerek kite alınmıştır. |
+| C3 | Ç | Geliştirme > bilgisayarında ölçülen durum tam olarak buydu: | Geliştirme > bilgisayarında tam olarak bu durum ölçülmüştür: |
+| C4 | Ç | `pip` yok, internet yok, elle adım yok. | `pip` gerekmez, internet gerekmez, elle yapılacak adım yoktur. |
+| C5 | Ç | ## 7. Gömülü kopya, kurulu kopyaya karşı kaybeder | ## 7. Kurulu kopya gömülü kopyadan önce gelir |
+| C6 | Ç | - Bozuk bir kurulumu “yok” sayar, çünkü `find_spec` hata verdiğinde sonuç `False` olur. | - `find_spec` hata verdiğinde sonuç `False` olduğundan, bozuk bir kurulumu “yok” sayar. |
+| C7 | Ç | Tek süreçte iki GDAL bilinen bir çökme sınıfıdır. | Tek süreçte iki GDAL, bilinen bir çökme sebebidir. |
+| C8 | K | ikisi de **`_vendor/`** dizininden geldi \| | ikisi de **`_vendor/`** dizininden gelmiştir \| |
+| C9 | K | ikisi de **sistemden** geldi; gömülü kopya kullanılmadı \| | ikisi de **sistemden** gelmiştir; gömülü kopya kullanılmamıştır \| |
+| C10 | Ç | B, denetimin düşebildiğini gösterir; C, öncelik kuralının çalıştığını. | B, denetimin eksikliği yakalayabildiğini gösterir; C, öncelik kuralının çalıştığını. |
+| C11 | Ç | ## 9. Doğrulanmamış olan ve bu maddenin ağırlığı | ## 9. Doğrulanmamış olan ve bunun önemi |
+| C12 | Ç | `os.add_dll_directory` listesi üzerinden çözer. | `os.add_dll_directory` listesi üzerinden çözümler. |
+
+**`20-komut-satiri.md`**, 6 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| S1 | Ç | Araç ince bir kabuktur: | Araç yalnızca bir sarmalayıcıdır: |
+| S2 | S | birleştirme bikübik ve GenCP modellerinde yumuşak geçişli | birleştirme bikübik ve eğitilmiş modellerde yumuşak geçişli |
+| S3 | Ç | `--overlap` metre alır ve kaynak pikselinin tam katı | `--overlap` metre cinsinden verilir ve kaynak pikselinin tam katı |
+| S4 | Ç | Araç, çıktının kaynak ızgarasının **tam** incelmesi olmasını şart koşar: | Araç, çıktı ızgarasının kaynak ızgarasına **tam** oturmasını şart koşar: |
+| S5 | Ç | Bu koşulu hem yazmadan önce öngörür hem de yazdıktan sonra | Bu koşulu hem yazmadan önce hesaplayarak denetler hem de yazdıktan sonra |
+| S6 | S | GenCP 2× modeli (`5e3de3cf…`) | eğitilmiş 2× model (`5e3de3cf…`) |
+
+**`sozluk.md`**, 2 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| G1 | S | “İnternet erişimi olmayan makine” yalnızca kavram ilk açıklanırken | “İnternet erişimi olmayan bilgisayar” yalnızca kavram ilk açıklanırken |
+| G2 | S | (satır yok) | \| bilgisayar \| makine \| computer, machine \| Kurum yazışmasının sözcüğü; “geliştirme bilgisayarı”, “kurum bilgisayarı” \| \| kıyas noktası \| karşılaştırma tabanı, baseline \| baseline \| Bikübik yöntem; öteki yöntemlerin sonuçları ona göre verilir \| \| arayüzsüz \| başsız, headless \| headless \| QGIS arayüzü açılmadan yürütülen sınama \| |
+
+**`sr-plugin-v0.1.0` gövdesi**, 15 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| P1, P2 | Ç | Sentinel-2 görüntüsünü, kendi ızgarasının tam tamsayı incelmesi üzerine süper çözünürlükle yazan bir QGIS eklentisi. Üç yöntemi vardır: **bikübik** (karşılaştırma tabanı; model ve `onnxruntime` gerektirmez), | Sentinel-2 görüntüsünü süper çözünürlüğe çıkaran bir QGIS eklentisi. Çıktı ızgarası kaynak ızgarasına tam oturur: her kaynak pikseli, ölçeğin karesi kadar çıktı pikseline bölünür. Üç yöntemi vardır: **bikübik** (kıyas noktası; model ve `onnxruntime` gerektirmez), |
+| P3 | Ç, S | Aktarım sisteminden geçen bir dosya bozulmuş olarak varabilir ve **bozuk bir `.onnx` dosyası, taşıma hatası gibi değil model hatası gibi görünen bir biçimde başarısız olur.** | Aktarım sisteminden geçen bir dosya bozuk gelebilir; **bozuk bir `.onnx` dosyasının verdiği hata ise aktarım hatasına değil model hatasına benzer.** |
+| P4 | Ç | Her satır `OK` demelidir. Demeyen dosya yeniden aktarılmalıdır; kurulmamalıdır. | Her satırda `OK` yazmalıdır. Yazmayan dosya yeniden aktarılmalıdır; kurulmamalıdır. |
+| P5 | Ç | paket olmadan da yüklenir ve iş tamamlar. | paket olmadan da yüklenir ve çalışır. |
+| P6 | Ç | tamamlanmış, **hiçbir ağ girişimi** olmamıştır. | tamamlanmış, **ağa hiçbir erişim girişimi** olmamıştır. |
+| P7 | Ç | PROJ, QGIS ile gelen yerel ızgaralara döner, hata vermez. | PROJ, QGIS ile gelen yerel ızgaraları kullanır, hata vermez. |
+| P8 | Ç | *Tam olarak söylenirse: soket engeli | *Kesin konuşmak gerekirse: soket engeli |
+| P9 | Ç | PROJ'un dışarıya çıkmayacağının kanıtı, | PROJ'un ağa erişmeyeceğinin kanıtı, |
+| P10 | Ç | ## Sınanan sürümler, yalnızca bunlar | ## Yalnızca şu sürümler sınanmıştır |
+| P11 | Ç | \| başsız 23/23, | \| arayüzsüz 23/23, |
+| P12 | Ç | Kodun çağırdığı her QGIS API simgesi 3.0 dönemindendir. | Kodun çağırdığı her QGIS API öğesi 3.0 dönemindendir. |
+| P13 | Ç | çip başına kayıtlı bir bikübik karşılaştırma tabanıyla eşleştirilmiş: **+3,520 dB PSNR** | her çipte kayıtlı bikübik sonucuyla karşılaştırılarak: **+3,520 dB PSNR** |
+| P14 | Ç, S | 8 bit model, bikübiğin kullanılabilir kontrol noktası sayısının **3,94 katını** verir (çip başına 491,3 RANSAC iç noktasına karşı 124,6) ve eşleşme hatasını **%40** düşürür. | 8 bit model, bikübiğin verdiğinin **3,94 katı** kullanılabilir yer kontrol noktası verir (çip başına 491,3 RANSAC iç noktası; bikübikte 124,6) ve eşleşme hatasını **%40** düşürür. |
+| P15 | Ç | gerçek görüntüyü süper çözünürlüğe çıkarmakla aynı iddia değildir. | gerçek görüntüyü süper çözünürlüğe çıkarmak demek değildir. |
+
+**kit gövdesi**, 8 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| T1 | S | (GenCP Sentetik Referans, Proje 1; | (GenCP Synthetic Reference, Proje 1; |
+| T2 | Ç | iki kurulum kılavuzu da buraya işaret eder. | iki kurulum kılavuzu da bu sayfaya yönlendirir. |
+| T3 | K | **2 Eylül 2026'da eklendi** | **2 Eylül 2026'da eklenmiştir** |
+| T4 | Ç | Kit, kendi beyan ettiği bağımlılıklar altında **kapalıdır**: / eksiksiz çözmüştür | Kit, beyan ettiği bağımlılıklar bakımından **eksiksizdir**: / eksiksiz çözümlemiştir |
+| T5 | Ç | **Bu kit Proje 1'in çevrimdışı OSM yolunu kapatmaz;** | **Bu kit Proje 1'in çevrimdışı OSM yolunu karşılamaz;** |
+| T6 | Ç | **Doğrulamanın sınırı, açıkça.** | **Doğrulamanın sınırı.** |
+| T7 | Ç | lisanslar ve bağımlılık kapanışı doğrulanmıştır. | lisanslar ve bağımlılık kümesinin eksiksizliği doğrulanmıştır. |
+| T8 | Ç | Bu, doğrulanmış bir manifest ve çalıştırılmamış bir kurulumdur; | Bu, doğrulanmış bir liste ve çalıştırılmamış bir kurulumdur; |
+
+**`sr_cli.py --help`**, 4 bulgu:
+
+| # | Sınıf | Cümle, olduğu gibi | Yeniden yazım |
+|---|---|---|---|
+| H1, H2 | S, Ç | GenCP Süper Çözünürlük, komut satırı. Bir GeoTIFF'i kendi ızgarasının tam tamsayı incelmesi üzerine süper çözünürlükle yazar. | GenCP Super-Resolution, komut satırı. Bir GeoTIFF'i süper çözünürlüğe çıkarır; çıktı ızgarası kaynak ızgarasına tam oturur. |
+| H3 | Ç | yazılacak ızgarayı Gate S terimleriyle gösterir / yazılacak ızgara Gate S terimleriyle | yazılacak ızgarayı Gate S ölçütleriyle gösterir / yazılacak ızgara Gate S ölçütleriyle |
+| H4 | Ç | `show this help message and exit`; `show program's version number and exit`; `positional arguments:`; `options:` (argparse kalıp satırları, İngilizce) | `bu yardım metnini gösterir ve çıkar`; `sürüm numarasını gösterir ve çıkar`; `konumsal argümanlar:`; `seçenekler:` (yalnızca yardım metni ve argüman grupları; `usage:` öneki kalmıştır, 18.3) |
+
+Listenin dışında kalan iki gözlem. (1) Brifingin örnek verdiği “bu repodadır”, WP25'in yazdığı
+üç README bloğunda değil, araştırma kaydı bölümlerindedir (`README.md` 446. ve 454. satırlarda
+“Bu repoda:” ve “Bu repodaki”); o bölümler §17.4'te bayt bayt korunmuş Proje 1 ve araştırma kaydı
+metnidir ve §17.8'in listesine eklenerek Proje 1'in ajanına bırakılmıştır. (2) “Bu bir bozup geri
+kazanma deneyidir” (README) ve “ham veri” türünden yerleşik kullanımlar bulgu sayılmamıştır;
+ölçüt, dikkatli bir Türkçe teknik yazarın yazmayacağı cümledir, yalnızca İngilizceden gelen
+cümle değil.
+
+### 18.2 Aşama 2: uygulama ve iddia koruması
+
+Bulgular bir düzenleme tablosuna yazılmış (`wp26_findings.py`, 69 metin çifti ve `--help` için
+bir yapısal düzenleme) ve program ile uygulanmıştır: her eski metnin dosyada tam olarak beklenen
+sayıda (bir; iki yerde iki) geçtiği doğrulanmadan hiçbir değişiklik yazılmamıştır. README'de üç
+bloğun dışındaki her bayt, düzenlemeden sonra programla karşılaştırılmış ve **aynı** çıkmıştır.
+
+Sözlüğe üç satır eklenmiştir: **bilgisayar** (§17.3'te seçilmiş, tabloya yazılmamıştı; sözlüğün
+kendi notu bile “makine” diyordu), **kıyas noktası** (İngilizce *baseline*; “karşılaştırma tabanı”
+brifingin ayar örneğiydi ve sözlükte karşılığı yoktu) ve **arayüzsüz** (*headless*; sürüm
+notunda “başsız”). Sözlük 52 kavramdan 55'e çıkmıştır.
+
+`--help` yüzeyinde argparse'ın İngilizce kalıp satırları yalnızca yardım metni ve argüman grupları
+üzerinden Türkçeleştirilmiştir (`add_help=False` ile açık bir `-h/--help`, `--version` için
+`help=`, “konumsal argümanlar” ve “seçenekler” grupları). `usage:` öneki bilerek bırakılmıştır:
+`tests/sr_cli_tests.py` 361. satırdaki bilinen-yanlış denetimi, argümansız çağrının çıktısında
+“usage” sözcüğünü arar; öneki değiştirmek doğrulayıcıyı da değiştirmeyi gerektirir ve bu bir kod
+iş paketinin işidir. `parser.error` iletileri de argparse'ın İngilizcesidir; `--help` yüzeyi
+değildir, kayıt için yazılmıştır. Değişiklikten sonra doğrulayıcı `gencp` conda ortamında
+(Python 3.11, numpy 2.4.6, rasterio 1.4.4, onnxruntime 1.29.0) çalıştırılmıştır:
+`sr_cli_tests.py --self-test` **17/17**, argümansız çağrı ve tanınmayan argüman denetimleri dâhil.
+`--version` çıktısı ve çıkış kodları değişmemiştir.
+
+İddia karşılaştırması: her yüzeyin taban çizgisi metni ile son metni, sekiz sınıfta küme olarak
+karşılaştırılmıştır (kod alanlarındaki komut satırları, ters tırnaklı tanımlayıcılar, adresler,
+dosya adları, etiketler, sağlama toplamları, sayılar ayırıcısıyla birlikte, sayı ile birim
+çiftleri). Ayıklayıcı, kendi bilinen-yanlışını (`49.379 → 49.380`) yakalamıştır.
+
+| Yüzey | Sonuç | Küme boyutları (kod, adres, dosya, etiket, sağlama, sayı, birim) |
+|---|---|---|
+| README açılış, Proje 2, KURAL | **aynı küme** | 24, 3, 9, 1, 0, 27, 7 |
+| `10-kurulum.md` | **aynı küme** | 58, 10, 30, 4, 0, 72, 24 |
+| `13-cevrimdisi-kurulum.md` | **aynı küme** | 49, 1, 8, 1, 0, 40, 10 |
+| `20-komut-satiri.md` | **aynı küme** | 26, 0, 8, 0, 6, 22, 2 |
+| `sozluk.md` | **aynı küme** | 23, 0, 2, 0, 0, 8, 3 |
+| `sr-plugin-v0.1.0` gövdesi | **aynı küme** | 39, 3, 12, 0, 6, 53, 9 |
+| kit gövdesi | **aynı küme** | 46, 0, 8, 0, 2, 33, 7 |
+| `sr_cli.py --help` | **aynı küme** | 0, 0, 5, 0, 0, 17, 0 |
+
+Kazanılan ya da kaybolan iddia yoktur. WP25'te açıklama gerektiren yedi fark bu kez yoktur, çünkü
+bu paket yapı değil cümle değiştirmiştir.
+
+Sürüm gövdeleri API ile tam baytla yazılmış ve geri okunmuştur:
+
+| Sürüm | Başlık | Gövde | Geri okuma |
+|---|---|---|---|
+| `sr-plugin-v0.1.0` | değişmedi | 9139 bayt → 9169 bayt, sha256 `08b6ed5737f8…` | **bayt bayt aynı**; 7 dosya dokunulmamış |
+| `kit-win_amd64-py312-2026-08-31` | değişmedi | 5256 bayt → 5276 bayt, sha256 `4e45e516f163…` | **bayt bayt aynı**; 3 dosya dokunulmamış |
+
+Etiketler ve dosya adları değişmemiştir. Diğer üç sürüme dokunulmamıştır.
+
+### 18.3 Aşama 3: son okuma, ve bu paketin kendi hataları
+
+**1. geçiş**, uygulamadan sonra her yüzey baştan sona: bir dil bulgusu ve bir düzen kalıntısı.
+Dil bulgusu `13-cevrimdisi-kurulum.md`'dedir: “rağmen” yan cümlesi başa alınınca “onu” zamiri
+gönderdiği `rasterio`'dan önce gelmiştir; cümle “Windows QGIS'in `rasterio`'yu zaten getiriyor
+olma ihtimaline rağmen bu paket bilerek kite alınmıştır” olarak yazılmıştır. Düzen kalıntısı:
+cümle değiştiren düzenlemeler on paragrafı belgelerin satır genişliğinin (96) dışına taşırmıştı.
+
+Kalıntıyı gidermek için yazılan yeniden sarma programı iki hata yapmış, ikisi de bu paketin
+kendi denetimlerine takılmıştır. (1) Program, paragrafları boş satırlardan ayırırken art arda
+gelen boş satırları ikiye katlamıştır; README'nin üç bloğunun dışının bayt bayt aynılığı denetimi
+bunu göstermiş, README'nin blok sınırları üç satır kaymıştı. Bunun üzerine altı metin yüzeyi taban
+çizgisinden tek bir belirlenimci akışla yeniden üretilmiştir: bulgu tablosu, ardından aşama 3
+düzeltmesi, ardından yalnızca değişen düz yazı paragraflarını boş satırları koruyarak saran bir
+sarma. Sarmadan önceki ve sonraki metin, boşluklar dışında aynı olduğu doğrulanarak yazılmıştır.
+(2) Sarma, iki yerde sayıyı biriminden ayırmıştı (“10 × 10 km”, “16,6 dakika”); iddia
+ayıklayıcısının birim sınıfı bunu bir kayıp ve iki kazanç olarak göstermiştir. Sarma, sayı ile
+birim ve sayı ile çarpı işareti çiftlerini bölmeyecek biçimde düzeltilmiş ve yeniden üretim
+tekrarlanmıştır. İki hata da metni değiştirmemiştir; ikisi de yalnızca satır sonlarını
+ilgilendirir ve ikisi de görülmeden önce ölçülmüştür.
+
+**2. geçiş**, yeniden üretimden sonra, her yüzeyin son metni taban çizgisine karşı satır satır:
+hiçbir şey bulunmamıştır; son geçiş budur. Mekanik sayım, son metinler üzerinde (kod alanları,
+komutlar ve adresler ayıklanarak): uzun çizgi 0, emoji 0, düz tırnak 0, birinci çoğul 0, ikinci
+kişi 0; sekiz yüzeyin hepsinde. Ondalık sayacı bu paketin kendi sürümünde sürüm ve bölüm
+numaralarını (3.40, §7.1) ondalık saydığı için tabloya alınmamıştır; ondalık virgül her sayıda
+gözle okunmuştur.
+
+Bir de yanlış alarm: A'nın sağlama toplamı manifesti, paket sonunda taban çizgisiyle 23.820
+satır farklı görünmüştür. İzlenen dosya listesi, `HEAD` ve `git status` aynıydı; hiçbir dosyanın
+değişim zamanı son doksan dakikaya düşmüyordu. İki manifest farklı kabuklarda, farklı sıralama
+yerel ayarıyla üretilmişti; ikisi de sıralanınca **15.309 satırın tamamı aynı** çıkmıştır.
+A'ya dokunulmamıştır.
+
+### 18.4 Brifingin öngörmediği bulgular
+
+İddialar olduğu gibi korunduğu için aşağıdakiler değiştirilmemiş, kayda yazılmıştır.
+
+1. `10-kurulum.md` §1.1, iki eklentinin `metadata.txt` dosyalarının en düşük sürüm olarak 3.28
+   belirttiğini yazar; Proje 2'nin `sr_plugin/metadata.txt` dosyasında `qgisMinimumVersion=3.40`
+   yazılıdır ve sürüm notu da 3.40 der. Cümle Proje 1 için doğru olabilir, Proje 2 için değildir.
+2. Kit sürüm notu “`SHA256SUMS.txt` üç dosyanın sağlama toplamını taşır” der; dosya indirilip
+   okunmuştur, iki satır taşır ve aynı notun tablosu “yukarıdaki ikisini listeler” der.
+3. `13-cevrimdisi-kurulum.md` §5, 31 Ağustos sınamasındaki “16 paketin tamamı” ifadesini korur;
+   kit notu 2 Eylül'de 18 dosyalık çözümlemeyi anlatır. İki cümle de tarihlidir; çelişki değil,
+   güncellenmemiş bir sayıdır.
+4. `20-komut-satiri.md` çıkış kodu 7 satırı “model yolunda uint16 dışı; 8 bit TCI modele verilmez”
+   der; bu, eklentinin 16 bit modeller için ürettiği iletinin dilidir. 8 bit TCI modeli
+   (`gencp_sr_tci_x4_b3_v2.onnx`) uint8 girdi alır; satır bu model için yanıltıcıdır.
+5. `usage:` öneki ve `parser.error` iletileri İngilizce kalmıştır (18.2).
+6. §17.8'deki Proje 1 yüzeyleri (README'nin Proje 1 ve araştırma kaydı bölümleri,
+   `tubitak/README.md`, `tubitak/qgis_plugin/README.md`, üç sürüm notu) bu paketin de dışındadır
+   ve açıktır.
+
+### 18.5 G1 ve commit
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| Depo | Karşılaştırılan | Değişen | İzlenmeyen | Hüküm |
+|---|---|---|---|---|
+| A | **1272 → 1272** | hiçbiri | yok | **PASS** |
+| B | **1551 → 1551** | `README.md`, `tubitak/sr/docs/10-kurulum.md`, `13-cevrimdisi-kurulum.md`, `20-komut-satiri.md`, `sozluk.md`, `18-depo-tasima.md`, `tubitak/sr/tools/sr_cli.py` | yok | **PASS** |
+
+Yasaklı yolların hiçbiri değişmemiştir; yeniden adlandırma ve silme yoktur. Commit sırasında
+başka bir oturumun çalışmadığı, depoda taban çizgisinden sonra yazılmış dosyaların yalnızca
+yukarıdaki yedi dosya olmasından ve çalışma dizini bu depoda olan başka bir ajan sürecinin
+bulunmamasından anlaşılmıştır. Tek commit, B'de, yedi yol tek tek hazırlanarak; uzak depo
+`git ls-remote` ile doğrulanmıştır.

@@ -18,7 +18,7 @@ kararsızsa değiştirilmiş ve nedeni son sütunda verilmiştir.
 | piksel özeti | pixel hash, piksel SHA | pixel hash | Dosyanın değil piksel içeriğinin SHA-256'sı; sağlama toplamından ayrı tutulur |
 | tekerlek | wheel, `.whl` dosyası | wheel | Dosya uzantısı olarak `.whl` kalır |
 | çevrimdışı kurulum kiti, kit | tekerlek kiti, offline kit | offline kit | |
-| çevrimdışı | internetsiz, ağsız, offline | offline | “İnternet erişimi olmayan makine” yalnızca kavram ilk açıklanırken |
+| çevrimdışı | internetsiz, ağsız, offline | offline | “İnternet erişimi olmayan bilgisayar” yalnızca kavram ilk açıklanırken |
 | QGIS'in kendi Python ortamı | QGIS Python'u, QGIS'in yorumlayıcısı | QGIS's own Python | Dizin adı `site-packages` olduğu gibi |
 | Python konsolu | Python Console | Python console | QGIS menü adı İngilizce arayüzde `Python Console` |
 | ortam raporu | environment report | environment report | `qgis_ortam_raporu.py` betiğinin çıktısı |
@@ -63,6 +63,9 @@ kararsızsa değiştirilmiş ve nedeni son sütunda verilmiştir.
 | çıkış kodu | exit code, dönüş kodu | exit code | |
 | kapsam | extent | extent | |
 | geçerli veri | valid data | valid data | |
+| bilgisayar | makine | computer, machine | Kurum yazışmasının sözcüğü; “geliştirme bilgisayarı”, “kurum bilgisayarı” |
+| kıyas noktası | karşılaştırma tabanı, baseline | baseline | Bikübik yöntem; öteki yöntemlerin sonuçları ona göre verilir |
+| arayüzsüz | başsız, headless | headless | QGIS arayüzü açılmadan yürütülen sınama |
 
 Yazım kuralları, terimlerden bağımsız olarak: ondalık ayırıcı virgüldür (2,5 m), binlik
 ayırıcı noktadır (49.379 bayt); özel adlara ve tanımlayıcılara gelen ekler kesme imiyle
