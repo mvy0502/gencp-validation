@@ -6,8 +6,8 @@ gerektirmez; her adım birebir uygulanabilir biçimde yazılmıştır.
 
 ## 1. Kitin içinde ne var
 
-`kit/` klasörü, **16 adet `.whl` dosyası** ve bir `MANIFEST.json` içerir; toplam
-**57,6 MB**. Kit, bu deponun `kit-win_amd64-py312-2026-08-31` sürümünde
+`kit/` klasörü, **18 adet `.whl` dosyası** ve bir `MANIFEST.json` içerir; toplam
+**64,7 MB** (2 Eylül 2026: Proje 2 için `Pillow` ve `PyYAML` eklenmiştir; ilk 16 tekerlek aynıdır). Kit, bu deponun `kit-win_amd64-py312-2026-08-31` sürümünde
 `gencp_kit_win_amd64_py312.zip` olarak yayımlanmıştır (`https://github.com/mvy0502/gencp-validation/releases/tag/kit-win_amd64-py312-2026-08-31`); açıldığında bu klasör
 elde edilir. Sürüm notları hangi paketin hangi eklenti için olduğunu ve kitin **neyi
 kapsamadığını** listeler. Sürümler ve SHA-256 özetleri `MANIFEST.json` içinde kayıtlıdır; kurulan
@@ -18,6 +18,8 @@ dosyaların sınanan dosyalarla aynı olduğu bu şekilde gösterilebilir.
 | `rasterio` | 1.5.1 | 29,2 MB |
 | `onnxruntime` | 1.29.0 | 13,4 MB |
 | `osmium` | 4.3.1 | 1,7 MB |
+| `Pillow` (yalnızca Proje 2; her yöntem) | 12.3.0 | 6,9 MB |
+| `PyYAML` (yalnızca Proje 2; `.yaml` künyeli modeller) | 6.0.3 | 0,15 MB |
 | bağımlılıklar (numpy, protobuf, requests, …) | 13 dosya | 13,3 MB |
 
 **`rasterio` bilerek dâhil edilmiştir**, Windows QGIS'in onu zaten getiriyor olma
@@ -51,7 +53,7 @@ ayarlayan komut penceresidir. Başlat menüsünde QGIS klasörünün altında bu
 Açıldıktan sonra tek satır:
 
 ```
-python -m pip install --no-index --find-links=C:\gencp_kit\wheels --target="<HEDEF>" rasterio onnxruntime osmium
+python -m pip install --no-index --find-links=C:\gencp_kit\wheels --target="<HEDEF>" rasterio onnxruntime osmium pillow pyyaml
 ```
 
 `<HEDEF>`, §2'deki raporun gösterdiği QGIS `site-packages` dizinidir; tırnak içinde
@@ -71,7 +73,7 @@ Yönetici olarak çalıştır), ya da `--target` yerine `--user` kullanılmalıd
 **Eklentiler > Python Konsolu** açılıp tek satır çalıştırılır:
 
 ```python
-import pip; pip.main(["install", "--no-index", "--find-links", r"C:\gencp_kit\wheels", "--target", r"<HEDEF>", "rasterio", "onnxruntime", "osmium"])
+import pip; pip.main(["install", "--no-index", "--find-links", r"C:\gencp_kit\wheels", "--target", r"<HEDEF>", "rasterio", "onnxruntime", "osmium", "pillow", "pyyaml"])
 ```
 
 ### 3.3 `pip` yoksa

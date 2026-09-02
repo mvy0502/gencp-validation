@@ -142,7 +142,7 @@ içinde gelmez.
 | **P2 — girdi** | Sentinel-2 rasteri, uint16 DN, 10 m | Kullanıcının kendi verisi | Herhangi bir klasör |
 | **P1 — model** | `gencp_C2_fp32.onnx` (217.678.087 bayt) | `https://github.com/mvy0502/gencp-validation/releases/download/plugin-v0.2.0/gencp_C2_fp32.onnx` | Herhangi bir klasöre; yol eklentinin model alanından seçilir |
 | **P1 — arazi örtüsü** | `clcplus_2021_turkey_10m.tif` (916.422.550 bayt) | `https://github.com/mvy0502/gencp-validation/releases/download/veri-turkiye-2026-08-31/clcplus_2021_turkey_10m.tif` | Yolu `GENCP_CLC_PATH` ortam değişkeniyle veya eklentinin alanıyla verilir |
-| **Her ikisi — çevrimdışı Python paketleri** (yalnızca internetsiz Windows, Python 3.12) | `gencp_kit_win_amd64_py312.zip` (59.959.899 bayt) + `MANIFEST.json` + `SHA256SUMS.txt` | `https://github.com/mvy0502/gencp-validation/releases/tag/kit-win_amd64-py312-2026-08-31` — hangi eklenti için neyi kapsadığı sürüm notlarında yazılıdır | Herhangi bir klasöre açılır; kurulum `13-cevrimdisi-kurulum.md` |
+| **Her ikisi — çevrimdışı Python paketleri** (yalnızca internetsiz Windows, Python 3.12) | `gencp_kit_win_amd64_py312.zip` (67.325.080 bayt; 18 tekerlek, Pillow ve PyYAML dahil) + `MANIFEST.json` + `SHA256SUMS.txt` | `https://github.com/mvy0502/gencp-validation/releases/tag/kit-win_amd64-py312-2026-08-31` — hangi eklenti için neyi kapsadığı sürüm notlarında yazılıdır | Herhangi bir klasöre açılır; kurulum `13-cevrimdisi-kurulum.md` |
 | **P1 — OSM** | `turkey-2026-08-19.osm.pbf` (642.343.710 bayt) | `https://github.com/mvy0502/gencp-validation/releases/download/veri-turkiye-2026-08-31/turkey-2026-08-19.osm.pbf` — ya da eklentinin kendi indirme düğmesi | Herhangi bir klasör |
 
 ---

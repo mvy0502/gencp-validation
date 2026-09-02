@@ -53,7 +53,18 @@ def _gencp_ortam_raporu():
     # --- the measurement: which packages exist, and WHERE -------------------
     p("-" * 62)
     p("PAKETLER (VAR/YOK ve nereden geldigi)")
-    for name in ("rasterio", "onnxruntime", "osmium", "numpy", "shapely", "pyproj"):
+    # (modul adi, YOK ise okuyucu icin ne anlama geldigi)
+    checks = (
+        ("rasterio",    "her iki eklenti de ONSUZ ACILMAZ; kitten kurulmali"),
+        ("onnxruntime", "model yontemleri calismaz; kitten kurulmali (P2 bikubik onsuz calisir)"),
+        ("osmium",      "yalnizca P1 yerel .osm.pbf yolu icin gerekir"),
+        ("numpy",       "her iki eklenti de onsuz calismaz; QGIS ile gelir"),
+        ("shapely",     "yalnizca P1 icin gerekir; QGIS ile gelir"),
+        ("pyproj",      "bilgi amacli; eklentiler dogrudan kullanmaz"),
+        ("PIL",         "PROJE 2 HIC CALISMAZ (bikubik dahil); Pillow kitte vardir, kurulmali"),
+        ("yaml",        "yalnizca .yaml kunyeli (wsx4) modeller kullanilamaz; PyYAML kitte vardir"),
+    )
+    for name, meaning in checks:
         try:
             m = __import__(name)
             ver = getattr(m, "__version__", getattr(m, "version", "?"))
@@ -61,6 +72,7 @@ def _gencp_ortam_raporu():
             p("  VAR  %-12s %-10s %s" % (name, str(ver)[:10], loc))
         except BaseException as e:
             p("  YOK  %-12s %s: %s" % (name, type(e).__name__, str(e)[:44]))
+            p("       -> %s" % meaning)
 
     # --- sys.path ----------------------------------------------------------
     p("-" * 62)

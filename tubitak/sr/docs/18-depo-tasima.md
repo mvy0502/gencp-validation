@@ -1063,3 +1063,151 @@ kit `geopandas`'ı kapsamaz (yeni bulgu, §14.1). İkisi de Proje 1 sürüm işi
    satırda hâlâ `tubitak/tool/…` der); zip'e alınmamıştır.
 6. `pip download` ilk denemede "geçersiz gereksinim" verdi: zsh, `$set` değişkenini kelimelere
    bölmez; `${=set}` ile yeniden koşulmuştur. İlk başarısızlık bulgu sayılmamıştır.
+
+
+---
+
+## 15. WP23 — Pillow varsayımının kapatılması
+
+**Tarih** 2 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152`,
+B `cfb185910b1e1fd32d97be2a99419786ecf3bbfd`; iki ağaç da temizdi; her izlenen dosya manifeste
+alınmıştır (A **1272**, B **1545**, `/tmp/wp23/`). §1–14 değiştirilmemiştir. **A'da hiçbir şey
+değişmemiş, hazırlanmamış, commit'lenmemiştir.** Eklenti kodu dondurulmuştur;
+`BicubicUpsampler`'daki `PIL` kullanımı olduğu gibi durmaktadır. Dosya gövdeleri Python ile
+yazılmıştır.
+
+WP22'nin V5 cevabı bir varsayıma dayanıyordu: `Pillow`'un QGIS'in Windows kurulumuyla gelmesi.
+Bu buradan ölçülemez; soru çözülmemiş, **cevabına bağımlılık iki bağımsız yolla kaldırılmıştır** —
+ortam raporu artık sorar, kit artık taşır. İkisinden biri tek başına okuyucuyu kurtarır.
+
+### 15.1 Adım 1 — ortam raporu sorar (V1)
+
+`tubitak/sr/tools/qgis_ortam_raporu.py`'deki paket döngüsü, her modülün yanına **YOK ise
+okuyucu için ne anlama geldiğini** söyleyen bir satır alacak biçimde genişletilmiştir; `PIL` ve
+`yaml` eklenmiştir. Aynı üslupta: `VAR` satırı sürüm ve yolu, `YOK` satırı hatayı ve altında
+anlamı yazar. Betik burada iki ortamda koşulmuş, çıktı aynen:
+
+`gencp` ortamı (ikisi de var):
+
+```text
+PAKETLER (VAR/YOK ve nereden geldigi)
+  VAR  rasterio     1.4.4      .../envs/gencp/lib/python3.11/site-packages/rasterio/__init__.py
+  VAR  onnxruntime  1.29.0     .../envs/gencp/lib/python3.11/site-packages/onnxruntime/__init__.py
+  VAR  osmium       ?          .../envs/gencp/lib/python3.11/site-packages/osmium/__init__.py
+  VAR  numpy        2.4.6      .../envs/gencp/lib/python3.11/site-packages/numpy/__init__.py
+  VAR  shapely      2.1.2      .../envs/gencp/lib/python3.11/site-packages/shapely/__init__.py
+  VAR  pyproj       3.7.2      .../envs/gencp/lib/python3.11/site-packages/pyproj/__init__.py
+  VAR  PIL          12.3.0     .../envs/gencp/lib/python3.11/site-packages/PIL/__init__.py
+  VAR  yaml         6.0.3      .../envs/gencp/lib/python3.11/site-packages/yaml/__init__.py
+```
+
+`karios` ortamı (bilinen-yanlış: `rasterio`, `shapely`, `pyproj`, `yaml` yok):
+
+```text
+PAKETLER (VAR/YOK ve nereden geldigi)
+  YOK  rasterio     ModuleNotFoundError: No module named 'rasterio'
+       -> her iki eklenti de ONSUZ ACILMAZ; kitten kurulmali
+  VAR  onnxruntime  1.29.0     /Users/vedat/.local/lib/python3.12/site-packages/onnxruntime/__init__.py
+  VAR  osmium       ?          /Users/vedat/.local/lib/python3.12/site-packages/osmium/__init__.py
+  VAR  numpy        1.26.4     .../envs/karios/lib/python3.12/site-packages/numpy/__init__.py
+  YOK  shapely      ModuleNotFoundError: No module named 'shapely'
+       -> yalnizca P1 icin gerekir; QGIS ile gelir
+  YOK  pyproj       ModuleNotFoundError: No module named 'pyproj'
+       -> bilgi amacli; eklentiler dogrudan kullanmaz
+  VAR  PIL          11.3.0     .../envs/karios/lib/python3.12/site-packages/PIL/__init__.py
+  YOK  yaml         ModuleNotFoundError: No module named 'yaml'
+       -> yalnizca .yaml kunyeli (wsx4) modeller kullanilamaz; PyYAML kitte vardir
+```
+
+`PIL` için yazılan anlam satırı: `PROJE 2 HIC CALISMAZ (bikubik dahil); Pillow kitte vardir,
+kurulmali`. Betik ASCII Türkçe yazar (özgün üslubu; QGIS konsolunda kodlama sorunu çıkmasın diye).
+
+### 15.2 Adım 2 — kit taşır (V2, V3, V4)
+
+İki tekerlek **hedef platform için** indirilmiştir
+(`pip download --only-binary=:all: --platform win_amd64 --python-version 3.12 --implementation cp
+--abi cp312 --no-deps pillow pyyaml`), bu makine için değil:
+
+| dosya | dağıtım | sürüm | etiketler | bayt | sha256 | lisans | bağımlılık |
+|---|---|---|---|---|---|---|---|
+| pillow-12.3.0-cp312-cp312-win_amd64.whl | Pillow | 12.3.0 | cp312 / cp312 / win_amd64 | 7.227.137 | `a2b55dd6b2a4c4b7d87ffa56bdb33fdc5fdb9a462173861a7bc097f17d91cb09` | MIT-CMU | yok |
+| pyyaml-6.0.3-cp312-cp312-win_amd64.whl | PyYAML | 6.0.3 | cp312 / cp312 / win_amd64 | 154.003 | `5fcd34e47f6e0b794d17de1b4ff496c00986e1c83f7ab2fb8fcfe9616ff7477b` | MIT | yok |
+
+İkisi de yeniden dağıtıma izin verir; ikisinin de koşulsuz `Requires-Dist`'i yoktur, kapanış
+bozulmaz.
+
+Kit yeniden üretilmiştir: **18 tekerlek**, `MANIFEST.json` (`n_files` 18, `total_bytes`
+67.827.226, `requested` listesine `pillow`, `pyyaml`; `updated_utc` ve sebep alanı), zip ve
+`SHA256SUMS.txt` birbiriyle uyumlu — zip içindeki 18 tekerlek manifeste karşı yeniden
+sağlanmıştır (18/18), zip içindeki `MANIFEST.json` ayrı varlıkla bayt bayt aynıdır, **ilk 16
+tekerlek WP22'dekiyle aynıdır**.
+
+**V4 — kapanış, varsayımsız.** `pip download --no-index --find-links=<kit> --platform win_amd64
+--python-version 3.12`: Proje 2'nin tam kümesi `rasterio onnxruntime pillow pyyaml` → **13
+tekerlek**, birleşik `rasterio onnxruntime osmium pillow pyyaml` → **18 tekerlek**, ağsız. Proje
+2'nin çalışma zamanı içe aktarmaları (`rasterio`, `onnxruntime`, `numpy`, `PIL`, `yaml`) kit
+dağıtımlarının alt kümesidir: **evet**. Kalan varsayım: **yok.**
+
+Aynı etiket, güncellenen varlıklar (`gh release upload --clobber`); etiket saatler eskiydi ve
+kendi kılavuzumuz dışında kimse anmıyordu. **V3 — API'den geri okuma:**
+
+| varlık | API boyut | indirilen sha256 | yerel sha256 | |
+|---|---|---|---|---|
+| `gencp_kit_win_amd64_py312.zip` | 67.325.080 | `5adfb18f05ec…` | `5adfb18f05ec…` | **aynı** |
+| `MANIFEST.json` | 4.157 | `75c8f734219b…` | `75c8f734219b…` | **aynı** |
+| `SHA256SUMS.txt` | 176 | `eae9fed8eee5…` | `eae9fed8eee5…` | **aynı** |
+
+`sha256sum -c` indirilenlerde: ikisi de OK. Notlar güncellenmiştir (18 tekerlek; iki yeni satır ve
+kimin için oldukları; kapanış satırı; varlık tablosu; "varlıklar 2 Eylül 2026'da güncellendi"
+satırı ve sebebi); canlı gövde amaçlananla aynıdır. `latest` `plugin-v0.2.0` kalmıştır;
+`sr-plugin-v0.1.0` 7, `plugin-v0.2.0` 2 varlık, dokunulmamış.
+
+### 15.3 Adım 3 — sayıyı söyleyen belgeler
+
+Arama (`16 adet`, `16 tekerlek`, `57,6`, `59.959.899`, `13 dosya`, sağlamalar): §14'ün kendi
+kaydı dışında üç yer bulunmuş, düzeltilmiştir:
+
+- `13-cevrimdisi-kurulum.md` §1: "**16 adet** … toplam **57,6 MB**" → "**18 adet** … toplam
+  **64,7 MB** (2 Eylül 2026: Proje 2 için `Pillow` ve `PyYAML` eklenmiştir; ilk 16 tekerlek
+  aynıdır)"; paket tablosuna `Pillow` ve `PyYAML` satırları.
+- `13-cevrimdisi-kurulum.md` kurulum komutları (§3.1 `pip install …` ve `pip.main([...])`):
+  `rasterio onnxruntime osmium` → `rasterio onnxruntime osmium pillow pyyaml`. Brifing "kitin
+  içeriğini listeleyen" yerleri istemişti; komut satırı da bir listedir ve üçte kalsaydı okuyucu
+  Pillow'u kurmadan devam ederdi — varsayım komut satırında yaşamaya devam ederdi.
+- `10-kurulum.md` §3 kit satırı: `59.959.899 bayt` → `67.325.080 bayt; 18 tekerlek, Pillow ve
+  PyYAML dahil`.
+
+§14'teki "16", "57,6 MB", `c9fabbebed86…` değerleri WP22 anının kaydıdır ve değiştirilmemiştir.
+
+### 15.4 G1
+
+İfade depo başına tek `if/else`'tir ve koşulmadan önce okunmuştur.
+
+| depo | karşılaştırılan | yol kümesi | değişen | sınıf |
+|---|---|---|---|---|
+| A | **1272** | aynı; izlenmeyen 0 | **hiçbiri** | — |
+| B | **1545** | aynı; beliren/kaybolan/taşınan yok; izlenmeyen 0 | `tubitak/sr/tools/qgis_ortam_raporu.py`; `docs/10-kurulum.md`, `docs/13-cevrimdisi-kurulum.md`; `docs/18-depo-tasima.md` | betik / belgeler / rapor |
+
+Tekerlekler ve zip hazırlanmamıştır (en büyük hazırlanan dosya bu rapordur). Kapı geçilmiştir.
+
+### 15.5 V5 — okuyucu sınaması
+
+İnternetsiz Windows, `onnxruntime` yok, yalnızca B ve sürümleri: `10-kurulum.md` §2 ortam raporu
+artık `PIL` ve `yaml` için de VAR/YOK der ve YOK ise ne olacağını yazar; §3 tablosu 18
+tekerlekli kiti adlandırır; §7.5 → `13-cevrimdisi-kurulum.md` §3.1 komutu beş paketi ister ve
+kit beşini de ağsız çözer (V4).
+
+**Cevap: EVET, niteliksiz.** Proje 2'nin çalışma zamanı ihtiyaçlarının tamamı B'nin
+sürümlerinden gelir; `Pillow` varsayımı kalmamıştır. Kalan tek sınır, WP22'deki gibi, kurulumun
+Windows'ta **çalıştırılmamış** olmasıdır: doğrulanmış manifest ve kapanış, çalıştırılmamış
+kurulum. Proje 1 için cevap değişmemiştir (HAYIR: iki yayımlanmamış zip, ve kit `geopandas`
+taşımaz) — Proje 1 sürüm işi.
+
+### 15.6 Brifingin öngörmediği bulgular
+
+1. **Kurulum komutları da bir "içerik listesi"ydi** (§15.3); yalnızca sayıyı düzeltmek varsayımı
+   komut satırında bırakırdı.
+2. `karios` ortamı, betiğin `YOK` dalı için doğal bir bilinen-yanlış sağlamıştır: dört modül
+   eksik, dördü için de anlam satırı basılmıştır.
+3. `SHA256SUMS.txt`'nin kendi sağlaması değişmiştir (`88fe7271d2f6…` → `eae9fed8eee5…`); §14'te
+   yazılı eski değer kaydıdır, güncel olan buradadır.
