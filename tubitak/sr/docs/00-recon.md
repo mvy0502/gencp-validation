@@ -45,7 +45,7 @@ arguments** — see risk R2.
 
 #### `extent.py` (12,188 bytes, 258 lines)
 
-Module constants, [extent.py:16-27](../../gencp_core/extent.py#L16):
+Module constants, [extent.py:16-27](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L16):
 
 ```
 SIZE = 257 · GSD = 10.0 · SUPERSAMPLE = 4
@@ -319,25 +319,25 @@ probe distinguishes present from absent per module and did report `torch ABSENT
 
 | parameter | value | file:line |
 |---|---|---|
-| tile ground footprint `TILE_M` | 2570.0 m | [gencp_core/extent.py:25](../../gencp_core/extent.py#L25) (`SRC_PX * NOMINAL`) |
-| tile input pixels `SRC_PX` | 257 | [extent.py:21](../../gencp_core/extent.py#L21) |
-| tile output pixels `OUT_PX` | 256 | [extent.py:22](../../gencp_core/extent.py#L22) |
+| tile ground footprint `TILE_M` | 2570.0 m | [gencp_core/extent.py:25](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L25) (`SRC_PX * NOMINAL`) |
+| tile input pixels `SRC_PX` | 257 | [extent.py:21](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L21) |
+| tile output pixels `OUT_PX` | 256 | [extent.py:22](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L22) |
 | network input `INPUT_PX` | 256 | [gencp_core/infer.py:27](../../gencp_core/infer.py#L27) |
-| output grid spacing `NOMINAL` | 10.0 m | [extent.py:23](../../gencp_core/extent.py#L23) |
-| true tile GSD `TRUE_GSD` | 10.0390625 m (`257*10/256`) | [extent.py:24](../../gencp_core/extent.py#L24) |
-| default overlap `DEFAULT_OVERLAP_M` | 640.0 m | [extent.py:27](../../gencp_core/extent.py#L27) — comment: "measured default: seam ratio 1.008, no point clustering" |
+| output grid spacing `NOMINAL` | 10.0 m | [extent.py:23](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L23) |
+| true tile GSD `TRUE_GSD` | 10.0390625 m (`257*10/256`) | [extent.py:24](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L24) |
+| default overlap `DEFAULT_OVERLAP_M` | 640.0 m | [extent.py:27](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L27) — comment: "measured default: seam ratio 1.008, no point clustering" |
 | UI default overlap | 640 | [qgis_plugin/dialog.py:86](../../qgis_plugin/dialog.py#L86), set at [dialog.py:377](../../qgis_plugin/dialog.py#L377) |
-| overlap legal range | `[0, 2570)`, whole multiples of 10 m | enforced in [dialog.py:126-157](../../qgis_plugin/dialog.py#L126) and [extent.py:200-202](../../gencp_core/extent.py#L200) |
-| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:203](../../gencp_core/extent.py#L203) |
+| overlap legal range | `[0, 2570)`, whole multiples of 10 m | enforced in [dialog.py:126-157](../../qgis_plugin/dialog.py#L126) and [extent.py:200-202](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L200) |
+| stride | `TILE_M - overlap_m` = 1930 m at the default | [extent.py:203](../../gencp_core/extent.py) |
 | overlap in pixels | `int(round(overlap_m / TRUE_GSD))` = 64 px at 640 m | [mosaic.py:53](../../gencp_core/mosaic.py#L53) |
 | **blend function** | separable raised cosine, `0.5 - 0.5*cos(pi*(arange(r)+0.5)/r)`, ramped over the first and last `r` columns/rows and 1.0 in the interior, made 2-D by outer product | [mosaic.py:29-37](../../gencp_core/mosaic.py#L29) |
 | blend accumulation | weighted average: `reproject` weight and `arr*weight` separately, then `acc/wac`; `valid = wac > 1e-6` | [mosaic.py:54-79](../../gencp_core/mosaic.py#L54) |
-| supersample for hard edges | `SUPERSAMPLE = 4`, box-averaged down | [extent.py:18](../../gencp_core/extent.py#L18) |
+| supersample for hard edges | `SUPERSAMPLE = 4`, box-averaged down | [extent.py:18](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L18) |
 | render blend sigma | `BLEND_SIGMA = 0.6` | [rasterize.py:26](../../gencp_core/rasterize.py#L26) (vector rendering only) |
 | stage progress weights | `render 0.8 · infer 0.06 · confidence 0.06 · mosaic 0.08` | [qgis_plugin/task.py:22](../../qgis_plugin/task.py#L22) |
-| per-tile cost | `SEC_PER_TILE = 0.48` s (render 0.343 + infer 0.016 + confidence 0.031 + mosaic 0.087) | [extent.py:228](../../gencp_core/extent.py#L228) |
+| per-tile cost | `SEC_PER_TILE = 0.48` s (render 0.343 + infer 0.016 + confidence 0.031 + mosaic 0.087) | [extent.py:228](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L228) |
 
-The `align_origin` argument of `tile_grid` ([extent.py:185](../../gencp_core/extent.py#L185))
+The `align_origin` argument of `tile_grid` ([extent.py:185](https://github.com/mvy0502/gencp-validation/blob/f386da375e78173ecb715167afe375a027b75ccb/tubitak/gencp_core/extent.py#L185))
 pins the NW corner of tile (0,0) — "which is what lets a tile be made to coincide exactly
 with an existing evaluation chip footprint." That is directly the hook a Wald evaluation
 needs.

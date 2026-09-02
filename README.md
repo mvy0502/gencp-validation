@@ -1,10 +1,12 @@
 # GenCP Doğrulama Çalışması
 
-Bu depoda iki iş bir arada duruyor. Biri, harita verisinden sentetik uydu görüntüsü üreten
+Bu depoda üç iş bir arada durmaktadır. Birincisi, harita verisinden sentetik uydu görüntüsü üreten
 ESA/Telespazio **GenCP** sisteminin ([telespazio-tim/GenCP](https://github.com/telespazio-tim/GenCP))
-bağımsız ölçüm ve doğrulama çalışması — TÜBİTAK UZAY stajı, Ağustos 2026. Öteki, o
-çalışmadan çıkan **QGIS eklentisi**: seçilen bir alan için OpenStreetMap ve arazi örtüsü
-verisinden georeferanslı sentetik referans görüntü üretir, terminal gerektirmez.
+bağımsız ölçüm ve doğrulama çalışması — TÜBİTAK UZAY stajı, Ağustos 2026. İkincisi, o
+çalışmadan çıkan **QGIS eklentisi** (Proje 1): seçilen bir alan için OpenStreetMap ve arazi örtüsü
+verisinden georeferanslı sentetik referans görüntü üretir, terminal gerektirmez. Üçüncüsü,
+Sentinel-2 görüntüsünü süper çözünürlüğe çıkaran ikinci bir **QGIS eklentisi** (Proje 2);
+kendi bölümü aşağıdadır.
 
 ---
 
@@ -96,9 +98,7 @@ Yukarıdaki eklentiden ayrı, ikinci bir QGIS eklentisi: **Sentinel-2 görüntü
 georeferanslamada anahtar nokta eşleştirmesi böylece **daha çok ve daha iyi konumlanmış kontrol
 noktası** üretir. Kaynak, belgeler ve kurulum kılavuzu `tubitak/sr/` altındadır; 2 Eylül 2026'dan
 itibaren Proje 2'nin güncel kopyası bu depodadır ve nereden geldiği
-[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır. (Aşağıdaki KURAL
-bölümü bu taşınmadan önce yazılmıştır; oradaki "QGIS eklenti iş paketi GenCP'de devam eder"
-cümlesi Proje 1 için geçerlidir.)
+[`tubitak/sr/SOURCE.md`](tubitak/sr/SOURCE.md) dosyasında kayıtlıdır.
 
 **İndirin — hepsi bir arada, toplam 8,1 MB:**
 **https://github.com/mvy0502/gencp-validation/releases/tag/sr-plugin-v0.1.0**
@@ -150,9 +150,11 @@ Modelin yaptığı iş: soldaki haritadan sağdaki görüntü üretiliyor.
 **Hiçbir yönde merge yok, hiçbir zaman.** Bu bir uyarı değil, kuraldır.
 
 Bu depo (**gencp-validation**) araştırma kaydıdır: ön kayıtlar, sonuçlar, denetimler,
-kanıt artefaktları ve düzeltme kaydı. Fork ve QGIS eklenti iş paketi
+kanıt artefaktları ve düzeltme kaydı. Fork ve **Proje 1** QGIS eklenti iş paketi
 [mvy0502/GenCP](https://github.com/mvy0502/GenCP) deposunda, `tubitak-tr` dalında
-devam eder. Makale çalışması `mvy0502/gencp-letter` deposundadır — **bu depo özeldir**, bağlantı
+devam eder, çünkü GenCP modelinden türemektedir. **Proje 2** (süper çözünürlük,
+`tubitak/sr/`) bu depoda bulunmaktadır; fork'taki kopyası dondurulmuştur. Makale çalışması
+`mvy0502/gencp-letter` deposundadır — **bu depo özeldir**, bağlantı
 verilmemiştir çünkü herkese açık bir ziyaretçi için 404 döner.
 
 - **`tubitak-tr` bu depoya birleştirilmez.** GenCP'deki `b815b46` commit'i 263 dosyayı
