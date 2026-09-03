@@ -2007,3 +2007,240 @@ başka bir oturumun çalışmadığı, depoda taban çizgisinden sonra yazılmı
 yukarıdaki yedi dosya olmasından ve çalışma dizini bu depoda olan başka bir ajan sürecinin
 bulunmamasından anlaşılmıştır. Tek commit, B'de, yedi yol tek tek hazırlanarak; uzak depo
 `git ls-remote` ile doğrulanmıştır.
+
+## 19. WP28: WP26'nın bulup yerinde bıraktığı dört olgusal düzeltme
+
+**Tarih** 3 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152` (1272
+izlenen dosya, çalışma ağacı temiz), B `f018367` (1551 izlenen dosya, temiz). İki deponun sağlama
+listeleri düzenlemeden önce `/tmp/wp28/` altına yazılmıştır. **Bölüm numarası:** brifing 20.
+bölümü istemiş ve 1'den 19'a kadar olan bölümleri değişmez saymıştır; dosyada 18 bölüm vardır,
+19. bölüm yoktur. Boşluk bırakmamak için bu bölüm 19 olarak numaralanmıştır.
+
+**Kapsam.** WP26 (§18) dil düzeltmesi yaparken dört cümlenin dilde değil olguda yanlış olduğunu
+bulmuş ve okuma geçişi iddia değiştirmediği için dördünü yerinde bırakmıştı. Bu paket dördünü
+ölçerek düzeltir. İzin verilen dosyalar: `10-kurulum.md`, `13-cevrimdisi-kurulum.md`,
+`20-komut-satiri.md`, kit sürüm notu ve bu rapor. Eklenti donmuştur: `sr_plugin/` altında,
+`metadata.txt` dahil, hiçbir şey değişmemiştir. Depo A'ya dokunulmamıştır.
+
+### 19.1 Adım 0: WP23 çalışmış mı
+
+`kit-win_amd64-py312-2026-08-31` sürümünün varlıkları API'den okunmuştur:
+`gencp_kit_win_amd64_py312.zip` (67.325.080 bayt), `MANIFEST.json` (4.157 bayt),
+`SHA256SUMS.txt` (176 bayt). `MANIFEST.json`: `n_files` 18, `total_bytes` 67.827.226,
+`updated_utc` 2026-09-02, `requested` `rasterio onnxruntime osmium pillow pyyaml`. Listede
+`pillow-12.3.0-cp312-cp312-win_amd64.whl` ve `pyyaml-6.0.3-cp312-cp312-win_amd64.whl` vardır.
+**WP23 çalışmıştır**; paket devam etmiştir.
+
+### 19.2 Madde 1: en düşük QGIS sürümü (V1)
+
+**Ölçülen değerler.** `qgisMinimumVersion`, dört dosyadan ve iki yayımlanmış zip'ten okunmuştur:
+
+| Kaynak | Değer |
+|---|---|
+| B `tubitak/sr/sr_plugin/metadata.txt` (Proje 2, donmuş eklenti) | `qgisMinimumVersion=3.40` |
+| B `tubitak/qgis_plugin/metadata.txt` (Proje 1'in B'deki donmuş kopyası) | `qgisMinimumVersion=3.28` |
+| A `tubitak/qgis_plugin/metadata.txt` (Proje 1 kaynağı, HEAD) | `qgisMinimumVersion=3.40` |
+| A `tubitak/sr/sr_plugin/metadata.txt` (Proje 2 aynası) | `qgisMinimumVersion=3.40` |
+| `gencp_plugin.zip` (`plugin-v0.2.0`, 94.987 bayt, 26 Ağustos yapımı) içindeki `metadata.txt` | `qgisMinimumVersion=3.28` |
+| `gencp_super_resolution.zip` (`sr-plugin-v0.1.0`, 49.379 bayt, 31 Ağustos yapımı) içindeki `metadata.txt` | `qgisMinimumVersion=3.40` |
+
+Kararı yayımdaki zip'in içindeki sayı verir; okuyucu o zip'i kurar. Kılavuz bu yüzden tek bir
+sayı değil, eklenti başına iki sayı yazmak zorundadır: Proje 1 için 3.28, Proje 2 için 3.40.
+Kılavuzun eski cümlesi ("Eklentilerin `metadata.txt` dosyaları en düşük sürüm olarak 3.28
+belirtir") Proje 1'in yayımdaki zip'i için doğru, Proje 2 için yanlıştı.
+
+**3.40'ın kaynağı.** A'da iki `metadata.txt` dosyasının tarihçesi, her işlemede değer okunarak:
+
+| İşleme | Tarih | Proje 2 | Proje 1 | İşleme iletisi |
+|---|---|---|---|---|
+| `ef299c7`, `b67881a` | 26 Ağustos | (yok) | 3.28 | Proje 1 eklentisinin doğuşu; 3.28 gerekçeyle seçilmiştir, ölçülmemiştir (`02b-plugin.md` §8 madde 2: "an argument rather than a measurement") |
+| `8ab24b2`, `54bfd94` | 30 Ağustos | 3.28 | 3.28 | Proje 2 eklentisinin doğuşu, aynı 3.28 |
+| `75332cb` | 31 Ağustos | **3.44** | **3.44** | "one eager rasterio import made the plugin look broken on all of QGIS 3.x"; WP12, `12-qt5-uyumluluk.md` §4: 3.44.13 "the oldest version actually verified" |
+| `216ab59` | 31 Ağustos | **3.40** | **3.40** | "declare qgisMinimumVersion 3.40, and ship a diagnostic for the offline machines" |
+
+Gerekçe `09-release-notes-draft.md`'de kayıtlıdır: bildirilen en düşük sürüm, sınanan tabanın
+(3.44.13) bilerek altına çekilmiştir, çünkü 3.44 bildirmek QGIS 3.40 LTR kullanan kurumları
+dışarıda bırakırdı; kodun çağırdığı her QGIS API simgesi 3.0 dönemindendir, tek yeni simge
+`hasattr` korumasındadır. 3.40'ın kendisi hiç çalıştırılmamıştır: qgis.org'dan indirilememektedir
+(`12-qt5-uyumluluk.md` §1, §5). **Sonuç: 3.40 bir ölçüm değil, seçilmiş bir alt sınırdır.**
+3.28 ile 3.44 arasındaki hiçbir sürüm çalıştırılmamıştır; 3.28'in çalışıp çalışmayacağı
+bilinmemektedir. `12-qt5-uyumluluk.md` §4'ün "now 3.44 in both" cümlesi `216ab59` ile eskimiştir;
+kayıt dosyasıdır, değiştirilmemiştir.
+
+**Kılavuz düzeltmesi** (`10-kurulum.md`): §1.1 tablosunun QGIS 3.x satırı iki sayıyı ayrı ayrı
+yazar; tablonun altına eklenen bir paragraf sayının kararı verdiğini, eski bir QGIS'te eklentinin
+etkinleştirilmeyip uyumsuz gösterileceğini ve sürümün **Yardım > Hakkında** penceresinden
+okunacağını söyler; §6'nın sınanmamışlar listesindeki "QGIS 3.28 ve diğer 3.x sürümleri" maddesi
+buna göre yazılmıştır. QGIS'in eski sürümdeki davranışı bu makinede ölçülememiştir (eski QGIS
+yok); QGIS'in belgelenmiş davranışından yazılmıştır.
+
+**Sunum için not.** Kurumun QGIS sürümü, tanı betiğinin çıktısı gelene kadar bilinmemektedir;
+3.40 bir risktir. Sürüm 3.40'ın altındaysa Proje 2 eklentisi etkinleşmez. Proje 1'in yayımdaki
+zip'i 3.28'e iner, fakat 26 Ağustos yapımıdır ve `75332cb`'nin düzelttiği kusuru taşır: zip'in
+20 Python dosyasından `gencp_core/extent.py` modül düzeyinde `rasterio` içe aktarır (ölçüldü);
+A'nın HEAD kaynağında bu içe aktarma yoktur. `rasterio` taşımayan bir QGIS'te bu zip 3.x'te de
+4.x'te de açılmaz; kit bunun içindir.
+
+**Açık madde (eklenti değişikliği, eklenti donmuş):** Proje 2 için 3.28'in ölçülmesi ve
+bulguya göre `qgisMinimumVersion`'ın bir sonraki eklenti sürümünde yeniden bildirilmesi.
+
+### 19.3 Madde 2: kit notunun dosya sayısı (V2)
+
+`SHA256SUMS.txt` sürümden indirilmiştir: 176 bayt, iki satır:
+
+```
+5adfb18f05ec0116f3cb1a12960b1ad439ffb7daf0cb4144b302b6fa9bb120f1  gencp_kit_win_amd64_py312.zip
+75c8f734219baedf96d012d6a8f6d3a049b68fcf19d9555db14e82dd3a3f1faa  MANIFEST.json
+```
+
+Not "üç dosyanın sağlama toplamını taşır" diyordu; dosya ikisini taşır. Düzeltme: "iki dosyanın
+sağlama toplamını taşır: `gencp_kit_win_amd64_py312.zip` ve `MANIFEST.json`"; varlık tablosunda
+`SHA256SUMS.txt` satırının boş bayt sütununa 176 yazılmıştır. Gövde API ile değiştirilmiştir
+(sürüm kimliği 381101565, `PATCH`): 5.331 bayt gönderilmiş, 5.331 bayt okunmuş, bayt bayt özdeş;
+ad, etiket ve üç varlık değişmemiştir.
+
+### 19.4 Madde 3: tarihli paket sayısı (V3)
+
+Arama, hafızaya değil dosyalara: B genelinde `\b1[68] (paket|tekerlek|dosya|adet)|ilk 16`, rapor
+hariç. Bulunanlar:
+
+| Yer | Metin | Durum |
+|---|---|---|
+| `10-kurulum.md` §3 kit satırı | "18 tekerlek" | doğru |
+| `13-cevrimdisi-kurulum.md` §1 | "18 tekerlek (`.whl`)", "ilk 16 tekerlek değişmemiştir" | doğru |
+| `13-cevrimdisi-kurulum.md` §5 madde 1 | "16 paketin tamamı çözümlenmiş" | **yanlış**, 31 Ağustos'un sayısı |
+| kit notu | "ilk 16 tekerlek bayt bayt aynıdır" | doğru |
+| `MANIFEST.json` `update_note` | "the original 16 wheels are unchanged" | doğru |
+
+Rapordaki 16'lar (§12 ve §14 tablo başlıklarındaki "sha256 (ilk 16)" karakter sayısıdır; §14 ve
+§15'tekiler tarihli kayıttır) değiştirilmemiştir. Düzeltme, `13-cevrimdisi-kurulum.md` §5'te:
+madde 1 artık iki ölçümü tarihleriyle yazar (31 Ağustos 2026'da 16 tekerlek; 2 Eylül 2026'da,
+`Pillow` ve `PyYAML` eklendikten sonra, beş paketlik isteğin kitteki 18 tekerleğin tamamını ağsız
+çözümlemesi, §15 V4); madde 2'nin sanal ortam sınaması 31 Ağustos'a ve ilk 16 tekerleğe
+tarihlenmiş, `Pillow` ve `PyYAML`'ın o ortamda içe aktarılmadığı yazılmıştır (§15'te böyle bir
+içe aktarma kaydı yoktur).
+
+### 19.5 Madde 4: çıkış kodu 7 (V4)
+
+**Kod.** `sr_cli.py` 7'yi iki yerden döndürür: `_check_bicubic_dtype`, bikübik yolunda veri tipi
+`uint8, int8, uint16, int16, uint32, int32, float32, float64` listesinde değilse; ve
+`_validate_for_model`, eklentinin `sr_plugin.onnx_upsample.validate_input` işlevini çağırır (aynı
+işlevi `dialog.py` satır 502'de iletişim kutusu çağırır) ve üç daldan ikisini 7'ye bağlar:
+`err_dtype` (veri tipi `uint16` değilse; modelden bağımsız, sabit yazılmıştır) ve `err_range`
+(uint16 ama örneklenen pencerenin sıfır dışı %99,9 dilimi 300 DN'nin altında). Üçüncü dal
+`err_bands` 6'dır.
+
+**Çalıştırmalar.** `gencp` ortamı, `/tmp/wp28/e7/` altında `rasterio` ile yazılmış 64 x 64
+piksel, EPSG:32636, 10 m sentetik rasterlar; modeller `tubitak/data/plugin_models/` altından
+(`gencp_sr_x4_b4.onnx` sha256 `f3f2ffbd…`, `gencp_sr_tci_x4_b3_v2.onnx` sha256 `01496736…`):
+
+```
+$ python sr_cli.py i64_1band.tif out1.tif
+sr_cli: Veri tipi int64 bikübik yöntemle desteklenmez. Desteklenenler: uint8, int8, uint16, int16, uint32, int32, float32, float64.
+exit=7
+
+$ python sr_cli.py u8_4band.tif out3.tif --method model --model gencp_sr_x4_b4.onnx
+sr_cli: Model 16 bit tam sayı (uint16) yansıtma değerleri bekler; girdinin veri tipi uint8.
+  8 bitlik TCI görseli modele verilmez; onu bikübik yöntemle kullanabilirsiniz.
+exit=7
+
+$ python sr_cli.py u16_4band_low.tif out4.tif --method model --model gencp_sr_x4_b4.onnx
+sr_cli: Girdi 16 bit ama değerleri 8 bitlik bir görüntününki gibi (%99,9 dilimi 199). Bu dosya büyük olasılıkla dönüştürülmüş bir TCI; yansıtma dosyasını seçin.
+exit=7
+
+$ python sr_cli.py u8_3band.tif o7.tif --method model --model gencp_sr_tci_x4_b3_v2.onnx
+sr_cli: Model 16 bit tam sayı (uint16) yansıtma değerleri bekler; girdinin veri tipi uint8.
+  8 bitlik TCI görseli modele verilmez; onu bikübik yöntemle kullanabilirsiniz.
+exit=7
+
+$ python sr_cli.py SAMPLE_3band_TCI_uint8_10m_512px.tif s1.tif --method model --model gencp_sr_tci_x4_b3_v2.onnx
+sr_cli: Model 16 bit tam sayı (uint16) yansıtma değerleri bekler; girdinin veri tipi uint8.
+  8 bitlik TCI görseli modele verilmez; onu bikübik yöntemle kullanabilirsiniz.
+exit=7
+
+$ python sr_cli.py u16_3band.tif out5.tif --method model --model gencp_sr_tci_x4_b3_v2.onnx
+sr_cli: 64 x 64 -> 256 x 256, 1 karo, model x4
+Bitti: /tmp/wp28/e7/out5.tif
+exit=0
+```
+
+Karşılaştırma için: `f64_1band.tif` bikübik yolunda kabul edilmiştir (`--dry-run`, çıkış 0);
+`u16_4band.tif` (değerler 0 ile 6000 arasında) dört bantlı modelle çalışmış, çıkış 0;
+`u8_3band.tif` dört bantlı modelle 6 (bant sayısı, veri tipinden önce denetlenir);
+yayımdaki `SAMPLE_4band_B02-B03-B04-B08_uint16_10m_512px.tif` dört bantlı modelle `--dry-run`
+0.
+
+**Bulgu.** Eski satır ("model yolunda uint16 dışı; 8 bit TCI modele verilmez") kodun yaptığını
+söylüyordu; WP26'nın "yanlış" hükmü, 8 bit TCI modelinin uint8 girdi aldığı inancına
+dayanıyordu. Ölçüm tersini gösterir: künyesinde `norm_divisor_dn = 255.0` ve `variant = tci`
+yazan `gencp_sr_tci_x4_b3_v2.onnx`, `validate_input` sabit `uint16` istediği için, kendi
+tasarlandığı 8 bit girdiyi, **yayımdaki `SAMPLE_3band_TCI_uint8_10m_512px.tif` dahil**, 7 ile
+reddeder; uint16 üç bantlı bir girdiyi ise kabul edip çalıştırır. Satır, gözlenen üç tetikleyiciyi
+yazacak biçimde yeniden yazılmış ve tablonun altına bu ölçümü kaydeden bir paragraf eklenmiştir.
+
+Bu, eklentiye ait açık bir kusurdur ve bu paketin kapsamı dışındadır (eklenti donmuş):
+`validate_input`, istenen veri tipini modelin künyesindeki bölenden (`norm_divisor_dn`) okumak
+yerine `uint16` sabitini kullanır. İletişim kutusu aynı işlevi çağırdığından eklenti içinde de
+aynı ret beklenir; bu raporda TCI modelinin iletişim kutusundan ya da komut satırından
+çalıştırıldığına dair bir kayıt yoktur (§16'nın özdeşlik listesinde TCI modeli yoktur).
+**Sunum için:** kurumun elindeki veri 8 bittir; onun için yayımlanan model, yayımdaki eklentiyle
+o veri üzerinde çalıştırılamaz. Sürüm notu ve README bu eşleşmeyi çalışır gibi anlatır; ikisi bu
+paketin izinli dosyaları değildir, düzeltilmemiştir.
+
+### 19.6 İddia karşılaştırması
+
+Sayılar, birimler, dosya adları, URL'ler, etiketler ve komutlar dört dosyadan önce ve sonra
+çıkarılıp küme olarak karşılaştırılmıştır:
+
+| Dosya | Kaybolan | Eklenen | Hangi düzeltme |
+|---|---|---|---|
+| `10-kurulum.md` | "3.28" (genel cümle, iki yerde) | 3.28 ve 3.40 eklenti başına; 0.2.0, 0.1.0; 3.44.13; 4.2.1; §7.6; `gencp_plugin.zip`, `gencp_super_resolution.zip` | madde 1 |
+| `13-cevrimdisi-kurulum.md` | yok | 18; 31 Ağustos 2026; 2 Eylül 2026; 16 (tarihli) | madde 3 |
+| `20-komut-satiri.md` | yok | int64; %99,9; 300 DN; 8 bit; 3 Eylül 2026; `gencp_sr_tci_x4_b3_v2.onnx`; `SAMPLE_3band_TCI_uint8_10m_512px.tif`; `18-depo-tasima.md` §19 | madde 4 |
+| kit notu | yok | 176; `gencp_kit_win_amd64_py312.zip`; `MANIFEST.json` (satır içinde adlandırma) | madde 2 |
+
+URL, etiket ve komut kümeleri dört dosyada da aynıdır. Eklenen her satır sözlüğe karşı
+okunmuştur; uzun tire, birinci çoğul kişi ve sözlük kaçağı yoktur.
+
+### 19.7 Bağlantı denetimi (V5)
+
+`check_links.py` kendi sınamasını geçmiştir. Depo genelinde, 146 Markdown dosyası, ağsız:
+düzenlemeden önce ve sonra **894 bağlantı, 24 ölü**, aynı 24. Dokunulan dosyalarda ölü bağlantı
+yoktur; üç dosya ağ ile de denetlenmiştir: 17 bağlantı, 0 ölü. 24 ölü bağlantının tamamı bu
+paketten öncedir ve izinli dosyaların dışındadır:
+
+| Dosya | Ölü | Sebep |
+|---|---|---|
+| `docs/datasets.md` | 3 | üstkaynak pix2pix belgesi, depoda olmayan `.tex` dosyaları |
+| `docs/overview.md` | 2 | üstkaynak, `.../README.md` yer tutucuları |
+| `docs/qa.md` | 1 | üstkaynak, `ttps://` yazım hatası |
+| `tubitak/rapor2/GenCP_Ilerleme_Raporu_2.md` | 11 | `gorseller/` `.gitignore`'dadır |
+| `tubitak/rapor3/GenCP_Rapor_Sonuc.md` | 4 | aynı |
+| `tubitak/sr/docs/18-depo-tasima.md` §1'den §18'e | 3 | `tubitak/sr/SOURCE.md` bağlantısı `docs/` dizinine göre çözülür; dosya vardır, yol yanlıştır |
+
+"Sıfır kırık" bu paketin dokunduğu her şey için doğrudur; deponun geri kalanı için doğru değildir
+ve 24'ü açık maddedir. Son üçü bu raporun önceki bölümlerindedir ve bölümler kural gereği
+değiştirilmemiştir.
+
+### 19.8 Kapı G1
+
+Rapor yazılmadan önce: **A geçti** (sağlama listesi ve HEAD aynı, çalışma ağacı temiz),
+**B geçti** (değişen yalnızca `10-kurulum.md`, `13-cevrimdisi-kurulum.md`,
+`20-komut-satiri.md`). İlk A denetimi "kaldı" demişti; sebep A'nın listesinin yanlışlıkla B'nin
+dizininden üretilmesiydi, A'nın kendi dizininden yinelenince geçmiştir. Rapor yazıldıktan sonra
+ikinci bir G1 çalıştırılmış, sonucu bu bölümün sonundadır.
+
+### 19.9 Açık maddeler
+
+1. **8 bit TCI modeli yayımdaki eklentiyle 8 bit veri üzerinde çalıştırılamaz** (§19.5).
+   Eklenti düzeltmesi: `validate_input` istenen veri tipini künyeden okumalı. Sürüm notu ve
+   README'nin bu eşleşmeyi anlatan cümleleri o düzeltmeyle birlikte ele alınmalıdır.
+2. Proje 2 için 3.28'in ölçülmesi; `qgisMinimumVersion` bir sonraki sürümde (§19.2).
+3. Proje 1'in yayımdaki zip'i (`plugin-v0.2.0`) `75332cb` ve `216ab59` öncesidir: 3.28 bildirir
+   ve `extent.py`'de modül düzeyi `rasterio` içe aktarması taşır (§19.2). A'nın kaynağı ikisini
+   de düzeltmiştir; Proje 1'in yeni bir sürümü gerekir.
+4. 24 önceden var olan ölü bağlantı (§19.7); üçü bu raporun eski bölümlerindedir.
+5. `Pillow` ve `PyYAML` yalnızca çözümlenmiştir; temiz bir sanal ortamda içe aktarılmamıştır
+   (§19.4).
+6. Kit hâlâ Windows'ta çalıştırılmamıştır; kurumun QGIS sürümü ve `rasterio` durumu tanı
+   çıktısına kadar bilinmemektedir.

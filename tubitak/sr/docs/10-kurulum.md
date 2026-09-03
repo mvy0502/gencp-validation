@@ -29,11 +29,19 @@ Proje 2, QGIS olmadan komut satırından da çalıştırılabilir ve eklentiyle 
 |---|---|---|
 | QGIS | **4.2.1 (Belém do Pará)** | Sınanmıştır |
 | İşletim sistemi | **macOS** | Sınanmıştır |
-| QGIS 3.28 ile 3.x arası | yok | **Sınanmamıştır.** Eklentilerin `metadata.txt` dosyaları en düşük sürüm olarak 3.28 belirtir; bu sürümlerde hiç çalıştırılmamıştır |
+| QGIS 3.x | yok | **Sınanmamıştır.** Yayımlanmış zip dosyalarının bildirdiği en düşük sürüm eklentiye göre değişir: GenCP Synthetic Reference 0.2.0 için 3.28, GenCP Super-Resolution 0.1.0 için 3.40 (aşağıdaki not). Proje 2'nin çalışması 3.44.13 üzerinde ayrıca ölçülmüştür (§7.6); bunun altındaki hiçbir 3.x sürümü çalıştırılmamıştır |
 | Windows, Linux | yok | **Sınanmamıştır** |
 
 Sınanmamış bir yapılandırmanın çalışacağı taahhüt edilmez. Bu, desteklenmediği anlamına da
 gelmez; yalnızca sınanmamıştır.
+
+**En düşük QGIS sürümü, eklentiye göre.** Her eklentinin zip dosyasındaki `metadata.txt`, eklentinin
+çalışacağı en düşük QGIS sürümünü bildirir ve kararı bu sayı verir: `gencp_plugin.zip` (GenCP
+Synthetic Reference 0.2.0) **3.28**, `gencp_super_resolution.zip` (GenCP Super-Resolution 0.1.0)
+**3.40** bildirir. QGIS, çalışan sürümü bu sayının altında kalan bir eklentiyi etkinleştirmez;
+eklenti yöneticisi onu bu QGIS sürümüyle uyumsuz olarak gösterir. Kurulu QGIS'in sürümü
+**Yardım > Hakkında** penceresinde yazar (İngilizce arayüzde **Help > About**). Proje 2'nin 3.40
+değeri bir ölçüm değil, seçilmiş bir alt sınırdır; sınanan en düşük sürüm 3.44.13'tür.
 
 ### 1.2 Python paketleri
 
@@ -230,7 +238,8 @@ indirilmesi, 1,78 GB için **1,6 dakika** (20 MB/s bağlantıda ölçülmüştü
 
 **Sınanmamıştır:**
 
-- QGIS 3.28 ve diğer 3.x sürümleri.
+- QGIS 3.x sürümleri (kurulum adımları yalnızca 4.2.1'de sınanmıştır; Proje 2'nin 3.44.13
+  üzerindeki çalışması §7.6'da ayrıca ölçülmüştür).
 - Windows ve Linux.
 - Proje 2'nin **eğitilmiş model** ve **wsx4** yöntemlerinin bu yeni profilde uçtan uca
   çalıştırılması; yalnızca bikübik çalıştırılmıştır.

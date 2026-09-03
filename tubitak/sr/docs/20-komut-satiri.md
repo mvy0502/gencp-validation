@@ -53,7 +53,7 @@ da yeniden örnekleme ile uydurulmaz; açık bir iletiyle ve ayrı bir çıkış
 | Girdinin KRS'si yok | 4 |
 | Girdi kuzeye dönük değil (döndürülmüş ya da eğilmiş) ya da piksel boyu sıfır | 5 |
 | Bant sayısı modelin beklediği sayı değil | 6 |
-| Veri tipi desteklenmiyor (model yolunda uint16 dışı; 8 bit TCI modele verilmez) | 7 |
+| Veri tipi desteklenmiyor: bikübik yolunda desteklenen listenin dışında bir tip (uint8, int8, uint16, int16, uint32, int32, float32, float64 dışı; örneğin int64); model yolunda, modelden bağımsız olarak, uint16 dışı bir tip ya da değerleri 8 bitlik bir görüntününki gibi kalan uint16 (%99,9 dilimi 300 DN'nin altında) | 7 |
 | Model dosyası yok, okunamıyor ya da künyesiz | 8 |
 | Çıktı zaten var ve `--overwrite` verilmemiş | 9 |
 | Çıktı yolu girdiyle aynı | 10 |
@@ -62,6 +62,11 @@ da yeniden örnekleme ile uydurulmaz; açık bir iletiyle ve ayrı bir çıkış
 | Yazma başarısız ya da durduruldu | 14 |
 | Ölçek ikinin kuvveti değil ya da modelinkiyle çelişiyor | 15 |
 | Yazılan dosya ızgara sözleşmesini sağlamadı | 16 |
+
+Kod 7'nin model yolundaki denetimi eklentinin `validate_input` işlevidir ve hangi model seçilirse
+seçilsin uint16 ister. Bu yüzden 8 bit TCI modeli (`gencp_sr_tci_x4_b3_v2.onnx`) de uint8 bir
+girdiyi 7 ile reddeder; yayımdaki `SAMPLE_3band_TCI_uint8_10m_512px.tif` ile 3 Eylül 2026'da
+ölçülmüştür. Eklentinin dondurulmuş sürümünün açık maddesidir (`18-depo-tasima.md` §19).
 
 Çıktı önce aynı klasörde geçici bir dosyaya yazılır, sonra adı değiştirilir; durdurulan ya da
 başarısız olan bir çalıştırma yarım dosya bırakmaz. Künye etiketi (`GENCP_SR_PROVENANCE`)

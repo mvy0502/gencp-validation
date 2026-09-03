@@ -111,11 +111,13 @@ ile kurulum hedefi aynı değildir; kurulum o dizine yeniden yapılmalıdır.
 
 **Sınanmıştır.** Kit iki kez, ağ bağlantısı kapalı biçimde (`--no-index`) kurulmuştur:
 
-1. **Windows paket kümesi**, `--platform win_amd64 --python-version 3.12` seçenekleriyle bir
-   hedef dizine kurulmuştur: 16 paketin tamamı çözümlenmiş, bağımlılık kümesi eksiksiz
-   çıkmıştır.
+1. **Windows paket kümesi**, `--platform win_amd64 --python-version 3.12` seçenekleriyle
+   ağsız çözümlenmiştir: 31 Ağustos 2026'da 16 tekerlek bir hedef dizine kurulmuş; 2 Eylül
+   2026'da, `Pillow` ve `PyYAML` eklendikten sonra, beş paketlik istek kitteki 18 tekerleğin
+   tamamını çözümlemiş, bağımlılık kümesi eksiksiz çıkmıştır.
 2. **Aynı sürümler** temiz bir Python 3.12.12 sanal ortamına kurulmuş; `rasterio`,
-   `onnxruntime` ve `osmium` **içe aktarılabilmiştir**.
+   `onnxruntime` ve `osmium` **içe aktarılabilmiştir** (31 Ağustos 2026, ilk 16 tekerlek;
+   `Pillow` ve `PyYAML` bu ortamda içe aktarılmamıştır).
 
 **Sınanmamıştır:** Windows'un kendisi. Yukarıdaki iki çalıştırma paket kümesinin eksiksiz ve
 komutun doğru olduğunu gösterir; **Windows'ta çalışacağını göstermez.** Windows QGIS 3.40'ın
