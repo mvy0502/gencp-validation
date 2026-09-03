@@ -2427,6 +2427,28 @@ işleme sonrası bağlantı sayımı bu bölümün sonundadır.
    ölçülen değerler 94.987 ve 217.678.087 bayttır (sürümler tablosu).
 4. 24 önceden var olan ölü bağlantı (§19.7) durmaktadır.
 
-**G1, rapor yazıldıktan sonra.** A geçti: sağlama listesi ve HEAD aynı, çalışma ağacı temiz. B geçti:
-silinen yok, değişen ve yeni yalnızca yedi izinli dosya ile bu rapor. Dosyalar açık yolla sahnelendikten
-sonra depo genelindeki bağlantı denetimi: 934 bağlantı, 24 ölü, hepsi önceden var olan 24.
+**G1, rapor yazıldıktan sonra; düzeltilmiş kayıt.** Buraya ilk yazılan satır doğru değildi ve iki
+ayrı sorunu birden örtüyordu.
+
+1. **Kapak görseli ilk işlemeye girmemiştir.** `.gitignore` satır 8 `*.png` der; `docs/plugin/*.png`
+   için istisna vardır, `docs/kapak.png` için yoktur. `git add` bu yüzden sıfır dışı çıkmış, `&&`
+   zinciri kopmuş, bağlantı sayımı ile B'nin rapor sonrası G1'i hiç koşmamış, zincirden sonra gelen
+   ayrı deyimler yine de çalışıp “geçti” satırını yazmıştır. `81c2406` işlemesi kapak görseli
+   olmadan uzak depoya gitmiştir. Görsel ikinci bir işlemeyle, `git add -f` ile eklenmiştir;
+   `.gitignore` bu paketin izinli dosyası olmadığı için `!docs/kapak.png` istisnası açık maddedir.
+   WP28'de de bir zincir hatası olmuştu (§19.8); orada sebep A denetiminin B'nin dizininde koşması,
+   burada `git add`'in sıfır dışı çıkışıdır. Ortak yön: zincirin bir halkası sessizce kopmuş,
+   sonrasındaki satır yine de yazılmıştır.
+
+2. **B'nin tam dosya listesinde dört fazladan dosya vardır.** `tubitak/sr/sr_data/__pycache__/`
+   altındaki dört `.cpython-311.pyc` dosyası 3 Eylül 10:08 ve 10:12'de yazılmıştır. Bu paket
+   `sr_data` modüllerini içe aktarmamıştır ve yazan süreç saptanamamıştır; makinedeki 3.11
+   yorumlayıcısı `gencp` ortamınınkidir. Dosyalar `.gitignore` satır 10 (`*/**/__pycache__`)
+   kapsamındadır, izlenmemektedir ve işlemeye girmemiştir. `sr_data`'nın 12 kaynak dosyası ile
+   `sr_plugin`, `sr_core`, `sr_train` ağaçlarının 50 dosyası taban çizgisiyle bayt bayt aynıdır.
+
+**Ölçülen sonuç.** Bağlantı denetimi, kapak görseli izlenir hâle geldikten sonra, depo genelinde
+150 Markdown dosyası: **934 bağlantı, 24 ölü**, hepsi §19.7'deki önceden var olan 24. G1 A geçti
+(A'nın kendi dizininden: sağlama listesi ve HEAD aynı, çalışma ağacı temiz). G1 B, izlenen dosya
+listesi üzerinden geçti: 1551'den 1557'ye, silinen yok, değişen ve yeni sekiz dosyanın hepsi
+izinli. Paket bu yüzden tek değil iki işlemedir.
