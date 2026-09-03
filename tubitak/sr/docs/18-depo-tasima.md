@@ -2251,3 +2251,182 @@ dosya kümesi aynı, değişen yalnızca dört izinli dosya (`10-kurulum.md`, `1
 eklenmiştir: işleme zincirinde A denetimi bir kez daha B'nin dizininde koşmuş, sessizce kalmış ve
 satır yazılmadan işleme yapılmıştır. A'nın kendi dizininden yinelenen denetim geçmiştir. Paket bu
 yüzden tek değil iki işlemedir; ikisi de yalnızca izinli dosyalara dokunur.
+
+## 20. WP27: README bir ön kapı olur
+
+**Tarih** 3 Eylül 2026. **Taban çizgisi** A `e5a3d225f71c84d4105fe16c823c6b71b5545152` (1272 izlenen
+dosya, çalışma ağacı temiz), B `0aff0f2` (1551 izlenen dosya, temiz); iki deponun sağlama listeleri
+`/tmp/wp27/` altına yazılmıştır. WP26'nın işlemesi (`f018367`) uzak depoda doğrulanmıştır.
+**Bölüm numarası:** brifing 19. bölümü istemiştir; WP28 bu paketten önce çalışıp 19. bölümü
+yazdığından bu bölüm 20'dir. 1'den 19'a kadar olan bölümler değişmemiştir.
+
+**Ölçülen başlangıç.** README 466 satır, 3.070 sözcük (`wc -w`), 28 başlık (kod bloğu içindeki iki
+`#` satırı başlık değildir). Brifingin 9.000 ile 10.000 sözcük tahmini karakter sayısına yakındır;
+başlık sayısı doğrudur.
+
+### 20.1 Aşama 1: eşleme (V1)
+
+Her başlık tek bir sınıfa: **a** ön sayfada kalır (yoğunlaştırılarak), **b** `docs/` altına bayt bayt
+taşınır, **c** bakım dosyasına taşınır.
+
+| # | Başlık (satır) | Sınıf | Gittiği yer |
+|---|---|---|---|
+| 1 | `# GenCP Doğrulama Çalışması` (1) | a | yeni başlık ve tek cümle |
+| 2 | `## Kurulum` (12) | a + b | ön sayfada yoğunlaştırılmış; tam metin `docs/proje1-eklenti.md` |
+| 3 | `### Eklenti` (50) | a + b | aynı |
+| 4 | `### Ayrıntı` (70) | a + b | aynı |
+| 5 | `### Lisans ve atıf` (83) | a + b | ön sayfanın “Lisans ve atıf” bölümüne yoğunlaştırılmış; tam metin `docs/proje1-eklenti.md` |
+| 6 | `## Proje 2: Sentinel-2 süper çözünürlük eklentisi` (93) | a + b | ön sayfada sözlüğe karşı yeniden yazılmış; eski metin `docs/proje2-eklenti.md` |
+| 7 | `## Araştırma kaydı` (131) | b | `docs/dogrulama-calismasi.md` |
+| 8 | `## KURAL: BU DEPO VE GenCP KALICI OLARAK AYRILDI` (147) | c | `MAINTAINERS.md` |
+| 9 | `## Öne çıkanlar` (170) | b | `docs/dogrulama-calismasi.md` |
+| 10 | `## Nereden başlamalı?` (183) | b | aynı |
+| 11 | `### Ne nerede?` (196) | b | aynı |
+| 12 | `### Deney kod adları` (212) | b | aynı |
+| 13 | `## Ne bulundu?` (227) | b | aynı |
+| 14 | `### 1. Yayınlanan üründe georeferanslama ölçek hatası var (+1/256)` (232) | b | aynı |
+| 15 | `### 2. Model, haritada olmayan yapılar "uyduruyor" (halüsinasyon)` (246) | b | aynı |
+| 16 | `### 3. Seyrek haritalı bölgelerde konum doğruluğu düşüyor` (259) | b | aynı |
+| 17 | `### 4. KARIOS doğrulaması: sayıların aslı` (266) | b | aynı |
+| 18 | `### 5. Veri setinde kusurlar var` (276) | b | aynı |
+| 19 | `## Türkiye'ye genelleme` (284) | b | aynı |
+| 20 | `### Zorlu sahalar: Kapadokya ve Tuz Gölü` (306) | b | aynı |
+| 21 | `## Model yeniden eğitildi mi? Evet` (325) | b | aynı |
+| 22 | `## Somut çıktı: ODTÜ referans paketi` (359) | b | aynı |
+| 23 | `## Güncel durum (25 Ağustos 2026)` (374) | b | aynı; tarih taşındığı günkü hâliyle kalır |
+| 24 | `## Kullanılan veri` (404) | b | aynı |
+| 25 | `## Nasıl çalıştırılır?` (416) | b | aynı |
+| 26 | `## Hızlı sözlük` (432) | b | aynı |
+| 27 | `## Çalışma disiplini` (451) | b | aynı |
+| 28 | `## İletişim, lisans ve atıf` (459) | a | “Lisans ve atıf” ve “Sorun bildirme” bölümlerine yoğunlaştırılmış |
+
+**Sınıflara sığmayan bir başlık.** 6 numaralı Proje 2 bölümü için brifing yalnızca “sizin
+yazdığınız” bir alt bölüm ister ve eski metnin nereye gideceğini söylemez. Eski metin sayı, dosya adı
+ve ölçüm taşır; iddia kuralı gereği bayt bayt `docs/proje2-eklenti.md` dosyasına taşınmış, ön
+sayfadaki yeni alt bölüm ona bağlanmıştır. Aynı gerekçeyle 2'den 5'e kadar olan Proje 1 başlıkları
+tek blok olarak `docs/proje1-eklenti.md` dosyasına gitmiştir.
+
+**Hedef dosya adları (sabit):** `docs/dogrulama-calismasi.md`, `docs/proje1-eklenti.md`,
+`docs/proje2-eklenti.md`, `MAINTAINERS.md` (kökte; bakım yapan kişinin ilk bakacağı yer). **Değişen
+çapalar:** b ve c sınıfındaki 24 başlığın README'deki çapaları artık yoktur; aynı başlık kimlikleri
+gittikleri dosyada aynen vardır. Depo B'nin 150 Markdown dosyasında ve üç sürüm gövdesinde README
+çapasına giden bir bağlantı bulunmamıştır; README'nin kendi içindeki iki çapa
+(`#deney-kod-adları`, `#hızlı-sözlük`) taşınan blokla birlikte gitmiş ve yeni dosyada çözülmektedir.
+
+### 20.2 Bir çelişki ve kararı: bayt aynılığı ile bağlantılar
+
+Taşınan bloklar depo köküne göre yazılmış 79 göreli bağlantı ve görsel yolu taşır
+(`tubitak/docs/…`, `gencp_imgs/…`, `docs/plugin/…`). GitHub göreli yolu dosyanın bulunduğu
+dizine göre çözer; `docs/` altına bayt bayt kopyalanan bir blokta bu 79 bağlantının tamamı 404
+olurdu. Brifingin üç isteği (`docs/` altı, bayt bayt, sıfır kırık bağlantı) burada birlikte
+sağlanamaz. Karar: metne dokunulmadan yalnızca göreli yolların başına `../` eklenmiştir;
+`MAINTAINERS.md` kökte olduğu ve KURAL bloğunda göreli yol bulunmadığı için o blok ham hâliyle
+aynıdır. Kanıt, aşağıdaki tabloda: ham özet dört blokta değişir, `../` ekleri geri alınarak
+hesaplanan normalleştirilmiş özet beşinde de öncekine eşittir ve farklı satırların her biri yalnızca
+bu ekle farklıdır. Brifingin tanımıyla bu dört blokta “özet değişmiştir”; değişikliğin tamamı
+sayılmış ve başka bir şey olmadığı gösterilmiştir.
+
+### 20.3 Blok özetleri (V2)
+
+sha256, ilk 16 karakter. “Farklı satır” taşınan bloğun kaynaktan farklı satır sayısı; “yalnız ek”
+her farkın sadece `../` eki olup olmadığı.
+
+| Blok | Hedef | Önce | Sonra (ham) | Sonra (normalleştirilmiş) | Eşit | Farklı satır | Yalnız ek |
+|---|---|---|---|---|---|---|---|
+| P1 | `docs/proje1-eklenti.md` | `c4f444deddeb7eae` | `37edd0f049e2e15b` | `c4f444deddeb7eae` | evet | 9 | evet |
+| P2 | `docs/proje2-eklenti.md` | `c0cc5586e2615b98` | `bddccd0e77ff7755` | `c0cc5586e2615b98` | evet | 4 | evet |
+| ARS | `docs/dogrulama-calismasi.md` | `a6867a9b97dadb4d` | `6f9a6a94332e2010` | `a6867a9b97dadb4d` | evet | 1 | evet |
+| STUDY | `docs/dogrulama-calismasi.md` | `5c1c7da3ff9a944b` | `776ab89fbe0a9225` | `5c1c7da3ff9a944b` | evet | 57 | evet |
+| KURAL | `MAINTAINERS.md` | `b84302d4cbf945ec` | `b84302d4cbf945ec` | `b84302d4cbf945ec` | evet | 0 | evet |
+
+Bloklar: P1 satır 12-90, P2 93-130, ARS 131-146, KURAL 147-169, STUDY 170-458. Öneklenen yol sayısı
+P1 10, P2 4, ARS 3, STUDY 62, KURAL 0. Kaynak bloklar `/tmp/wp27/blocks/` altındadır.
+
+### 20.4 Aşama 2: kapak görseli (V5)
+
+`docs/kapak.png`, 1054 x 1138 piksel, 971.660 bayt, `tools/make_hero.py` ile üretilmiştir; çıkarım
+çalıştırılmamıştır. Dört panel 2 x 2, her biri 512 piksel; README genişliğinde (900 piksel) dört
+panel okunabilir olduğundan ikiye inilmemiştir.
+
+| Panel | Kaynak | Ne |
+|---|---|---|
+| üst sol | `tubitak/docs/evidence/plugin_screens/06_canvas_output_only.png` (760 x 760) | Proje 1'in Ankara demo karosu `ank_0_30` (2570 x 2570 m, EPSG:32636) için ürettiği sentetik referans, QGIS'in kendi çizimiyle |
+| üst sağ | `tubitak/docs/evidence/plugin_screens/12_canvas_confidence_layer.png` (760 x 760; `docs/plugin/confidence_layer.png` ile bayt bayt aynı) | aynı karonun güven katmanı |
+| alt sol | `03_ODTU_Ankara.png` 1. panel (sütun 0-1023, satır 120-1143) | ODTÜ kampüsü, EOxCloudless s2cloudless-2024, 10 m girdi, 2,56 x 2,56 km |
+| alt sağ | aynı görselin 3. paneli (sütun 2076-3099) | aynı girdinin `gencp_sr_tci_x4_b3_v2.onnx` ile 4x, 2,5 m çıktısı |
+
+`03_ODTU_Ankara.png` (3100 x 1218, sha256 `6588824e84a64f99…`), `tubitak/sr/tools/make_slides_v2.py`
+betiğinin 1 Eylül 2026'da ürettiği altı görselden biridir ve depoda değildir; betik onu yol olarak
+alır, argümansız çağrılınca kullanım yazıp 1 ile çıkar. EOxCloudless atıf satırı görselin altına
+çizilmiştir (CC BY-NC-SA 4.0). README'deki altyazı her panelin ne olduğunu ve girdinin hangi ürün
+olduğunu yazar.
+
+### 20.5 Aşama 3: ön sayfa (V4)
+
+Yapı brifingteki sırayladır: başlık ve tek cümle; bir rozet (son sürüm, `img.shields.io`; ikinci
+bir rozet eklenti başına farklı iki QGIS sürümünü tek sayıya indirirdi, eklenmemiştir); kapak
+görseli ve altyazı; “Bu depoda ne var” üç satır; “Hızlı başlangıç” altı adım; iki eklenti; doğrulama
+çalışması tek paragraf; sürümler tablosu; lisans ve atıf; sorun bildirme. **Sözcük sayısı: toplam
+901; sürümler tablosu ve altyazı dışında 691.** Uzun çizgi yoktur; sözlük ve kip taraması temizdir.
+
+İlk sonuç bikübik yöntemle verilmiştir, çünkü 8 bit örnek raster ile 8 bit model eşleşmesi yayımdaki
+sürümde çalışmamaktadır (§19.5); Proje 2 alt bölümünün sınır cümlesi bunu söyler.
+
+### 20.6 İddia karşılaştırması (V3)
+
+Eski README'den çıkarılan sayı, birim, dosya adı, URL, etiket ve komut kümeleri, yeni README ile dört
+hedef dosyanın birleşimiyle karşılaştırılmıştır (`../` ekleri karşılaştırmadan önce geri alınarak).
+**Kaybolan: hiçbiri**, beş sınıfta da. Yeni README'ye eklenenler: beş sürüm etiketi ve sayfa
+adresleri, varlıkların bayt cinsinden boyutları (sürümler tablosu), yeni `docs/` dosyalarının ve
+hızlı başlangıcın bağlantıları (`10-kurulum.md`, `13-cevrimdisi-kurulum.md`, `20-komut-satiri.md`,
+`qgis_ortam_raporu.py`, `SAMPLE_3band_TCI_uint8_10m_512px.tif`, kit varlıkları), kapak altyazısının
+kaynak görselleri ve ölçüleri (`ank_0_30`, 2570 m, EPSG:32636, 2,56 km, 2024), sorun bildirme
+adresi. Hedef dosyalara önsözlerden gelen tek ekleme kök `README.md`, `MAINTAINERS.md`, `CLAUDE.md` ve
+`18-depo-tasima.md` §19 bağlantılarıdır.
+
+### 20.7 Aşama 4: bağlantılar (V6)
+
+`check_links.py` kendi sınamasını geçmiştir. Depo genelinde 150 Markdown dosyası, ağsız: 934
+bağlantı, 33 ölü. Bunların 9'u yeni dosyalara giden ve denetleyicinin “yerelde var, git izlemiyor”
+diye işaretlediği bağlantılardır; işlemeyle birlikte izlenir hâle gelir (işleme sonrası sayım
+aşağıda). Kalan 24, §19.7'deki 24 ile aynıdır: üstkaynak pix2pix belgeleri (6), `.gitignore`'daki
+rapor görselleri (15), bu raporun eski bölümlerindeki `SOURCE.md` yolu (3); hiçbiri bu paketin
+dosyalarında değildir. Ağ ile, yazılan beş dosya: 135 bağlantı, izlenmeyen dosya işaretleri dışında
+0 ölü. Üç sürüm gövdesindeki 11 bağlantının hepsi var olan yollara gider; README çapasına giden
+bağlantı yoktur; sürüm gövdesi değiştirilmemiştir.
+
+### 20.8 Aşama 5: okuyucu sınamaları (V7)
+
+- **Yönetici, ilk ekran.** Başlık, tek cümle ve kapak görseli iki aracı, ne ürettiklerini ve
+  çalışmanın neyi ölçtüğünü söyler. **Evet.**
+- **Teknisyen, çevrimdışı Windows.** Hızlı başlangıç 2. adım zip'in sürüm sayfasını, 5. adım ortam
+  raporu betiğini, kit sürümünü ve `13-cevrimdisi-kurulum.md` kılavuzunu verir; 6. adım
+  `10-kurulum.md`. Aramadan ulaşır. **Evet.**
+- **Akademisyen, doğrulama çalışması.** “Doğrulama çalışması” paragrafından tek tıkla
+  `docs/dogrulama-calismasi.md`; metin özgün metnin tamamıdır (normalleştirilmiş özet eşit), yalnızca
+  bağlantı yolları `../` ile çözülür hâle getirilmiştir. **Evet, §20.2'deki kayıtla.**
+- **Taşınan bölüme giden eski bağlantı.** Depoda ve sürümlerde böyle bir bağlantı yoktur. Dışarıdan
+  bir yer imi (`README.md#ne-bulundu` gibi) GitHub'da 404 değil README'nin başını açar; oradan
+  “Doğrulama çalışması” bölümü metnin bulunduğu dosyaya bağlanır. **Evet; 404 yok.**
+
+### 20.9 Kapı G1 ve işleme
+
+Rapor yazılmadan önce: **A geçti** (A'nın kendi dizininden; sağlama listesi ve HEAD aynı, çalışma
+ağacı temiz), **B geçti** (değişen ve yeni: `README.md`, `MAINTAINERS.md`, `docs/dogrulama-calismasi.md`,
+`docs/proje1-eklenti.md`, `docs/proje2-eklenti.md`, `docs/kapak.png`, `tools/make_hero.py`; silinen
+yok). `sozluk.md` değişmemiştir; yeni terim gerekmemiştir. Rapor yazıldıktan sonra ikinci G1 ve
+işleme sonrası bağlantı sayımı bu bölümün sonundadır.
+
+### 20.10 Açık maddeler
+
+1. Taşınan dört bloğun ham özeti `../` ekleri yüzünden farklıdır (§20.2). Bloklar kökten yeniden
+   çözülecek bir yere taşınırsa ekler kaldırılabilir; o zaman ham özet de eşitlenir.
+2. `docs/dogrulama-calismasi.md` içindeki “Güncel durum (25 Ağustos 2026)” bölümü taşındığı günkü
+   hâliyle tarihlidir; güncellemesi Proje 1'in işidir.
+3. Eski README'nin `73 KB` ve `208 MB` boyutları taşınan Proje 1 bloğunda kalmıştır; sürümdeki
+   ölçülen değerler 94.987 ve 217.678.087 bayttır (sürümler tablosu).
+4. 24 önceden var olan ölü bağlantı (§19.7) durmaktadır.
+
+**G1, rapor yazıldıktan sonra.** A geçti: sağlama listesi ve HEAD aynı, çalışma ağacı temiz. B geçti:
+silinen yok, değişen ve yeni yalnızca yedi izinli dosya ile bu rapor. Dosyalar açık yolla sahnelendikten
+sonra depo genelindeki bağlantı denetimi: 934 bağlantı, 24 ölü, hepsi önceden var olan 24.
