@@ -2244,3 +2244,10 @@ ikinci bir G1 çalıştırılmış, sonucu bu bölümün sonundadır.
    (§19.4).
 6. Kit hâlâ Windows'ta çalıştırılmamıştır; kurumun QGIS sürümü ve `rasterio` durumu tanı
    çıktısına kadar bilinmemektedir.
+
+**G1, rapor yazıldıktan sonra.** A geçti: sağlama listesi ve HEAD aynı, çalışma ağacı temiz. B geçti:
+dosya kümesi aynı, değişen yalnızca dört izinli dosya (`10-kurulum.md`, `13-cevrimdisi-kurulum.md`,
+`20-komut-satiri.md`, bu rapor). Bu satır ilk işlemeden (`f8df38c`) sonra ayrı bir işlemeyle
+eklenmiştir: işleme zincirinde A denetimi bir kez daha B'nin dizininde koşmuş, sessizce kalmış ve
+satır yazılmadan işleme yapılmıştır. A'nın kendi dizininden yinelenen denetim geçmiştir. Paket bu
+yüzden tek değil iki işlemedir; ikisi de yalnızca izinli dosyalara dokunur.
