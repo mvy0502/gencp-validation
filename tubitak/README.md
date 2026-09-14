@@ -1,3 +1,5 @@
+> **14 September 2026.** The research record behind the GenCP validation letter continues at [`mvy0502/gencp-letter`](https://github.com/mvy0502/gencp-letter), which carries this repository's full history. This repository is the internship delivery as handed over and is not changed further.
+
 # GenCP — TÜBİTAK UZAY workspace
 
 > **Repository split, 26 August 2026 — read this before following a link below.**

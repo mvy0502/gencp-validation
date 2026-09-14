@@ -1,3 +1,5 @@
+> **14 September 2026.** The research record behind the GenCP validation letter continues at [`mvy0502/gencp-letter`](https://github.com/mvy0502/gencp-letter), which carries this repository's full history. This repository is the internship delivery as handed over and is not changed further.
+
 # GenCP: doğrulama çalışması ve iki QGIS eklentisi
 
 ESA/Telespazio GenCP sisteminin bağımsız doğrulama çalışması ve o çalışmadan çıkan iki QGIS
